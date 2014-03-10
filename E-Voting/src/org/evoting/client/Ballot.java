@@ -1,5 +1,6 @@
 package org.evoting.client;
 
-public class Ballot {
+public class Ballot
+{
 
 }

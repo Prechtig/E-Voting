@@ -4,7 +4,8 @@ import java.io.Console;
 
 import jolie.runtime.JavaService;
 
-public class ConsoleIO extends JavaService {
+public class ConsoleIO extends JavaService
+{
 	
 	public static Ballot getBallot()
 	{

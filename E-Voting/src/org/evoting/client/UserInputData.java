@@ -1,6 +1,7 @@
 package org.evoting.client;
 
-public class UserInputData {
+public class UserInputData
+{
 	private int userId;
 	private String password;
 	private int candidateId;

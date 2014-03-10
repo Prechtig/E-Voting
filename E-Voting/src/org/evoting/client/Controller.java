@@ -1,6 +1,7 @@
 package org.evoting.client;
  
-public class Controller {
+public class Controller
+{
 	
     public static Ballot getBallot(UserInputData userInputData)
     {
