@@ -1,16 +1,16 @@
 interface Interface {
-    OneWay: println( string )
+    OneWay: getBallot()
 }
  
-outputPort Controller {
+outputPort ConsoleIO {
     Interfaces: Interface
 }
  
 embedded {
-    Java: "org.evoting.client.Controller" in Controller
+    Java: "org.evoting.client.ConsoleIO" in Controller
 }
  
 main
 {
-    println@Controller("Hello World!")
+    getBallot@ConsoleIO()
 }
