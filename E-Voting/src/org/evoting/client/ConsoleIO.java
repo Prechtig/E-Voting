@@ -2,19 +2,9 @@ package org.evoting.client;
 
 import java.io.Console;
 
-import jolie.runtime.JavaService;
-
-public class ConsoleIO extends JavaService
-{
-	
-	public static Ballot getBallot()
-	{
-		UserInputData userInputData = getUserInput();
-		Ballot ballot = Controller.getBallot(userInputData);
-		return ballot;
-	}
-	
-	private static UserInputData getUserInput()
+public class ConsoleIO
+{	
+	public static UserInputData getUserInput()
 	{
 		Console console = System.console();
 		String input = "";
@@ -34,11 +24,11 @@ public class ConsoleIO extends JavaService
 		userId = Integer.parseInt(input);
 		input = "";
 		
-		while(!isPassword(input)) {
+		while(!isValidPassword(input)) {
 			System.out.println("Enter user password:");
 			input = console.readLine();
-			if(!isPassword(input)) {
-				System.out.println("The input does not match the requirements for a password");
+			if(!isValidPassword(input)) {
+				System.out.println("The input does not meet the requirements for a password");
 				System.out.println("");
 			}
 		}
@@ -78,7 +68,7 @@ public class ConsoleIO extends JavaService
 		return isNumber(str);
 	}
 	
-	private static boolean isPassword(String str)
+	private static boolean isValidPassword(String str)
 	{
 		if(str.equals("")) {
 			return false;
@@ -90,5 +80,4 @@ public class ConsoleIO extends JavaService
 	{
 		return isNumber(str);
 	}
-	
 }

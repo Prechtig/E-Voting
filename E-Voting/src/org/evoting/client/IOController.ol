@@ -1,16 +1,19 @@
+include "console.iol"
+
 interface Interface {
-    OneWay: getBallot()
+    RequestResponse: getBallot( void )( int )
 }
  
-outputPort ConsoleIO {
+outputPort Controller {
     Interfaces: Interface
 }
  
 embedded {
-    Java: "org.evoting.client.ConsoleIO" in Controller
+    Java: "org.evoting.client.Controller" in Controller
 }
  
 main
 {
-    getBallot@ConsoleIO()
+    getBallot@Controller()( a );
+    println@Console(a)()
 }
