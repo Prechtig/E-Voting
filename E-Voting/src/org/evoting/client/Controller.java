@@ -3,7 +3,7 @@ import jolie.runtime.JavaService;
  
 public class Controller extends JavaService {
      
-    public void println( String s  ){
+    public void println( String s ){
         System.out.println( s );
     }
 }
