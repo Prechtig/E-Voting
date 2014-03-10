@@ -1,10 +1,18 @@
 package org.evoting.client;
+
+import jolie.runtime.JavaService;
  
-public class Controller
+public class Controller extends JavaService
 {
+	public static void setCandidateList(String[] candidates)
+	{
+		Model.setCandidates(candidates);
+	}
 	
-    public static Ballot getBallot(UserInputData userInputData)
+    public Integer getBallot()
     {
-    	return Model.getBallot(userInputData);
+    	UserInputData userInputData = ConsoleIO.getUserInput();
+    	Ballot ballot = Model.getBallot(userInputData);
+    	return 3;
     }
 }
