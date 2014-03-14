@@ -1,4 +1,4 @@
-if not exist "F:\Documents\Git\E-Voting\E-Voting\src\org\evoting\client\jolie\lib" mkdir "F:\Documents\Git\E-Voting\E-Voting\bin\src\evoting\client\jolie\lib"
+if not exist "org\evoting\client\jolie\lib" mkdir "org\evoting\client\jolie\lib"
 
 javac -cp ..\lib\jolie.jar -d ..\bin org\evoting\client\ConsoleIO.java org\evoting\client\Controller.java org\evoting\client\UserInputData.java org\evoting\client\Model.java org\evoting\client\Ballot.java org\evoting\client\Security.java org\evoting\client\exceptions\NoCandidateListException.java 
 

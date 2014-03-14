@@ -8,9 +8,13 @@ inputPort BulletinBoardService {
 }
 
 outputPort BulletinBoardController {
-	Location: "socket://localhost:8000/"
+    Location: "socket://localhost:8000/"
     Protocol: sodep
     Interfaces: IBulletinBoardController
+}
+
+embedded {
+    Java: "org.evoting.bulletinboard.Controller" in BulletinBoardController
 }
 
 // Enables concurrent execution
@@ -23,19 +27,17 @@ cset {
 	sid: VoteRequest.sid
 }
 
-//Embed Java classes
-embedded {
-	Java: "org.evoting.bulletinboard.Controller" in BulletinBoardController
-}
-
 main {
 	getCandidates( )( result ) {
-		getCandidates@BulletinBoardController(  )( candidates );
-		println@Console("Number of candidates: " + #candidates.candidates)();
+		getCandidates@BulletinBoardController( )( candidates );
+		result.candidates << candidates.candidates;
+		println@Console( "Received candidate list of size " + #candidates.candidates )();
 		csets.sid = new;
-		result.sid = csets.sid;
-		result.candidates << candidates.candidates
+		result.sid = csets.sid
 	};
-	processVote@BulletinBoardController(  )( registered );
-	println@Console( "Vote is registered: " + registered)()
+	vote( request )( registered ) {
+		processVote@BulletinBoardController( )( response );
+		registered = response;
+		println@Console( "Registered: " + registered )()
+	}
 }

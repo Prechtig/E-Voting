@@ -9,9 +9,6 @@ outputPort BulletinBoardService {
  
 main
 {
-	install( illegal_vote =>
-		println@Console( main.illegal_vote.error )()
-	);
 	getCandidates@BulletinBoardService( void )( result );
     println@Console( "Length of array " + #result.candidates )();
     for(i = 0, i < #result.candidates, i++) {

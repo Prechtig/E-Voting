@@ -12,13 +12,9 @@ type VoteRequest:void {
 	.votes*: bool
 }
 
-type ExplainedException: void {
-	.error: string
-}
-
 interface IBulletinBoard {
 	RequestResponse: getCandidates( void )( GetCandidatesResponse )
-	RequestResponse: vote( VoteRequest )( bool ) throws illegal_vote( ExplainedException )
+	RequestResponse: vote( VoteRequest )( bool )
 }
 
 interface IBulletinBoardController {
