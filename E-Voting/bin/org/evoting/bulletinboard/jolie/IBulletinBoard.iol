@@ -16,7 +16,7 @@ type VoteRequest:void {
 
 interface IBulletinBoard {
 	RequestResponse: getCandidates( void )( GetCandidatesResponse )
-	RequestResponse: vote( VoteRequest )( bool )
+	RequestResponse: vote( Ballot )( bool )
 }
 
 interface IBulletinBoardController {

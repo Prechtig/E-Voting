@@ -7,7 +7,6 @@ public class Controller extends JavaService {
 	
 	public Value processVote() {
 		Value voteRegistered = Value.create(false);
-		
 		return voteRegistered;
 	}
 	

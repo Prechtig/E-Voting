@@ -29,6 +29,4 @@ public class Ballot
 		
 		return result;
 	}
-	
-	
 }

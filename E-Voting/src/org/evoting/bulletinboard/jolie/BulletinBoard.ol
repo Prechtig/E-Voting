@@ -24,7 +24,7 @@ execution {
 
 // Used to identify the incoming process
 cset {
-	sid: VoteRequest.sid
+	sid: Ballot.sid
 }
 
 main {
@@ -35,12 +35,7 @@ main {
 		csets.sid = new;
 		result.sid = csets.sid
 	};
-	vote( request )( registered ) {
-		ballot.userId = 42;
-		ballot.passowrd = "secrecy";
-		ballot.vote[0] = false;
-		ballot.vote[1] = true;
-		ballot.vote[2] = false;
+	vote( ballot )( registered ) {
 		processVote@BulletinBoardController( ballot )( response );
 		registered = response;
 		println@Console( "Registered: " + registered )()
