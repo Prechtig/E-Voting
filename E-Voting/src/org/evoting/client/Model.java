@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.BitSet;
 
-import org.evoting.client.Exceptions.NoCandidateListException;
+import org.evoting.client.exceptions.NoCandidateListException;
 
 public class Model
 { 

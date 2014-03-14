@@ -1,6 +1,6 @@
 package org.evoting.client;
 
-import org.evoting.client.Exceptions.NoCandidateListException;
+import org.evoting.client.exceptions.NoCandidateListException;
 
 import jolie.runtime.JavaService;
 import jolie.runtime.Value;
@@ -16,6 +16,9 @@ public class Controller extends JavaService
 		Model.setCandidates(candidates);
 	}
 	
+	/*
+	 * Gets the voting ballot from user input.
+	 */
     public Value getBallot() throws NoCandidateListException
     {
     	//Test
