@@ -36,7 +36,12 @@ main {
 		result.sid = csets.sid
 	};
 	vote( request )( registered ) {
-		processVote@BulletinBoardController( )( response );
+		ballot.userId = 42;
+		ballot.passowrd = "secrecy";
+		ballot.vote[0] = false;
+		ballot.vote[1] = true;
+		ballot.vote[2] = false;
+		processVote@BulletinBoardController( ballot )( response );
 		registered = response;
 		println@Console( "Registered: " + registered )()
 	}

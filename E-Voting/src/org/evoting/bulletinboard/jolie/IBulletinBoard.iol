@@ -1,3 +1,5 @@
+include "../../client/jolie/IOController.ol"
+
 type GetCandidatesResponse:void {
 	.sid:string
 	.candidates*: string
@@ -19,5 +21,5 @@ interface IBulletinBoard {
 
 interface IBulletinBoardController {
 	RequestResponse: getCandidates( void )( CandidateList )
-	RequestResponse: processVote( void )( bool )
+	RequestResponse: processVote( Ballot )( bool )
 }
