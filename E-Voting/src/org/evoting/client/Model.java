@@ -9,13 +9,20 @@ import org.evoting.client.exceptions.NoCandidateListException;
 public class Model
 { 
 	private static ArrayList<String> candidateList;
+	private static int numberOfCandidates = 0;
 	
 	public static void setCandidates(String[] candidates)
 	{
 		candidateList = new ArrayList<String>();
+		numberOfCandidates = candidates.length;
 		for(String s : candidates) {
 			candidateList.add(s);
 		}
+	}
+	
+	public static int getNumberOfCandidates()
+	{
+		return numberOfCandidates;
 	}
 
 	public static Ballot getBallot(UserInputData userInputData) throws NoCandidateListException

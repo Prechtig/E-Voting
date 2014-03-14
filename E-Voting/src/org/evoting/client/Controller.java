@@ -19,20 +19,22 @@ public class Controller extends JavaService
 	/*
 	 * Gets the voting ballot from user input.
 	 */
-    public Value getBallot() throws NoCandidateListException
+    public Value getBallot()
     {
     	//Test
     	setCandidateList(new String[] {"John", "Hans", "Levi"});
     	
-    	UserInputData userInputData = ConsoleIO.getUserInput();
+    	UserInputData userInputData = ConsoleIO.getUserInput(Model.getNumberOfCandidates());
     	Ballot ballot;
+    	Value result = null;
 		try {
 			ballot = Model.getBallot(userInputData);
+	    	result = ballot.getValue();
+	    	return result;
 		} catch (NoCandidateListException e) {
 			System.err.println("No candidate list has been retrieved from server.");
-			throw e;
 		}
-    	Value result = ballot.getValue();
-    	return result;
+		
+		return result;
     }
 }
