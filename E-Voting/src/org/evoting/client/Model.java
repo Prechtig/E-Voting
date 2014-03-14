@@ -1,9 +1,6 @@
 package org.evoting.client;
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.BitSet;
-
 import org.evoting.client.exceptions.NoCandidateListException;
 
 public class Model
