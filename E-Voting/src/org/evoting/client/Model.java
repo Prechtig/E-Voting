@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.BitSet;
 
+import org.evoting.client.exceptions.NoCandidateListException;
+
 public class Model
 { 
 	private static ArrayList<String> candidateList;
@@ -16,15 +18,19 @@ public class Model
 		}
 	}
 
-	public static Ballot getBallot(UserInputData userInputData)
+	public static Ballot getBallot(UserInputData userInputData) throws NoCandidateListException
 	{
-		BitSet candidateBits = getBitSetFromCandidateId(userInputData.getCandidateId());
-		return new Ballot(userInputData.getUserId(), userInputData.getPassword(), candidateBits);
+		if(candidateList == null) {
+			throw new NoCandidateListException();
+		}
+		boolean[] votes = getBooleanArrayFromCandidateId(userInputData.getCandidateId());
+		return new Ballot(userInputData.getUserId(), userInputData.getPassword(), votes);
 	}
 	
-	private static BitSet getBitSetFromCandidateId(int candidateId)
+	private static boolean[] getBooleanArrayFromCandidateId(int candidateId)
 	{
-		BitSet result = new BitSet();
+		boolean[] result = new boolean[candidateList.size()];
+		result[candidateId] = true;
 		return result;
 	}
 }

@@ -16,7 +16,7 @@ public class UserInputData
 		return password;
 	}
 	public void setPassword(String password) {
-		this.password = password;
+		this.password = Security.encryptPassword(password);
 	}
 	public int getCandidateId() {
 		return candidateId;
