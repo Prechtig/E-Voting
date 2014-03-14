@@ -1,17 +1,34 @@
 package org.evoting.client;
 
-import java.util.BitSet;
+import jolie.runtime.Value;
 
 public class Ballot
 {
 	private int userId;
 	private String password;
-	private BitSet vote;
+	// Contains false for candidates that are not voted for and true for candidates that are voted for.
+	private boolean[] votes;
 	
-	public Ballot(int userId, String password, BitSet vote)
+	public Ballot(int userId, String password, boolean[] votes)
 	{
 		this.userId = userId;
 		this.password = password;
-		this.vote = vote;
+		this.votes = votes;
 	}
+	
+	/*
+	 * Creates a value representation of the ballot, which has a tree structure that is XML convertible.
+	 */
+	public Value getValue() {
+		Value result = Value.create();
+		result.getNewChild("userId").setValue(userId);
+		result.getNewChild("password").setValue(password);
+		for(int i = 0; i < votes.length; i++) {
+			result.getNewChild("vote").setValue(votes[i]);;
+		}
+		
+		return result;
+	}
+	
+	
 }

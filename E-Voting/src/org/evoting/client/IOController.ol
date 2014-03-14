@@ -1,7 +1,13 @@
 include "console.iol"
 
+type Ballot: void {
+	.userId:int
+	.password:string
+	.vote*:bool
+}
+
 interface Interface {
-    RequestResponse: getBallot( void )( int )
+    RequestResponse: getBallot( void )( Ballot )
 }
  
 outputPort Controller {
@@ -15,5 +21,6 @@ embedded {
 main
 {
     getBallot@Controller()( a );
-    println@Console(a)()
+    println@Console(a.userId[0])();
+    println@Console(a.password[0])()
 }
