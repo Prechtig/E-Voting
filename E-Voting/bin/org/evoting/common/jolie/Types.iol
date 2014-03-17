@@ -8,4 +8,5 @@ type Ballot: void {
 type EncryptedBallot: void {
     .userInfo: string
     .vote: string
+    .sid: string
 }

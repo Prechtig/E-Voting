@@ -5,8 +5,14 @@ import jolie.runtime.Value;
 
 public class Controller extends JavaService {
 	
-	public Value processVote() {
+	public Value processVote(Value encryptedBallot) {
 		Value voteRegistered = Value.create(false);
+		
+		//Get the values from the ballot
+		String userInfo = encryptedBallot.getChildren("userInfo").get(0).strValue();
+		String votes = encryptedBallot.getChildren("vote").get(0).strValue();
+		
+		
 		return voteRegistered;
 	}
 	

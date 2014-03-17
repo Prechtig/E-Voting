@@ -16,10 +16,10 @@ type VoteRequest:void {
 
 interface IBulletinBoard {
 	RequestResponse: getCandidates( void )( GetCandidatesResponse )
-	RequestResponse: vote( Ballot )( bool )
+	RequestResponse: vote( EncryptedBallot )( bool )
 }
 
 interface IBulletinBoardController {
 	RequestResponse: getCandidates( void )( CandidateList )
-	RequestResponse: processVote( Ballot )( bool )
+	RequestResponse: processVote( EncryptedBallot )( bool )
 }

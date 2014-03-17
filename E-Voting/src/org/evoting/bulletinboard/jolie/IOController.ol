@@ -18,10 +18,7 @@ main
 
 	println@Console( result.sid )();
 	ballot.sid = result.sid;
-	ballot.userId = 42;
-	ballot.password = "secrecy";
-	ballot.vote[0] = false;
-	ballot.vote[1] = true;
-	ballot.vote[2] = false;
+	ballot.userInfo = "42secrecy";
+	ballot.vote = "010";
 	vote@BulletinBoardService( ballot )()
 }

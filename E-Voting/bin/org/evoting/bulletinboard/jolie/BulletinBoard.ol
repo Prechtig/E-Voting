@@ -1,4 +1,4 @@
-include "IBulletinBoard.iol"
+include "../../common/jolie/IBulletinBoard.iol"
 include "console.iol"
 
 inputPort BulletinBoardService {
@@ -24,7 +24,7 @@ execution {
 
 // Used to identify the incoming process
 cset {
-	sid: Ballot.sid
+	sid: EncryptedBallot.sid
 }
 
 main {
@@ -35,9 +35,8 @@ main {
 		csets.sid = new;
 		result.sid = csets.sid
 	};
-	vote( ballot )( registered ) {
-		processVote@BulletinBoardController( ballot )( response );
-		registered = response;
+	vote( encryptedBallot )( registered ) {
+		processVote@BulletinBoardController( encryptedBallot )( registered );
 		println@Console( "Registered: " + registered )()
 	}
 }
