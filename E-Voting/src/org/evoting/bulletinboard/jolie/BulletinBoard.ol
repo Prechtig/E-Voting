@@ -22,18 +22,11 @@ execution {
 	concurrent
 }
 
-// Used to identify the incoming process
-cset {
-	sid: Ballot.sid
-}
-
 main {
 	getCandidates( )( result ) {
 		getCandidates@BulletinBoardController( )( candidates );
 		result.candidates << candidates.candidates;
-		println@Console( "Received candidate list of size " + #candidates.candidates )();
-		csets.sid = new;
-		result.sid = csets.sid
+		println@Console( "Received candidate list of size " + #candidates.candidates )()
 	};
 	vote( ballot )( registered ) {
 		processVote@BulletinBoardController( ballot )( response );
