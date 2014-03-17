@@ -1,9 +1,5 @@
 include "../../common/jolie/Types.iol"
-
-type EncryptedBallot:void {
-    .userInfo:string
-    .votes:string
-}
+include "../../common/jolie/IBulletinBoard.iol"
 
 interface Interface {
     RequestResponse: getBallot( void )( EncryptedBallot )

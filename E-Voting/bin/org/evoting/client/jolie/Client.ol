@@ -12,7 +12,7 @@ embedded {
 main
 {
 	a = "Ezalor";
-		
+	
 	setCandidateList@Controller( a );
-    getBallot@Controller()( b );
+    getBallot@Controller()( b )
 }

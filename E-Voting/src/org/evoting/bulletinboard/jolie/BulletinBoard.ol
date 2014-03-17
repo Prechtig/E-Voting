@@ -1,4 +1,4 @@
-include "IBulletinBoard.iol"
+include "../../common/jolie/IBulletinBoard.iol"
 include "console.iol"
 
 inputPort BulletinBoardService {
