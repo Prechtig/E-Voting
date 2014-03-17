@@ -17,9 +17,11 @@ main
     println@Console( "Done" )();
 
 	println@Console( result.sid )();
-	x.sid = result.sid;
-	x.votes[0] = true;
-	x.votes[1] = false;
-	x.votes[2] = true;
-	vote@BulletinBoardService( x )()
+	ballot.sid = result.sid;
+	ballot.userId = 42;
+	ballot.passowrd = "secrecy";
+	ballot.vote[0] = false;
+	ballot.vote[1] = true;
+	ballot.vote[2] = false;
+	vote@BulletinBoardService( ballot )()
 }

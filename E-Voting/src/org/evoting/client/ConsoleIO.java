@@ -15,6 +15,9 @@ public class ConsoleIO
 		String password;
 		UserInputData userData = new UserInputData();
 		
+		//Test
+		System.out.println(numberOfCandidates);
+		
 		while(!isCPRNumber(input)) {
 			System.out.println("Enter CPR number:");
 			input = console.readLine();

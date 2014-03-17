@@ -4,6 +4,9 @@ import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
+/*
+ * Contains all encryption and decryption logic for the client.
+ */
 public class Security {
 	
 	private static final String passwordEncryptionAlgorithm = "MD5";

@@ -1,5 +1,8 @@
 package org.evoting.client;
 
+/*
+ * Contains user input to create a ballot and logic to hash the password.
+ */
 public class UserInputData
 {
 	private int userId;

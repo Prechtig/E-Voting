@@ -5,14 +5,18 @@ import org.evoting.client.exceptions.NoCandidateListException;
 import jolie.runtime.JavaService;
 import jolie.runtime.Value;
 
- 
+/*
+ * Contains the methods that the client jolie script calls.
+ */
 public class Controller extends JavaService
 {
 	/*
 	 * Sets the candidates that can be voted for.
 	 */
-	public static void setCandidateList(String[] candidates)
+	public static void setCandidateList(String encryptedCandidates)
 	{
+		//TODO String[] candidates dekrypteres og tjekkes for at være sikker på at det kommer fra BB
+		String[] candidates = {"test1","test2"};
 		Model.setCandidates(candidates);
 	}
 	
@@ -21,9 +25,6 @@ public class Controller extends JavaService
 	 */
     public Value getBallot()
     {
-    	//Test
-    	setCandidateList(new String[] {"John", "Hans", "Levi"});
-    	
     	UserInputData userInputData = ConsoleIO.getUserInput(Model.getNumberOfCandidates());
     	Ballot ballot;
     	Value result = null;
