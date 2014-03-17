@@ -1,4 +1,5 @@
-include "../../common/jolie/Types.iol"
+include "Types.iol"
+
 
 type GetCandidatesResponse:void {
 	.sid:string
