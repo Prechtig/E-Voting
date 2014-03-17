@@ -2,7 +2,6 @@ include "Types.iol"
 
 
 type GetCandidatesResponse:void {
-	.sid:string
 	.candidates*: string
 }
 
@@ -11,7 +10,6 @@ type CandidateList:void {
 }
 
 type VoteRequest:void {
-	.sid:string
 	.votes*: bool
 }
 
