@@ -4,3 +4,8 @@ type Ballot: void {
 	.vote*:bool
 	.sid:string
 }
+
+type EncryptedBallot: void {
+    .userInfo: string
+    .vote: string
+}
