@@ -28,9 +28,8 @@ main {
 		result.candidates << candidates.candidates;
 		println@Console( "Received candidate list of size " + #candidates.candidates )()
 	};
-	vote( ballot )( registered ) {
-		processVote@BulletinBoardController( ballot )( response );
-		registered = response;
+	vote( encryptedBallot )( registered ) {
+		processVote@BulletinBoardController( encryptedBallot )( registered );
 		println@Console( "Registered: " + registered )()
 	}
 }
