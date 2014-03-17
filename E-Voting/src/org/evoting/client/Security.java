@@ -8,8 +8,9 @@ import java.security.NoSuchAlgorithmException;
  * Contains all encryption and decryption logic for the client.
  */
 public class Security {
-	
+	// The algorithm that is used to encrypt the password.
 	private static final String passwordEncryptionAlgorithm = "MD5";
+	// The encoding used to convert the characters typed by the user.
 	private static final String bitEncoding = "UTF-8";
 
 	/*

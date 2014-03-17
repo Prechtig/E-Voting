@@ -4,7 +4,9 @@ import jolie.runtime.Value;
 
 public class Ballot
 {
+	// The id that identifies the voter among other voters.
 	private int userId;
+	// The hashed password.
 	private String password;
 	// Contains false for candidates that are not voted for and true for candidates that are voted for.
 	private boolean[] votes;

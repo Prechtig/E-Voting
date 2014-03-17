@@ -12,7 +12,11 @@ embedded {
 main
 {
 	a = "Ezalor";
-	
+	println@Console( "requesting" ) ();
+	request.ZipCode = "10007";
+	LocalTimeByZipCode@LocalTimeSoap( request )( response );
+	println@Console( response.LocalTimeByZipCodeResult ) ();
 	setCandidateList@Controller( a );
     getBallot@Controller()( b )
+    
 }
