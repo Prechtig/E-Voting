@@ -10,6 +10,8 @@ public class Model
 { 
 	// List of candidate names. The index is equal to the candidate id.
 	private static ArrayList<String> candidateList;
+	// The time stamp that marks the candidate list.
+	private static long candidateListTime;
 	// The number of candidates contained in the candidateList.
 	private static int numberOfCandidates = 0;
 	
