@@ -1,6 +1,10 @@
 include "console.iol"
 include "IClient.iol"
 
+outputPort Controller {
+    Interfaces: IClientController
+}
+
 embedded {
     Java: "org.evoting.client.Controller" in Controller
 }

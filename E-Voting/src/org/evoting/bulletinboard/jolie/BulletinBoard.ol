@@ -21,8 +21,11 @@ inputPort BulletinBoardService {
 }
 
 main {
+<<<<<<< HEAD
 	getCandidates( )( candidates ) {
+		println@Console("Someone is requesting the candidate list")();
 		getCandidates@BBJavaController( )( candidates );
+		println@Console("Got answer from embedded java service")();
 		println@Console( "Received candidate list of size " + #candidates.candidates )()
 	};
 	vote( encryptedBallot )( registered ) {
