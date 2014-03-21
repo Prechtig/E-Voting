@@ -30,7 +30,7 @@ public class Controller extends JavaService
     	Value result = null;
 		try {
 			ballot = Model.getBallot(userInputData);
-	    	result = ballot.getValue();
+	    	result = Model.getEncryptedBallot(ballot).getValue();
 	    	return result;
 		} catch (NoCandidateListException e) {
 			System.err.println("No candidate list has been retrieved from server.");

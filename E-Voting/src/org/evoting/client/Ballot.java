@@ -17,18 +17,28 @@ public class Ballot
 		this.password = password;
 		this.votes = votes;
 	}
-	
-	/*
-	 * Creates a value representation of the ballot, which has a tree structure that is XML convertible.
-	 */
-	public Value getValue() {
-		Value result = Value.create();
-		result.getNewChild("userId").setValue(userId);
-		result.getNewChild("password").setValue(password);
-		for(int i = 0; i < votes.length; i++) {
-			result.getNewChild("vote").setValue(votes[i]);;
-		}
-		
-		return result;
+
+	public int getUserId() {
+		return userId;
+	}
+
+	public void setUserId(int userId) {
+		this.userId = userId;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	public boolean[] getVotes() {
+		return votes;
+	}
+
+	public void setVotes(boolean[] votes) {
+		this.votes = votes;
 	}
 }

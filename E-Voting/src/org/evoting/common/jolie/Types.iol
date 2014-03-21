@@ -1,5 +1,6 @@
 type EncryptedBallot: void {
-    .userInfo: string
+    .userId: string
+    .passwordHash: string
+    .timeStamp: string
     .vote: string
-    .sid: string
 }

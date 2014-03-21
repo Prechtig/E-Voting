@@ -11,7 +11,7 @@ public class Model
 	// List of candidate names. The index is equal to the candidate id.
 	private static ArrayList<String> candidateList;
 	// The time stamp that marks the candidate list.
-	private static long candidateListTime;
+	private static String candidateListTime;
 	// The number of candidates contained in the candidateList.
 	private static int numberOfCandidates = 0;
 	
@@ -48,6 +48,14 @@ public class Model
 		}
 		boolean[] votes = getBooleanArrayFromCandidateId(userInputData.getCandidateId());
 		return new Ballot(userInputData.getUserId(), userInputData.getPassword(), votes);
+	}
+	
+	/*
+	 * Encrypts the ballot and adds the time stamp of the candidate list.
+	 */
+	public static EncryptedBallot getEncryptedBallot(Ballot ballot)
+	{
+		return new EncryptedBallot(ballot.getUserId(), ballot.getPassword(), candidateListTime, ballot.getVotes());
 	}
 	
 	/*

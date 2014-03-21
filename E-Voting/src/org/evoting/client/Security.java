@@ -4,6 +4,8 @@ import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
+import org.evoting.security.ISecurities;
+
 /*
  * Contains all encryption and decryption logic for the client.
  */
