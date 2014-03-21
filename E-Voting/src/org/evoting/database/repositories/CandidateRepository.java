@@ -20,7 +20,7 @@ public class CandidateRepository extends EntityRepository<Candidate>{
 	 * @return The candidate with the given id if one exists, null otherwise
 	 */
 	public Candidate findById(int candidateId) {
-		String query = "SELECT c FROM Candidate c WHERE candidateId = ?";
+		String query = "SELECT c FROM Candidate c WHERE id = ?";
 		return super.findSingleByQuery(query, candidateId);
 	}
 	

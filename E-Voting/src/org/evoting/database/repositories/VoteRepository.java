@@ -21,7 +21,7 @@ public class VoteRepository extends EntityRepository<Vote> {
 	 * @return The vote for the user with the given userId, otherwise null
 	 */
 	public Vote findById(int userId) {
-		String query = "SELECT v FROM Vote v WHERE userId = ?";
+		String query = "SELECT v FROM Vote v WHERE id = ?";
 		return super.findSingleByQuery(query, userId);
 	}
 }

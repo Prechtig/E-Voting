@@ -24,6 +24,14 @@ public class Candidate extends BaseEntity {
 	}
 	
 	/**
+	 * Private constructor needed for Hibernate 
+	 */
+	@SuppressWarnings("unused")
+	private Candidate() {
+		super();
+	}
+	
+	/**
 	 * @return The name of the candidate
 	 */
 	public String getName() {

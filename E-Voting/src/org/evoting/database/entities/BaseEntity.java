@@ -21,6 +21,13 @@ abstract public class BaseEntity {
 	}
 	
 	/**
+	 * Private constructor needed for Hibernate 
+	 */
+	protected BaseEntity() {
+		//Do nothing
+	}
+	
+	/**
 	 * @return The id of the entity
 	 */
 	public int getId() {

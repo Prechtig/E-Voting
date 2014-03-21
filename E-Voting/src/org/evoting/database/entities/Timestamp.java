@@ -1,10 +1,12 @@
 package org.evoting.database.entities;
 
 import javax.persistence.Column;
+import javax.persistence.Entity;
 
 /**
  * Used to represent a timestamp
  */
+@Entity
 public class Timestamp extends BaseEntity {
 	
 	// The time
@@ -18,6 +20,14 @@ public class Timestamp extends BaseEntity {
 	public Timestamp(int id, long time) {
 		super(id);
 		this.time = time;
+	}
+	
+	/**
+	 * Private constructor needed for Hibernate 
+	 */
+	@SuppressWarnings("unused")
+	private Timestamp() {
+		super();
 	}
 	
 	/**

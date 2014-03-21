@@ -4,8 +4,10 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 
 import org.evoting.database.entities.Candidate;
+import org.evoting.database.entities.Timestamp;
 import org.evoting.database.entities.Vote;
 import org.evoting.database.repositories.CandidateRepository;
+import org.evoting.database.repositories.TimestampRepository;
 import org.evoting.database.repositories.VoteRepository;
 
 public class HibernateTest {
@@ -13,6 +15,7 @@ public class HibernateTest {
 		Vote v1 = new Vote(0, "abc");
 		Vote v2 = new Vote(1, "def");
 		Candidate c1 = new Candidate(0, "Mikkel Hvilshøj Funch");
+		Timestamp t = new Timestamp(0, 123456l);
 
 		EntityManager entMgr = EntityManagerUtil.getEntityManagerFactory()
 				.createEntityManager();
@@ -30,6 +33,11 @@ public class HibernateTest {
 		CandidateRepository cr = new CandidateRepository(entMgr);
 		if (cr.findById(c1.getId()) == null) {
 			entMgr.persist(c1);
+		}
+		
+		TimestampRepository tr = new TimestampRepository(entMgr);
+		if(tr.findByTime(t.getTime()) == null) {
+			entMgr.persist(t);
 		}
 
 		transaction.commit();

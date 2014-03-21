@@ -24,6 +24,14 @@ public class Vote extends BaseEntity {
 	}
 	
 	/**
+	 * Private constructor needed for Hibernate 
+	 */
+	@SuppressWarnings("unused")
+	private Vote() {
+		super();
+	}
+	
+	/**
 	 * @return The encrypted vote
 	 */
 	public String getCiphertext() {
