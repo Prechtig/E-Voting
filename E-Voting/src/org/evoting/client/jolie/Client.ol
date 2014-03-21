@@ -11,11 +11,9 @@ embedded {
 
 main
 {
-	a = "Ezalor";
-	println@Console( "requesting" ) ();
-	request.ZipCode = "10007";
-	LocalTimeByZipCode@LocalTimeSoap( request )( response );
-	println@Console( response.LocalTimeByZipCodeResult ) ();
+	println@Console("requesting...")();
+	getCandidates@BulletinBoardService( )( a );
+	println@Console("got candidates...")();
 	setCandidateList@Controller( a );
     getBallot@Controller()( b )
     
