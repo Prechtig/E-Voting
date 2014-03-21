@@ -1,8 +1,10 @@
-package org.evoting.database;
+package org.evoting.database.repositories;
 
 import java.util.List;
 
 import javax.persistence.EntityManager;
+
+import org.evoting.database.entities.Candidate;
 
 /**
  * Used to find candidates in the persistent storage 
@@ -19,11 +21,7 @@ public class CandidateRepository extends EntityRepository<Candidate>{
 	 */
 	public Candidate findById(int candidateId) {
 		String query = "SELECT c FROM Candidate c WHERE candidateId = ?";
-		List<Candidate> resultList = super.findByQuery(query, candidateId);
-		if(resultList.isEmpty()) {
-			return null;
-		}
-		return resultList.get(0);
+		return super.findSingleByQuery(query, candidateId);
 	}
 	
 	/**
@@ -31,7 +29,6 @@ public class CandidateRepository extends EntityRepository<Candidate>{
 	 */
 	public List<Candidate> findAll() {
 		String query = "SELECT c FROM Candidate c ORDER BY c.id";
-		List<Candidate> candidates = super.findByQuery(query);
-		return candidates;
+		return super.findByQuery(query);
 	}
 }

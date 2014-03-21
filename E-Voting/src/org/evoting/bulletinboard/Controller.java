@@ -7,8 +7,8 @@ import jolie.runtime.JavaService;
 import jolie.runtime.Value;
 
 import org.evoting.database.EntityManagerUtil;
-import org.evoting.database.Vote;
-import org.evoting.database.VoteRepository;
+import org.evoting.database.entities.Vote;
+import org.evoting.database.repositories.VoteRepository;
 
 public class Controller extends JavaService {
 

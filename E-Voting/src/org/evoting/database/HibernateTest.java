@@ -3,6 +3,11 @@ package org.evoting.database;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 
+import org.evoting.database.entities.Candidate;
+import org.evoting.database.entities.Vote;
+import org.evoting.database.repositories.CandidateRepository;
+import org.evoting.database.repositories.VoteRepository;
+
 public class HibernateTest {
 	public static void main(String[] args) {
 		Vote v1 = new Vote(0, "abc");
