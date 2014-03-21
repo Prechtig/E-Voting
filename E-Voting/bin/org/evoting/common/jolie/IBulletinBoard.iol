@@ -1,10 +1,5 @@
 include "Types.iol"
 
-
-type GetCandidatesResponse:void {
-	.candidates*: string
-}
-
 type CandidateList:void {
 	.candidates*: string
 }
@@ -14,11 +9,11 @@ type VoteRequest:void {
 }
 
 interface IBulletinBoard {
-	RequestResponse: getCandidates( void )( GetCandidatesResponse )
+	RequestResponse: getCandidates( void )( CandidateList )
 	RequestResponse: vote( EncryptedBallot )( bool )
 }
 
-interface IBulletinBoardController {
+interface IBBJavaController {
 	RequestResponse: getCandidates( void )( CandidateList )
 	RequestResponse: processVote( EncryptedBallot )( bool )
 }

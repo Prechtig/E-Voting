@@ -2,7 +2,7 @@ include "../../common/jolie/IBulletinBoard.iol"
 include "console.iol"
 
 embedded {
-    Java: "org.evoting.bulletinboard.Controller" in BulletinBoardController
+    Java: "org.evoting.bulletinboard.Controller" in BBJavaController
 }
 
 // Enables concurrent execution
@@ -10,10 +10,8 @@ execution {
 	concurrent
 }
 
-outputPort BulletinBoardController {
-    Location: "socket://localhost:8000/"
-    Protocol: sodep
-    Interfaces: IBulletinBoardController
+outputPort BBJavaController {
+    Interfaces: IBBJavaController
 }
 
 inputPort BulletinBoardService {
@@ -23,13 +21,12 @@ inputPort BulletinBoardService {
 }
 
 main {
-	getCandidates( )( result ) {
-		getCandidates@BulletinBoardController( )( candidates );
-		result.candidates << candidates.candidates;
+	getCandidates( )( candidates ) {
+		getCandidates@BBJavaController( )( candidates );
 		println@Console( "Received candidate list of size " + #candidates.candidates )()
 	};
 	vote( encryptedBallot )( registered ) {
-		processVote@BulletinBoardController( encryptedBallot )( registered );
+		processVote@BBJavaController( encryptedBallot )( registered );
 		println@Console( "Registered: " + registered )()
 	}
 }

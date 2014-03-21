@@ -52,7 +52,7 @@ public class Controller extends JavaService {
 
 	public Value getCandidates() {
 		Value candidates = Value.create();
-		
+
 		EntityManager entMgr = EntityManagerUtil.getEntityManagerFactory().createEntityManager();
 		EntityTransaction transaction = entMgr.getTransaction();
 		transaction.begin();
@@ -63,10 +63,14 @@ public class Controller extends JavaService {
 		
 		transaction.commit();
 		
-		for(Candidate c : candidateList) {
-			candidates.getNewChild("candidates").setValue(c.getName());
+		if(candidateList == null || (candidateList != null && candidateList.isEmpty())) {
+			candidates.getNewChild("candidates").setValue("Andreas");
+		} else {
+			for(Candidate c : candidateList) {
+				candidates.getNewChild("candidates").setValue(c.getName());
+			}
 		}
-		
+
 		return candidates;
 	}
 }

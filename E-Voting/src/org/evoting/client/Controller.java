@@ -13,7 +13,7 @@ public class Controller extends JavaService
 	/*
 	 * Sets the candidates that can be voted for.
 	 */
-	public static void setCandidateList(String encryptedCandidates)
+	public static void setCandidateList(Value encryptedCandidates)
 	{
 		//TODO String[] candidates dekrypteres og tjekkes for at være sikker på at det kommer fra BB
 		String[] candidates = {"test1","test2"};
