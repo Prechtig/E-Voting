@@ -16,12 +16,8 @@ public class Controller extends JavaService {
 
 	public Value processVote(Value encryptedBallot) {
 		Value voteRegistered = Value.create(false);
-<<<<<<< HEAD
-/*
-=======
 
 		/*
->>>>>>> 5074d1beac22e15ef46b5e66300386208e6ec401
 		// Get the values from the ballot
 		String userInfo = encryptedBallot.getChildren("userInfo").get(0).strValue();
 		String votes = encryptedBallot.getChildren("vote").get(0).strValue();
@@ -49,12 +45,8 @@ public class Controller extends JavaService {
 			vote.setCiphertext(passwordHash);
 		}
 		//Commit the transaction
-<<<<<<< HEAD
-		transaction.commit();*/
-=======
 		transaction.commit();
 		*/
->>>>>>> 5074d1beac22e15ef46b5e66300386208e6ec401
 		return voteRegistered;
 	}
 
