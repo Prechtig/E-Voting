@@ -36,7 +36,7 @@ public class Controller extends JavaService {
 		
 		if(vote == null) {
 			//Persist the vote if the user hasn't voted yet
-			vr.persist(vote);
+			entMgr.persist(vote);
 		} else {
 			//Update the ciphertext if the user has voted before
 			vote.setCiphertext(ciphertext);

@@ -30,8 +30,4 @@ public class VoteRepository {
 		}
 		return resultList.get(0);
 	}
-	
-	public void persist(Vote vote) {
-		entMgr.persist(vote);
-	}
 }
