@@ -4,13 +4,19 @@ import java.io.Console;
 
 public class ConsoleIO
 {	
-	public static UserInputData getUserInput()
+	/*
+	 * Gets user input data required to create a ballot from console.
+	 */
+	public static UserInputData getUserInput(int numberOfCandidates)
 	{
 		Console console = System.console();
 		String input = "";
 		int userId, candidateId;
 		String password;
 		UserInputData userData = new UserInputData();
+		
+		//Test
+		System.out.println(numberOfCandidates);
 		
 		while(!isCPRNumber(input)) {
 			System.out.println("Enter CPR number:");
@@ -36,10 +42,10 @@ public class ConsoleIO
 		password = input;
 		input = "";
 		
-		while(!isCandidateId(input)) {
+		while(!isCandidateId(input, numberOfCandidates)) {
 			System.out.println("Enter the ID of the candidate that you want to vote for:");
 			input = console.readLine();
-			if(!isCandidateId(input)) {
+			if(!isCandidateId(input, numberOfCandidates)) {
 				System.out.println("The input does not match any legal candidate IDs");
 				System.out.println("");
 			}
@@ -76,8 +82,14 @@ public class ConsoleIO
 		return true;
 	}
 	
-	private static boolean isCandidateId(String str)
+	private static boolean isCandidateId(String str, int numberOfCandidates)
 	{
-		return isNumber(str);
+		int candidateId;
+		if(isNumber(str)) {
+			candidateId = Integer.parseInt(str);
+		} else {
+			return false;
+		}
+		return  0 <= candidateId && candidateId < numberOfCandidates;
 	}
 }

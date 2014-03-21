@@ -1,5 +1,8 @@
 package org.evoting.client;
 
+/*
+ * Contains user input to create a ballot and logic to hash the password.
+ */
 public class UserInputData
 {
 	private int userId;
@@ -16,7 +19,7 @@ public class UserInputData
 		return password;
 	}
 	public void setPassword(String password) {
-		this.password = password;
+		this.password = Security.encryptPassword(password);
 	}
 	public int getCandidateId() {
 		return candidateId;
