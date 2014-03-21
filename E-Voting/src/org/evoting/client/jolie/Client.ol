@@ -2,20 +2,22 @@ include "console.iol"
 include "IClient.iol"
 
 outputPort Controller {
-    Interfaces: Interface
+    Interfaces: IClientController
 }
 
 embedded {
     Java: "org.evoting.client.Controller" in Controller
 }
 
+outputPort Controller {
+    Interfaces: Interface
+}
+
 main
 {
-	a = "Ezalor";
-	println@Console( "requesting" ) ();
-	request.ZipCode = "10007";
-	LocalTimeByZipCode@LocalTimeSoap( request )( response );
-	println@Console( response.LocalTimeByZipCodeResult ) ();
+	println@Console("requesting...")();
+	getCandidates@BulletinBoardService( )( a );
+	println@Console("got candidates...")();
 	setCandidateList@Controller( a );
     getBallot@Controller()( b )
     
