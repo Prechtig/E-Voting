@@ -2,7 +2,7 @@ include "console.iol"
 include "IClient.iol"
 
 outputPort Controller {
-    Interfaces: Interface
+    Interfaces: IClientController
 }
 
 embedded {

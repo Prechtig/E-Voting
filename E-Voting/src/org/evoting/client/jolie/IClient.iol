@@ -1,7 +1,7 @@
 include "../../common/jolie/Types.iol"
 include "../../common/jolie/IBulletinBoard.iol"
 
-interface Interface {
+interface IClientController {
     RequestResponse: getBallot( void )( EncryptedBallot )
     OneWay: setCandidateList( string )
 }

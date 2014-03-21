@@ -11,8 +11,6 @@ execution {
 }
 
 outputPort BulletinBoardController {
-    Location: "socket://localhost:8000/"
-    Protocol: sodep
     Interfaces: IBulletinBoardController
 }
 
@@ -24,7 +22,9 @@ inputPort BulletinBoardService {
 
 main {
 	getCandidates( )( result ) {
+		println@Console("Someone is requesting the candidate list")();
 		getCandidates@BulletinBoardController( )( candidates );
+		println@Console("Got answer from embedded java service")();
 		result.candidates << candidates.candidates;
 		println@Console( "Received candidate list of size " + #candidates.candidates )()
 	};
