@@ -14,7 +14,7 @@ abstract public class BaseEntity {
 		this.id = id;
 	}
 	
-	public int getId() {
+	protected int getId() {
 		return this.id;
 	}
 }

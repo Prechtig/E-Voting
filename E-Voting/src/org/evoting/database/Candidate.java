@@ -15,10 +15,6 @@ public class Candidate extends BaseEntity {
 		this.name = name;
 	}
 	
-	public int getCandidateId() {
-		return super.getId();
-	}
-	
 	public String getName() {
 		return this.name;
 	}

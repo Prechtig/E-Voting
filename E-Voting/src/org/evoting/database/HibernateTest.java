@@ -15,15 +15,15 @@ public class HibernateTest {
 		transaction.begin();
 
 		VoteRepository vr = new VoteRepository(entMgr);
-		if (vr.findById(v1.getUserId()) == null) {
+		if (vr.findById(v1.getId()) == null) {
 			entMgr.persist(v1);
 		}
-		if (vr.findById(v2.getUserId()) == null) {
+		if (vr.findById(v2.getId()) == null) {
 			entMgr.persist(v2);
 		}
 
 		CandidateRepository cr = new CandidateRepository(entMgr);
-		if (cr.findById(c1.getCandidateId()) == null) {
+		if (cr.findById(c1.getId()) == null) {
 			entMgr.persist(c1);
 		}
 

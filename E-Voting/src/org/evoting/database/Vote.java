@@ -15,10 +15,6 @@ public class Vote extends BaseEntity {
 		this.ciphertext = ciphertext;
 	}
 	
-	public int getUserId() {
-		return super.getId();
-	}
-	
 	public String getCiphertext() {
 		return this.ciphertext;
 	}
