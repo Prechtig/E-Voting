@@ -2,31 +2,21 @@ package org.evoting.database;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
 @Table(name = "Votes")
-public class Vote {
-	
-	@Id
-	@Column(name = "userId", updatable = false, nullable = false)
-	private int userId;
-	
+public class Vote extends IdentifiableEntity {
 	@Column(name = "ciphertext", nullable = false)
 	private String ciphertext;
 	
-	public Vote() {
-		
-	}
-	
 	public Vote(int userId, String ciphertext) {
-		this.userId = userId;
+		super(userId);
 		this.ciphertext = ciphertext;
 	}
 	
 	public int getUserId() {
-		return this.userId;
+		return super.getId();
 	}
 	
 	public String getCiphertext() {

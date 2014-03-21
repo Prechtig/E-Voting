@@ -9,6 +9,7 @@
 
 		<!-- This is where we tell JPA/Hibernate about our @Entity objects -->
 		<class>org.evoting.database.Vote</class>
+		<class>org.evoting.database.Candidate</class>
 
 		<properties>
 			<property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver" />

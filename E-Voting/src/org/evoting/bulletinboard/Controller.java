@@ -15,14 +15,15 @@ public class Controller extends JavaService {
 	public Value processVote(Value encryptedBallot) {
 		Value voteRegistered = Value.create(false);
 
+		/*
 		// Get the values from the ballot
 		String userInfo = encryptedBallot.getChildren("userInfo").get(0).strValue();
 		String votes = encryptedBallot.getChildren("vote").get(0).strValue();
 
 		//TODO: Set the userId to the userId found in the userInfo
 		int userId;
-		//TODO: Set the ciphertext to the ciphertext found in the userInfo
-		String ciphertext;
+		//TODO: Set the passwordHash to the passwordHash found in the userInfo
+		String passwordHash;
 		
 		EntityManager entMgr = EntityManagerUtil.getEntityManagerFactory().createEntityManager();
 		VoteRepository vr = new VoteRepository(entMgr);
@@ -39,10 +40,11 @@ public class Controller extends JavaService {
 			entMgr.persist(vote);
 		} else {
 			//Update the ciphertext if the user has voted before
-			vote.setCiphertext(ciphertext);
+			vote.setCiphertext(passwordHash);
 		}
 		//Commit the transaction
 		transaction.commit();
+		*/
 		return voteRegistered;
 	}
 
