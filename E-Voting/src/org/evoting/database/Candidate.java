@@ -6,7 +6,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "Candidates")
-public class Candidate extends IdentifiableEntity {
+public class Candidate extends BaseEntity {
 	@Column(name = "name", updatable = false, nullable = false)
 	private String name;
 	

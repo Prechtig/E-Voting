@@ -6,7 +6,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "Votes")
-public class Vote extends IdentifiableEntity {
+public class Vote extends BaseEntity {
 	@Column(name = "ciphertext", nullable = false)
 	private String ciphertext;
 	

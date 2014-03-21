@@ -5,7 +5,7 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 
-abstract public class EntityRepository<T extends IdentifiableEntity> {
+abstract public class EntityRepository<T extends BaseEntity> {
 	private EntityManager entMgr;
 	private final Class<T> entityType;
 	

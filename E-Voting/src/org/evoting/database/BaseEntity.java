@@ -5,12 +5,12 @@ import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 
 @MappedSuperclass
-abstract public class IdentifiableEntity {
+abstract public class BaseEntity {
 	@Id
 	@Column(name = "id", updatable = false, nullable = false)
 	private int id;
 	
-	public IdentifiableEntity(int id) {
+	public BaseEntity(int id) {
 		this.id = id;
 	}
 	
