@@ -1,5 +1,7 @@
 package org.evoting.bulletinboard;
 
+import java.util.List;
+
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 
@@ -7,8 +9,8 @@ import jolie.runtime.JavaService;
 import jolie.runtime.Value;
 
 import org.evoting.database.EntityManagerUtil;
-import org.evoting.database.entities.Vote;
-import org.evoting.database.repositories.VoteRepository;
+import org.evoting.database.entities.Candidate;
+import org.evoting.database.repositories.CandidateRepository;
 
 public class Controller extends JavaService {
 
@@ -50,9 +52,21 @@ public class Controller extends JavaService {
 
 	public Value getCandidates() {
 		Value candidates = Value.create();
-		for (int i = 0; i < 10; i++) {
-			candidates.getNewChild("candidates").setValue("candidate_" + i);
+		
+		EntityManager entMgr = EntityManagerUtil.getEntityManagerFactory().createEntityManager();
+		EntityTransaction transaction = entMgr.getTransaction();
+		transaction.begin();
+		
+		CandidateRepository cRepo = new CandidateRepository(entMgr);
+		
+		List<Candidate> candidateList = cRepo.findAll();
+		
+		transaction.commit();
+		
+		for(Candidate c : candidateList) {
+			candidates.getNewChild("candidates").setValue(c.getName());
 		}
+		
 		return candidates;
 	}
 }
