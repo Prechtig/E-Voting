@@ -47,6 +47,13 @@ public class ElGamalHandler {
 		engine.init(true, localElGamalPublicKeyParameters);
 		byte[] encrypted3 = engine.processBlock(bytem, 0, bytem.length);
 		
+		
+		//String a = bytes2String(encrypted);
+		
+		//byte[] b = a.getBytes();
+		
+		
+		
 		engine.init(false, localElGamalPrivateKeyParameters);
 		byte[] decrypted = engine.processBlock(encrypted, 0, encrypted.length);
 		
@@ -61,7 +68,14 @@ public class ElGamalHandler {
 	
 	
 	
-	
+	   private static String bytes2String(byte[] bytes) {
+		    StringBuilder string = new StringBuilder();
+		    for (byte b : bytes) {
+		        String hexString = Integer.toHexString(0x00FF & b);
+		        string.append(hexString.length() == 1 ? "0" + hexString : hexString);
+		    }
+		    return string.toString();
+		}
 	
 	
 	
