@@ -9,16 +9,17 @@ embedded {
     Java: "org.evoting.client.Controller" in Controller
 }
 
-outputPort Controller {
-    Interfaces: Interface
-}
-
 main
 {
-	println@Console("requesting...")();
-	getCandidates@BulletinBoardService( )( a );
-	println@Console("got candidates...")();
-	setCandidateList@Controller( a );
+	println@Console( "Requesting candidate list..." )(  );
+	getCandidates@BulletinBoardService( )( candidateList );
+	println@Console("Got candidate list of size " + #candidateList.candidates)();
+	
+	for(i = 0, i < #candidateList.candidates, i++) {
+    	println@Console("Candidate " + i + ": " + candidateList.candidates[i] )()
+    };
+	
+	setCandidateList@Controller( candidateList );
     getBallot@Controller()( b )
     
 }

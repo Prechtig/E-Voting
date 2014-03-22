@@ -14,6 +14,6 @@ interface IBulletinBoard {
 }
 
 interface IBBJavaController {
-	RequestResponse: getCandidates( void )( CandidateList )
+	RequestResponse: getCandidateList( void )( CandidateList )
 	RequestResponse: processVote( EncryptedBallot )( bool )
 }

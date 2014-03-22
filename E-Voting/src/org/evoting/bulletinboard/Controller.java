@@ -50,7 +50,7 @@ public class Controller extends JavaService {
 		return voteRegistered;
 	}
 
-	public Value getCandidates() {
+	public Value getCandidateList() {
 		Value candidates = Value.create();
 
 		EntityManager entMgr = EntityManagerUtil.getEntityManagerFactory().createEntityManager();
