@@ -16,7 +16,6 @@ public class Controller extends JavaService {
 
 	public Value processVote(Value encryptedBallot) {
 		Value voteRegistered = Value.create(false);
-
 		/*
 		// Get the values from the ballot
 		String userInfo = encryptedBallot.getChildren("userInfo").get(0).strValue();

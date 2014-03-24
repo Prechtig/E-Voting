@@ -2,7 +2,6 @@ package org.evoting.security;
 
 import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
-import java.nio.charset.Charset;
 import java.security.SecureRandom;
 
 import org.bouncycastle.crypto.AsymmetricCipherKeyPair;
@@ -43,8 +42,8 @@ public class ElGamalTester {
 		ElGamalPrivateKeyParameters localElGamalPrivateKeyParameters = (ElGamalPrivateKeyParameters) localAsymmetricCipherKeyPair.getPrivate();
 		//
 		
-		Security s = new Security();
-		s.encryptElGamalToBB("username", "password", localElGamalPublicKeyParameters);
+		//Security s = new Security();
+		//s.encryptElGamalToBB("username", "password", localElGamalPublicKeyParameters);
 		
 		
 		/*RSA rsa = new RSA(20);
