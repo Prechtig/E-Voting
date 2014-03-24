@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.evoting.client.exceptions.NoCandidateListException;
+import org.evoting.common.EncryptedBallot;
 
 /*
  * Contains data about the candidates and logic that supports ballot creation.
