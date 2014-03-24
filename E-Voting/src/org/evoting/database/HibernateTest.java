@@ -14,7 +14,7 @@ public class HibernateTest {
 	public static void main(String[] args) {
 		Vote v1 = new Vote(0, "abc");
 		Vote v2 = new Vote(1, "def");
-		Candidate c1 = new Candidate(0, "Mikkel Hvilshøj Funch");
+		Candidate c1 = new Candidate(0, "First Candidate");
 		Timestamp t = new Timestamp(0, 123456l);
 
 		EntityManager entMgr = EntityManagerUtil.getEntityManagerFactory()
