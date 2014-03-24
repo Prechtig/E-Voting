@@ -24,7 +24,7 @@ public class EncryptedCandidateList {
 		ValueVector vector = value.getChildren(TIMESTAMP_VALUE_NAME);
 	}
 	
-	private Value getValue()
+	public Value getValue()
 	{
 		Value result = Value.create();
 		

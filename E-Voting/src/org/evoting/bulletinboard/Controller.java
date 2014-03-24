@@ -8,9 +8,15 @@ import javax.persistence.EntityTransaction;
 import jolie.runtime.JavaService;
 import jolie.runtime.Value;
 
+import org.evoting.client.CandidateList;
+import org.evoting.common.EncryptedCandidateList;
 import org.evoting.database.EntityManagerUtil;
 import org.evoting.database.entities.Candidate;
+import org.evoting.database.entities.Timestamp;
 import org.evoting.database.repositories.CandidateRepository;
+import org.evoting.database.repositories.TimestampRepository;
+import org.evoting.security.Security;
+import org.hibernate.id.GUIDGenerator;
 
 public class Controller extends JavaService {
 
@@ -53,28 +59,24 @@ public class Controller extends JavaService {
 	 * @return Returns the candidatelist as a Value, used in Jolie 
 	 */
 	public Value getCandidateList() {
-		Value candidates = Value.create();
-
 		EntityManager entMgr = EntityManagerUtil.getEntityManagerFactory().createEntityManager();
 		EntityTransaction transaction = entMgr.getTransaction();
 		transaction.begin();
 		
 		CandidateRepository cRepo = new CandidateRepository(entMgr);
 		
-		List<Candidate> candidateList = cRepo.findAll();
+		List<Candidate> candidates = cRepo.findAll();
 		
-		if(candidateList != null) {
-			for(Candidate c : candidateList) {
-				candidates.getNewChild("candidates").setValue(c.getName());
-			}
-		}
+		TimestampRepository tRepo = new TimestampRepository(entMgr);
 		
-		//TODO: Encrypt that shit!
+		Timestamp timestamp = tRepo.findTime();
+		
+		EncryptedCandidateList candidateList = new EncryptedCandidateList(candidates, timestamp.getTime());
 		
 		//Close the connection to the persistant storage
 		transaction.commit();
 		entMgr.close();
 
-		return candidates;
+		return candidateList.getValue();
 	}
 }
