@@ -10,10 +10,12 @@ public interface ISecurity {
 	//Encrypt username and password from C to BB using BB's public key
 	//public String encryptUsernameAndPassword(String u, String p);
 	public byte[] encryptElGamal(String m, ElGamalPublicKeyParameters pK); //Used in C
+	public byte[] encryptElGamal(byte[] m, ElGamalPublicKeyParameters pK);
 	
 	//Encrypt candidate list from BB to C
 	//public String encryptCandidateList(String candidates);
 	public byte[] encryptRSA(String hash, PrivateKey pK); // Used in BB
+	public byte[] encryptRSA(byte[] hash, PrivateKey pK);
 	
 	//Encrypt ballot from C to BB using A's public key
 	//public String encryptBallot(String ballot);

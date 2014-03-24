@@ -9,12 +9,16 @@ import org.bouncycastle.crypto.params.ElGamalPublicKeyParameters;
 public class Security implements ISecurity {
 
 	public static void main(String[] paramArrayOfString) {
-		SecurityTester st = new SecurityTester();
-		st.testAll();
+		
 	}
 
 	@Override
 	public byte[] encryptElGamal(String m, ElGamalPublicKeyParameters pK) {
+		return ElGamal.encrypt(m, pK);
+	}
+
+	@Override
+	public byte[] encryptElGamal(byte[] m, ElGamalPublicKeyParameters pK) {
 		return ElGamal.encrypt(m, pK);
 	}
 	
@@ -25,6 +29,11 @@ public class Security implements ISecurity {
 
 	@Override
 	public byte[] encryptRSA(String hash, PrivateKey pK) {
+		return RSA.encrypt(hash, pK);
+	}
+
+	@Override
+	public byte[] encryptRSA(byte[] hash, PrivateKey pK) {
 		return RSA.encrypt(hash, pK);
 	}
 
