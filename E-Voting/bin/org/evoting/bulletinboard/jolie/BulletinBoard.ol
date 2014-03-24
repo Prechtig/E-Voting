@@ -21,14 +21,13 @@ embedded {
 }
 
 main {
-	getCandidates( )( candidates ) {
-		println@Console("Someone is requesting the candidate list")();
-		getCandidateList@BBJavaController( )( candidates );
-		println@Console("Got answer from embedded java service")();
-		println@Console( "Received candidate list of size " + #candidates.candidates )()
-	};
-	vote( encryptedBallot )( registered ) {
+	[ getCandidates( )( candidateList ) {
+		println@Console("Someone is requesting the candidate list")(  );
+		getCandidateList@BBJavaController( )( candidateList );
+		println@Console( "Received candidate list of size " + #candidateList.candidates )(  )
+	} ]  { nullProcess }
+	[ vote( encryptedBallot )( registered ) {
 		processVote@BBJavaController( encryptedBallot )( registered );
 		println@Console( "Registered: " + registered )()
-	}
+	} ]  { nullProcess }
 }
