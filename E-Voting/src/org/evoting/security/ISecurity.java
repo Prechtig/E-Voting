@@ -26,5 +26,7 @@ public interface ISecurity {
 	public byte[] decryptElgamal(byte[] m, ElGamalPrivateKeyParameters pK);
 	public byte[] decryptRSA(byte[] m, PublicKey pK);
 	
-	public String SHA1(String m);
+	public String hash(String m);
+	
+	public byte[] sign(String m, PrivateKey pK);
 }

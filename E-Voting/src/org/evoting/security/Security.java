@@ -34,7 +34,13 @@ public class Security implements ISecurity {
 	}
 
 	@Override
-	public String SHA1(String m) {
+	public String hash(String m) {
 		return SHA1.hash(m);
+	}
+
+	@Override
+	public byte[] sign(String m, PrivateKey pK) {
+		String hash = hash(m);
+		return encryptRSA(hash, pK);
 	}
 }
