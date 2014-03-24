@@ -54,7 +54,7 @@ public class Model
 	 */
 	public static EncryptedBallot getEncryptedBallot(Ballot ballot)
 	{
-		return new EncryptedBallot(ballot.getUserId(), ballot.getPassword(), candidateListTime, ballot.getVotes());
+		return new EncryptedBallot(ballot.getUserId(), ballot.getPasswordHash(), candidateListTime, ballot.getVotes());
 	}
 	
 	/*

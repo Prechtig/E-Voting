@@ -8,15 +8,12 @@ import javax.persistence.EntityTransaction;
 import jolie.runtime.JavaService;
 import jolie.runtime.Value;
 
-import org.evoting.client.CandidateList;
 import org.evoting.common.EncryptedCandidateList;
 import org.evoting.database.EntityManagerUtil;
 import org.evoting.database.entities.Candidate;
 import org.evoting.database.entities.Timestamp;
 import org.evoting.database.repositories.CandidateRepository;
 import org.evoting.database.repositories.TimestampRepository;
-import org.evoting.security.Security;
-import org.hibernate.id.GUIDGenerator;
 
 public class Controller extends JavaService {
 
