@@ -1,6 +1,8 @@
 package org.evoting.client;
 
 import java.util.ArrayList;
+import java.util.List;
+
 import org.evoting.client.exceptions.NoCandidateListException;
 
 /*
@@ -9,9 +11,9 @@ import org.evoting.client.exceptions.NoCandidateListException;
 public class Model
 { 
 	// List of candidate names. The index is equal to the candidate id.
-	private static ArrayList<String> candidateList;
+	private static List<String> candidateList;
 	// The time stamp that marks the candidate list.
-	private static String candidateListTime;
+	private static byte[] candidateListTime;
 	// The number of candidates contained in the candidateList.
 	private static int numberOfCandidates = 0;
 	

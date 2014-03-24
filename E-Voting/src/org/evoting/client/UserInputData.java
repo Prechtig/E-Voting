@@ -19,7 +19,7 @@ public class UserInputData
 		return password;
 	}
 	public void setPassword(String password) {
-		this.password = Security.encryptPassword(password);
+		this.password = Security.hashPassword(password);
 	}
 	public int getCandidateId() {
 		return candidateId;
