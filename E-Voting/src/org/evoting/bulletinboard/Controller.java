@@ -49,6 +49,9 @@ public class Controller extends JavaService {
 		return voteRegistered;
 	}
 
+	/**
+	 * @return Returns the candidatelist as a Value, used in Jolie 
+	 */
 	public Value getCandidateList() {
 		Value candidates = Value.create();
 
@@ -60,15 +63,17 @@ public class Controller extends JavaService {
 		
 		List<Candidate> candidateList = cRepo.findAll();
 		
-		transaction.commit();
-		
-		if(candidateList == null || (candidateList != null && candidateList.isEmpty())) {
-			candidates.getNewChild("candidates").setValue("Andreas");
-		} else {
+		if(candidateList != null) {
 			for(Candidate c : candidateList) {
 				candidates.getNewChild("candidates").setValue(c.getName());
 			}
 		}
+		
+		//TODO: Encrypt that shit!
+		
+		//Close the connection to the persistant storage
+		transaction.commit();
+		entMgr.close();
 
 		return candidates;
 	}
