@@ -3,7 +3,7 @@ include "../../common/jolie/IBulletinBoard.iol"
 
 interface IClientController {
     RequestResponse: getBallot( void )( EncryptedBallot )
-    OneWay: setCandidateList( string )
+    RequestResponse: setCandidateList( string )( )
 }
 
 outputPort BulletinBoardService {

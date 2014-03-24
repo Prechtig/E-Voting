@@ -19,7 +19,7 @@ main
     	println@Console("Candidate " + i + ": " + candidateList.candidates[i] )()
     };
 	
-	setCandidateList@Controller( candidateList );
+	setCandidateList@Controller( candidateList )();
     getBallot@Controller()( b )
     
 }
