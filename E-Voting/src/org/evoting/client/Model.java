@@ -36,25 +36,20 @@ public class Model
 		return numberOfCandidates;
 	}
 	
-	/*
-	 * Creates an encrypted ballot from the user input. Fails if no legal candidates exist.
+	
+	/**
+	 * Creates an encrypted ballot from the user input.
+	 * @param userInputData The data that the user submitted to cast his vote.
+	 * @return An encrypted ballot.
+	 * @throws NoCandidateListException
 	 */
-	public static Ballot getBallot(UserInputData userInputData) throws NoCandidateListException
+	public static EncryptedBallot getEncryptedBallot(UserInputData userInputData) throws NoCandidateListException
 	{
-		//TODO Encrypt the ballot
 		if(candidateNames == null) {
 			throw new NoCandidateListException();
 		}
 		boolean[] votes = getBooleanArrayFromCandidateId(userInputData.getCandidateId());
-		return new Ballot(userInputData.getUserId(), userInputData.getPassword(), votes);
-	}
-	
-	/*
-	 * Encrypts the ballot and adds the time stamp of the candidate list.
-	 */
-	public static EncryptedBallot getEncryptedBallot(Ballot ballot)
-	{
-		return new EncryptedBallot(ballot.getUserId(), ballot.getPasswordHash(), candidateListTime, ballot.getVotes());
+		return new EncryptedBallot(userInputData.getUserId(), userInputData.getPassword(), candidateListTime, votes);
 	}
 	
 	/*
