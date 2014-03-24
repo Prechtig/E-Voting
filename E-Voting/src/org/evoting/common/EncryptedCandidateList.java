@@ -1,11 +1,11 @@
-package org.evoting.client;
+package org.evoting.common;
 
 import java.util.List;
 
 public class EncryptedCandidateList {
 	// All the fields below are ciphertext.
-	private String timeStamp;
-	private String candidates;
+	private byte[] timeStamp;
+	private byte[] candidates;
 	
 	public EncryptedCandidateList(List<String> candidates, long timeStamp)
 	{
@@ -13,13 +13,15 @@ public class EncryptedCandidateList {
 		this.timeStamp = encryptTimeStamp(timeStamp);
 	}
 	
-	private String encryptCandidates(List<String> candidates)
+	private byte[] encryptCandidates(List<String> candidates)
 	{
-		return "";
+		byte[] result = new byte[0];
+		return result;
 	}
 	
-	private String encryptTimeStamp(long timeStamp)
+	private byte[] encryptTimeStamp(long timeStamp)
 	{
-		return "";
+		byte[] result = new byte[0];
+		return result;
 	}
 }

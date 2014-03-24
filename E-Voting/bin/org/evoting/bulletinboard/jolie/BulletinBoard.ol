@@ -1,10 +1,6 @@
 include "../../common/jolie/IBulletinBoard.iol"
 include "console.iol"
 
-embedded {
-    Java: "org.evoting.bulletinboard.Controller" in BBJavaController
-}
-
 // Enables concurrent execution
 execution { 
 	concurrent
@@ -20,11 +16,14 @@ inputPort BulletinBoardService {
     Interfaces: IBulletinBoard
 }
 
+embedded {
+    Java: "org.evoting.bulletinboard.Controller" in BBJavaController
+}
+
 main {
-<<<<<<< HEAD
 	getCandidates( )( candidates ) {
 		println@Console("Someone is requesting the candidate list")();
-		getCandidates@BBJavaController( )( candidates );
+		getCandidateList@BBJavaController( )( candidates );
 		println@Console("Got answer from embedded java service")();
 		println@Console( "Received candidate list of size " + #candidates.candidates )()
 	};

@@ -16,7 +16,7 @@ public class Security {
 	/*
 	 * Encrypts the password using the algorithm and encoding specified in the class fields.
 	 */
-	public static String encryptPassword(String password) {
+	public static String hashPassword(String password) {
 		byte[] bytesOfPassword;
 		byte[] digest = {0};
 		try {

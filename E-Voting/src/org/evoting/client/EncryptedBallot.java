@@ -7,12 +7,12 @@ import jolie.runtime.Value;
  */
 public class EncryptedBallot {
 	// All the fields below are ciphertext.
-	private String userId;
-	private String passwordHash;
-	private String timeStamp;
-	private String vote;
+	private byte[] userId;
+	private byte[] passwordHash;
+	private byte[] timeStamp;
+	private byte[] vote;
 	
-	public EncryptedBallot(int userId, String passwordHash, String timeStamp, boolean[] vote) {
+	public EncryptedBallot(int userId, String passwordHash, byte[] timeStamp, boolean[] vote) {
 		this.userId = encryptUserId(userId);
 		this.passwordHash = encryptPasswordHash(passwordHash);
 		this.timeStamp = timeStamp;
@@ -22,25 +22,28 @@ public class EncryptedBallot {
 	/*
 	 * Encrypts the userId.
 	 */
-	private String encryptUserId(int userId)
+	private byte[] encryptUserId(int userId)
 	{
-		return "";
+		byte[] result = new byte[0];
+		return result;
 	}
 	
 	/*
 	 * Encrypts the password hash.
 	 */
-	private String encryptPasswordHash(String password)
+	private byte[] encryptPasswordHash(String password)
 	{
-		return "";
+		byte[] result = new byte[0];
+		return result;
 	}
 	
 	/*
 	 * Encrypts the vote.
 	 */
-	private String encryptVote(boolean[] vote)
+	private byte[] encryptVote(boolean[] vote)
 	{
-		return "";
+		byte[] result = new byte[0];
+		return result;
 	}
 	
 	/*
