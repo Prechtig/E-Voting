@@ -11,13 +11,13 @@ public class Timestamp extends BaseEntity {
 	
 	// The time
 	@Column(name = "time", updatable = false, nullable = false, unique = true)
-	private long time;
+	private byte[] time;
 	
 	/**
 	 * @param id The id of the Timestamp
 	 * @param time The time of the Timestamp
 	 */
-	public Timestamp(int id, long time) {
+	public Timestamp(int id, byte[] time) {
 		super(id);
 		this.time = time;
 	}
@@ -33,7 +33,7 @@ public class Timestamp extends BaseEntity {
 	/**
 	 * @return The time of this timestamp
 	 */
-	public long getTime() {
+	public byte[] getTime() {
 		return this.time;
 	}
 }
