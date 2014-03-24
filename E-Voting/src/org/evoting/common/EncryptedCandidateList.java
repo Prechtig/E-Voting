@@ -13,10 +13,10 @@ public class EncryptedCandidateList {
 	private static final String TIMESTAMP_VALUE_NAME = "timestamp";
 	private static final String CANDIDATES_VALUE_NAME = "candidates";
 	
-	public EncryptedCandidateList(List<String> candidates, long timeStamp)
+	public EncryptedCandidateList(List<String> candidates, byte[] timeStamp)
 	{
 		this.candidates = encryptCandidates(candidates);
-		this.timeStamp = encryptTimeStamp(timeStamp);
+		this.timeStamp = timeStamp;
 	}
 	
 	public EncryptedCandidateList(Value value)
@@ -38,11 +38,6 @@ public class EncryptedCandidateList {
 	}
 	
 	private byte[] encryptCandidates(List<String> candidates)
-	{
-		throw new UnsupportedOperationException();
-	}
-	
-	private byte[] encryptTimeStamp(long timeStamp)
 	{
 		throw new UnsupportedOperationException();
 	}
