@@ -217,6 +217,7 @@ public class ElGamalTest {
 		BufferedReader reader = new BufferedReader(new java.io.FileReader(fileName));
 		String fileContent = reader.readLine();
 		String[] result = fileContent.split("\\s");
+		reader.close();
 		return result;
 	}
 
@@ -231,6 +232,7 @@ public class ElGamalTest {
 		RandomAccessFile file = new RandomAccessFile(fileName, "r");
 		byte[] fileContent = new byte[(int) file.length()];
 		file.read(fileContent);
+		file.close();
 		return fileContent;
 	}
 }
