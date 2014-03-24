@@ -8,26 +8,28 @@ import javax.persistence.EntityTransaction;
 import jolie.runtime.JavaService;
 import jolie.runtime.Value;
 
+import org.evoting.client.Ballot;
+import org.evoting.common.EncryptedBallot;
 import org.evoting.common.EncryptedCandidateList;
 import org.evoting.database.EntityManagerUtil;
 import org.evoting.database.entities.Candidate;
 import org.evoting.database.entities.Timestamp;
+import org.evoting.database.entities.Vote;
 import org.evoting.database.repositories.CandidateRepository;
 import org.evoting.database.repositories.TimestampRepository;
+import org.evoting.database.repositories.VoteRepository;
 
 public class Controller extends JavaService {
 
-	public Value processVote(Value encryptedBallot) {
-		Value voteRegistered = Value.create(false);
-		/*
-		// Get the values from the ballot
-		String userInfo = encryptedBallot.getChildren("userInfo").get(0).strValue();
-		String votes = encryptedBallot.getChildren("vote").get(0).strValue();
-
-		//TODO: Set the userId to the userId found in the userInfo
-		int userId;
-		//TODO: Set the passwordHash to the passwordHash found in the userInfo
-		String passwordHash;
+	public Value processVote(Value valueEncryptedBallot) {
+		EncryptedBallot encryptedBallot = new EncryptedBallot(valueEncryptedBallot);
+		Ballot ballot = encryptedBallot.getBallot();
+		
+		int userId = ballot.getUserId();
+		String passwordHash = ballot.getPasswordHash();
+		byte[] encryptedVote = ballot.getVote();
+		
+		//TODO: Check the user+passwordHash is a legal combination
 		
 		EntityManager entMgr = EntityManagerUtil.getEntityManagerFactory().createEntityManager();
 		VoteRepository vr = new VoteRepository(entMgr);
@@ -43,13 +45,13 @@ public class Controller extends JavaService {
 			//Persist the vote if the user hasn't voted yet
 			entMgr.persist(vote);
 		} else {
-			//Update the ciphertext if the user has voted before
-			vote.setCiphertext(passwordHash);
+			//Update the vote if the user has voted before
+			vote.setEncryptedVote(encryptedVote);
 		}
 		//Commit the transaction
 		transaction.commit();
-		*/
-		return voteRegistered;
+		
+		return Value.create(true);
 	}
 
 	/**

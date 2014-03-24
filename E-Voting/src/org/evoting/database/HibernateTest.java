@@ -10,8 +10,8 @@ import org.evoting.database.repositories.VoteRepository;
 
 public class HibernateTest {
 	public static void main(String[] args) {
-		Vote v1 = new Vote(0, "abc");
-		Vote v2 = new Vote(1, "def");
+		Vote v1 = new Vote(0, new byte[] { 0x00, 0x01});
+		Vote v2 = new Vote(1, new byte[] { 0x00, 0x02});
 		Candidate c1 = new Candidate(0, "First Candidate");
 
 		EntityManager entMgr = EntityManagerUtil.getEntityManagerFactory()
