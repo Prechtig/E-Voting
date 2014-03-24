@@ -55,7 +55,7 @@ public class EncryptedBallot {
 	 * @return The encrypted vote
 	 * @throws InvalidVoteException Is thrown if the vote is invalid
 	 */
-	private byte[] encryptVote(boolean[] vote) throws InvalidVoteException {
+	private byte[] encryptVote(boolean[] vote) {
 		if(voteIsValid(vote)) {
 			StringBuilder sb = new StringBuilder();
 			for(int i = 0; i < vote.length; i++) {

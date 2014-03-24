@@ -15,10 +15,10 @@ public class EncryptedCandidateList {
 	private static final String TIMESTAMP_VALUE_NAME = "timestamp";
 	private static final String CANDIDATES_VALUE_NAME = "candidates";
 	// All the fields below are ciphertext.
-	private byte[] timeStamp;
+	private byte[] timestamp;
 	private byte[] candidates;
 	
-	public EncryptedCandidateList(List<Candidate> candidates, byte[] timeStamp)
+	public EncryptedCandidateList(List<Candidate> candidates, byte[] timestamp)
 	{
 		ArrayList<String> candidateNames = new ArrayList<String>(candidates.size());
 		Candidate c;
@@ -33,18 +33,16 @@ public class EncryptedCandidateList {
 		}
 		
 		this.candidates = encryptCandidates(candidateNames);
-		this.timeStamp = timeStamp;
+		this.timestamp = timestamp;
 	}
 	
 	public EncryptedCandidateList(Value value)
 	{
 		ValueVector vector = value.getChildren(TIMESTAMP_VALUE_NAME);
-		Value byteArrayValue = vector.first();
-		timeStamp = byteArrayValue.byteArrayValue().getBytes();
+		timestamp = vector.first().byteArrayValue().getBytes();
 		
 		vector = value.getChildren(CANDIDATES_VALUE_NAME);
-		byteArrayValue = vector.first();
-		candidates = byteArrayValue.byteArrayValue().getBytes();		
+		candidates = vector.first().byteArrayValue().getBytes();		
 	}
 	
 	public CandidateList getCandidateList()
@@ -56,11 +54,8 @@ public class EncryptedCandidateList {
 	{
 		Value result = Value.create();
 		
-		Value timeStampByteArray = Value.create(new ByteArray(timeStamp));
-		result.getNewChild(TIMESTAMP_VALUE_NAME).assignValue(timeStampByteArray);
-		
-		Value candidatesByteArray = Value.create(new ByteArray(candidates));
-		result.getNewChild(CANDIDATES_VALUE_NAME).assignValue(candidatesByteArray);
+		result.getNewChild(TIMESTAMP_VALUE_NAME).setValue(new ByteArray(timestamp));
+		result.getNewChild(CANDIDATES_VALUE_NAME).setValue(new ByteArray(candidates));
 
 		return result;
 	}
