@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.evoting.client.exceptions.NoCandidateListException;
+import org.evoting.common.EncryptedBallot;
+import org.evoting.database.entities.Candidate;
 
 /*
  * Contains data about the candidates and logic that supports ballot creation.
@@ -11,7 +13,7 @@ import org.evoting.client.exceptions.NoCandidateListException;
 public class Model
 { 
 	// List of candidate names. The index is equal to the candidate id.
-	private static List<String> candidateList;
+	private static List<String> candidateNames;
 	// The time stamp that marks the candidate list.
 	private static byte[] candidateListTime;
 	// The number of candidates contained in the candidateList.
@@ -20,15 +22,10 @@ public class Model
 	/*
 	 * Sets the list of available candidates.
 	 */
-	public static void setCandidates(String[] candidates)
+	public static void setCandidates(CandidateList candidates)
 	{
-		candidateList = new ArrayList<String>();
-		for(String s : candidates) {
-			candidateList.add(s);
-		}
-		numberOfCandidates = candidateList.size();
-		//Test
-		System.out.println("Number of candidates in model: " + numberOfCandidates);
+		candidateNames = candidates.getCandidates();
+		numberOfCandidates = candidateNames.size();
 	}
 	
 	/*
@@ -45,7 +42,7 @@ public class Model
 	public static Ballot getBallot(UserInputData userInputData) throws NoCandidateListException
 	{
 		//TODO Encrypt the ballot
-		if(candidateList == null) {
+		if(candidateNames == null) {
 			throw new NoCandidateListException();
 		}
 		boolean[] votes = getBooleanArrayFromCandidateId(userInputData.getCandidateId());
@@ -65,7 +62,7 @@ public class Model
 	 */
 	private static boolean[] getBooleanArrayFromCandidateId(int candidateId)
 	{
-		boolean[] result = new boolean[candidateList.size()];
+		boolean[] result = new boolean[candidateNames.size()];
 		result[candidateId] = true;
 		return result;
 	}

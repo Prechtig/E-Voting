@@ -1,6 +1,7 @@
 package org.evoting.client;
 
 import org.evoting.client.exceptions.NoCandidateListException;
+import org.evoting.common.EncryptedCandidateList;
 
 import jolie.runtime.JavaService;
 import jolie.runtime.Value;
@@ -15,9 +16,11 @@ public class Controller extends JavaService
 	 */
 	public static void setCandidateList(Value encryptedCandidates)
 	{
-		//TODO String[] candidates dekrypteres og tjekkes for at være sikker på at det kommer fra BB
-		String[] candidates = {"test1","test2"};
-		Model.setCandidates(candidates);
+		// Interprets the value object as an encrypted candidate list.
+		EncryptedCandidateList encryptedCandidateList = new EncryptedCandidateList(encryptedCandidates);
+		// Decrypts the candidate list.
+		CandidateList candidateList = encryptedCandidateList.getCandidateList();
+		Model.setCandidates(candidateList);
 	}
 	
 	/*
