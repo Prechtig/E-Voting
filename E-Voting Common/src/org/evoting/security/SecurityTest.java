@@ -23,6 +23,8 @@ public class SecurityTest {
 	public static void setup(){
 		s = new Security();
 		
+		
+		
 		ElGamal.generateKeyPair(true);
 		ElGamalPrivateKey = ElGamal.getPrivateKey();
 		ElGamalPublicKey = ElGamal.getPublicKey();
@@ -30,6 +32,7 @@ public class SecurityTest {
 		RSA.generateKeyPair(true);
 		RSAPrivateKey = RSA.getPrivateKey();
 		RSAPublicKey = RSA.getPublicKey();
+		
 	}
 
 	@Test
