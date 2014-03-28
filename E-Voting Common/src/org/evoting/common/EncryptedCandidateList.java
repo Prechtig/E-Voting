@@ -12,6 +12,11 @@ import jolie.runtime.ValueVector;
 import org.evoting.database.entities.Candidate;
 import org.evoting.security.Security;
 
+/**
+ * This class contains fields and logic for encrypting and decrypting candidate list data.
+ * @author Mark
+ *
+ */
 public class EncryptedCandidateList
 {
 	// Name of the time stamp ciphertext in the value object.
@@ -48,6 +53,10 @@ public class EncryptedCandidateList
 		this.timestamp = timestamp;
 	}
 	
+	/**
+	 * Interprets a value as an encrypted candidate list.
+	 * @param value The value object.
+	 */
 	public EncryptedCandidateList(Value value)
 	{
 		ValueVector vector = value.getChildren(TIMESTAMP_VALUE_NAME);
