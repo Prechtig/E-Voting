@@ -18,8 +18,8 @@ public class ElGamal {
 	private static ElGamalPublicKeyParameters pubK;
 	private static ElGamalPrivateKeyParameters privK;
 
-	public static void generateKeyPair(boolean overwirte) {
-		if ((pubK == null && privK == null) || overwirte == true) {
+	public static void generateKeyPair(boolean overwrite) {
+		if ((pubK == null && privK == null) || overwrite == true) {
 			BigInteger paramBigInteger1 = g512;
 			BigInteger paramBigInteger2 = p512;
 			int paramInt2 = 0;
