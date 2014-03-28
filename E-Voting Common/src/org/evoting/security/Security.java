@@ -9,7 +9,12 @@ import org.bouncycastle.crypto.params.ElGamalPublicKeyParameters;
 public class Security implements ISecurity {
 
 	public static void main(String[] paramArrayOfString) {
-		
+		generateKeys();
+	}
+
+	public static void generateKeys() {
+		ElGamal.generateKeyPair(true);
+		RSA.generateKeyPair(true);
 	}
 
 	@Override
@@ -21,7 +26,7 @@ public class Security implements ISecurity {
 	public byte[] encryptElGamal(byte[] m, ElGamalPublicKeyParameters pK) {
 		return ElGamal.encrypt(m, pK);
 	}
-	
+
 	@Override
 	public byte[] decryptElgamal(byte[] m, ElGamalPrivateKeyParameters pK) {
 		return ElGamal.decrypt(m, pK);
@@ -51,5 +56,39 @@ public class Security implements ISecurity {
 	public byte[] sign(String m, PrivateKey pK) {
 		String hash = hash(m);
 		return encryptRSA(hash, pK);
+	}
+
+	
+	//Temporary
+	public ElGamalPublicKeyParameters getElgamalPublicKey() {
+		return ElGamal.getPublicKey();
+	}
+
+	public ElGamalPrivateKeyParameters getElgamalPrivatecKey() {
+		return ElGamal.getPrivateKey();
+	}
+
+	public PublicKey getRSAPublicKey() {
+		return RSA.getPublicKey();
+	}
+
+	public PrivateKey getRSAPrivateKey() {
+		return RSA.getPrivateKey();
+	}
+
+	public void setElGamalPublicKey(ElGamalPublicKeyParameters pubK) {
+		ElGamal.setPublicKey(pubK);
+	}
+
+	public void setElGamalPrivateKey(ElGamalPrivateKeyParameters privK) {
+		ElGamal.setPrivateKey(privK);
+	}
+
+	public void setRSAPublicKey(PublicKey pubK) {
+		RSA.setPublicKey(pubK);
+	}
+
+	public void setRSAPrivateKey(PrivateKey privK) {
+		RSA.setPrivateKey(privK);
 	}
 }

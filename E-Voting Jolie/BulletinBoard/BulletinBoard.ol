@@ -1,4 +1,4 @@
-include "../../common/jolie/IBulletinBoard.iol"
+include "../Common/IBulletinBoard.iol"
 include "console.iol"
 
 // Enables concurrent execution
@@ -23,10 +23,12 @@ embedded {
 main {
 	[ getCandidates( )( candidateList ) {
 		println@Console("Someone is requesting the candidate list")(  );
+		//Get the candidatelist from the embedded Java service
 		getCandidateList@BBJavaController( )( candidateList );
 		println@Console( "Received candidate list of size " + #candidateList.candidates )(  )
 	} ]  { nullProcess }
 	[ vote( encryptedBallot )( registered ) {
+		//Process the vote in the embedded Java service
 		processVote@BBJavaController( encryptedBallot )( registered );
 		println@Console( "Registered: " + registered )()
 	} ]  { nullProcess }

@@ -81,4 +81,14 @@ public class RSA {
 
 		return result;
 	}
+
+	public static void setPublicKey(PublicKey pubK2) {
+		// TODO Auto-generated method stub
+		pubK = pubK2;
+	}
+
+	public static void setPrivateKey(PrivateKey privK2) {
+		// TODO Auto-generated method stub
+		privK = privK2;
+	}
 }

@@ -73,4 +73,14 @@ public class ElGamal {
 
 		return result;
 	}
+
+	public static void setPublicKey(ElGamalPublicKeyParameters pubK2) {
+		// TODO Auto-generated method stub
+		pubK = pubK2;
+	}
+
+	public static void setPrivateKey(ElGamalPrivateKeyParameters privK2) {
+		// TODO Auto-generated method stub
+		privK = privK2;
+	}
 }
