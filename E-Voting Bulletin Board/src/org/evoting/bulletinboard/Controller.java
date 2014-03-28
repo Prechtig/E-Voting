@@ -1,7 +1,5 @@
 package org.evoting.bulletinboard;
 
-import java.math.BigInteger;
-import java.security.PublicKey;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -97,7 +95,7 @@ public class Controller extends JavaService {
 		
 		Value keys = Value.create();
 		
-		Value elgamalPublicKeyValue = keys.getNewChild("ElGamalPublicKey");
+		Value elgamalPublicKeyValue = keys.getNewChild("elgamalPublicKey");
 		elgamalPublicKeyValue.getNewChild("y").setValue(elgamalPublicKey.getY().toString());
 		Value elgamalParametersValue = elgamalPublicKeyValue.getNewChild("parameters");
 		elgamalParametersValue.getNewChild("p").setValue(elgamalParameters.getP().toString());
@@ -105,7 +103,7 @@ public class Controller extends JavaService {
 		elgamalParametersValue.getNewChild("l").setValue(elgamalParameters.getL());
 		
 		byte[] rsaPublicKey = security.getRSAPublicKeyBytes();
-		keys.getNewChild("RSAPublicKey").setValue(new ByteArray(rsaPublicKey));
+		keys.getNewChild("rsaPublicKey").setValue(new ByteArray(rsaPublicKey));
 		
 		return keys;
 	}

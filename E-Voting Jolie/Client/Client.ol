@@ -16,7 +16,7 @@ main
 	println@Console( publicKeys.elgamalPublicKey.parameters.p )(  );
 	println@Console( publicKeys.elgamalPublicKey.parameters.g )(  );
 	println@Console( publicKeys.elgamalPublicKey.parameters.l )(  );
-	println@Console( publicKeys.rsaPublicKey )(  );
+	println@Console( publicKeys.rsaPublicKey )(  )
 	/*
 	println@Console( "Requesting candidate list..." )(  );
 	getCandidates@BulletinBoardService( )( candidateList );
