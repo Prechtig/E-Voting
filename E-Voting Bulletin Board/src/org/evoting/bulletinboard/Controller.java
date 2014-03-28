@@ -92,4 +92,10 @@ public class Controller extends JavaService {
 	private boolean validateUser(int userId, String passwordHash) {
 		return true;
 	}
+	
+	public static void main(String[] args) {
+		Controller controller = new Controller();
+		Value v = controller.getCandidateList();
+		System.out.println(v);
+	}
 }

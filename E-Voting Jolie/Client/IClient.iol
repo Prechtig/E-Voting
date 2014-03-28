@@ -1,9 +1,9 @@
-include "../../common/jolie/Types.iol"
-include "../../common/jolie/IBulletinBoard.iol"
+include "../Common/Types.iol"
+include "../Common/IBulletinBoard.iol"
 
 interface IClientController {
     RequestResponse: getBallot( void )( EncryptedBallot )
-    RequestResponse: setCandidateList( string )( )
+    RequestResponse: setCandidateList( string )( void )
 }
 
 outputPort BulletinBoardService {
