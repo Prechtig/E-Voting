@@ -87,7 +87,7 @@ public class Controller extends JavaService {
 		return candidateList.getValue();
 	}
 	
-	public Value getKeys() {
+	public Value getPublicKeys() {
 		Security security = new Security();
 		if(!Security.keysGenerated()) {
 			Security.generateKeys();
@@ -122,7 +122,7 @@ public class Controller extends JavaService {
 	
 	public static void main(String[] args) {
 		Controller controller = new Controller();
-		controller.getKeys();
+		controller.getPublicKeys();
 		System.out.println();
 	}
 }
