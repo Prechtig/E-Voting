@@ -8,6 +8,7 @@ import javax.persistence.EntityTransaction;
 import jolie.runtime.JavaService;
 import jolie.runtime.Value;
 
+import org.evoting.bulletinboard.exceptions.InvalidUserInformationException;
 import org.evoting.common.Ballot;
 import org.evoting.common.EncryptedBallot;
 import org.evoting.common.EncryptedCandidateList;
@@ -21,15 +22,18 @@ import org.evoting.database.repositories.VoteRepository;
 
 public class Controller extends JavaService {
 
-	public Value processVote(Value valueEncryptedBallot) {
-		EncryptedBallot encryptedBallot = new EncryptedBallot(valueEncryptedBallot);
-		Ballot ballot = encryptedBallot.getBallot();
+	public boolean processVote(Value valueEncryptedBallot) {
+		Ballot ballot = new EncryptedBallot(valueEncryptedBallot).getBallot();
 		
+		//Extract needed information from the ballot
 		int userId = ballot.getUserId();
 		String passwordHash = ballot.getPasswordHash();
 		byte[] encryptedVote = ballot.getVote();
 		
-		//TODO: Check the user+passwordHash is a legal combination
+		//Check the userId+passwordHash is a legal combination
+		if(!validateUser(userId, passwordHash)) {
+			throw new InvalidUserInformationException("userId and passwordHash did not match.");
+		}
 		
 		EntityManager entMgr = EntityManagerUtil.getEntityManagerFactory().createEntityManager();
 		VoteRepository vr = new VoteRepository(entMgr);
@@ -51,7 +55,7 @@ public class Controller extends JavaService {
 		//Commit the transaction
 		transaction.commit();
 		
-		return Value.create(true);
+		return true;
 	}
 
 	/**
@@ -77,5 +81,9 @@ public class Controller extends JavaService {
 		entMgr.close();
 
 		return candidateList.getValue();
+	}
+	
+	private boolean validateUser(int userId, String passwordHash) {
+		return true;
 	}
 }
