@@ -7,7 +7,7 @@ execution {
 }
 
 outputPort BBJavaController {
-    Interfaces: IBBJavaController
+    Interfaces: IBulletinBoard
 }
 
 inputPort BulletinBoardService {

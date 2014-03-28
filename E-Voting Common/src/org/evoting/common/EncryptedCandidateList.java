@@ -7,7 +7,6 @@ import java.util.List;
 
 import jolie.runtime.ByteArray;
 import jolie.runtime.Value;
-import jolie.runtime.ValueVector;
 
 import org.evoting.database.entities.Candidate;
 import org.evoting.security.Security;
@@ -19,10 +18,6 @@ import org.evoting.security.Security;
  */
 public class EncryptedCandidateList
 {
-	// Name of the time stamp ciphertext in the value object.
-	private static final String TIMESTAMP_VALUE_NAME = "timestamp";
-	// Name of the candidates ciphertext in the value object.
-	private static final String CANDIDATES_VALUE_NAME = "candidates";
 	// Character used for converting a list of strings to a single string. Each string is seperated by this string.
 	private static final String SEPERATION_CHARACTER = "|";
 	private Security security = new Security();
@@ -59,11 +54,8 @@ public class EncryptedCandidateList
 	 */
 	public EncryptedCandidateList(Value value)
 	{
-		ValueVector vector = value.getChildren(TIMESTAMP_VALUE_NAME);
-		timestamp = vector.first().byteArrayValue().getBytes();
-		
-		vector = value.getChildren(CANDIDATES_VALUE_NAME);
-		candidates = vector.first().byteArrayValue().getBytes();		
+		timestamp = value.getFirstChild(ValueIdentifiers.TIMESTAMP).byteArrayValue().getBytes();
+		candidates = value.getFirstChild(ValueIdentifiers.CANDIDATES).byteArrayValue().getBytes();		
 	}
 	
 	/**
@@ -87,8 +79,8 @@ public class EncryptedCandidateList
 	{
 		Value result = Value.create();
 		
-		result.getNewChild(TIMESTAMP_VALUE_NAME).setValue(new ByteArray(timestamp));
-		result.getNewChild(CANDIDATES_VALUE_NAME).setValue(new ByteArray(candidates));
+		result.getNewChild(ValueIdentifiers.TIMESTAMP).setValue(new ByteArray(timestamp));
+		result.getNewChild(ValueIdentifiers.CANDIDATES).setValue(new ByteArray(candidates));
 
 		return result;
 	}
