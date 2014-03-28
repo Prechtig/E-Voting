@@ -1,13 +1,18 @@
 package org.evoting.bulletinboard;
 
+import java.math.BigInteger;
+import java.security.PublicKey;
 import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 
+import jolie.runtime.ByteArray;
 import jolie.runtime.JavaService;
 import jolie.runtime.Value;
 
+import org.bouncycastle.crypto.params.ElGamalParameters;
+import org.bouncycastle.crypto.params.ElGamalPublicKeyParameters;
 import org.evoting.bulletinboard.exceptions.InvalidUserInformationException;
 import org.evoting.common.Ballot;
 import org.evoting.common.EncryptedBallot;
@@ -19,6 +24,7 @@ import org.evoting.database.entities.Vote;
 import org.evoting.database.repositories.CandidateRepository;
 import org.evoting.database.repositories.TimestampRepository;
 import org.evoting.database.repositories.VoteRepository;
+import org.evoting.security.Security;
 
 public class Controller extends JavaService {
 
@@ -67,11 +73,9 @@ public class Controller extends JavaService {
 		transaction.begin();
 		
 		CandidateRepository cRepo = new CandidateRepository(entMgr);
-		
 		List<Candidate> candidates = cRepo.findAll();
 		
 		TimestampRepository tRepo = new TimestampRepository(entMgr);
-		
 		Timestamp timestamp = tRepo.findTime();
 		
 		EncryptedCandidateList candidateList = new EncryptedCandidateList(candidates, timestamp.getTime());
@@ -81,6 +85,29 @@ public class Controller extends JavaService {
 		entMgr.close();
 
 		return candidateList.getValue();
+	}
+	
+	public Value getKeys() {
+		Security security = new Security();
+		if(!Security.keysGenerated()) {
+			Security.generateKeys();
+		}
+		ElGamalPublicKeyParameters elgamalPublicKey = security.getElgamalPublicKey();
+		ElGamalParameters elgamalParameters = elgamalPublicKey.getParameters();
+		
+		Value keys = Value.create();
+		
+		Value elgamalPublicKeyValue = keys.getNewChild("ElGamalPublicKey");
+		elgamalPublicKeyValue.getNewChild("y").setValue(elgamalPublicKey.getY().toString());
+		Value elgamalParametersValue = elgamalPublicKeyValue.getNewChild("parameters");
+		elgamalParametersValue.getNewChild("p").setValue(elgamalParameters.getP().toString());
+		elgamalParametersValue.getNewChild("g").setValue(elgamalParameters.getG().toString());
+		elgamalParametersValue.getNewChild("l").setValue(elgamalParameters.getL());
+		
+		byte[] rsaPublicKey = security.getRSAPublicKeyBytes();
+		keys.getNewChild("RSAPublicKey").setValue(new ByteArray(rsaPublicKey));
+		
+		return keys;
 	}
 	
 	/**
@@ -95,7 +122,7 @@ public class Controller extends JavaService {
 	
 	public static void main(String[] args) {
 		Controller controller = new Controller();
-		Value v = controller.getCandidateList();
-		System.out.println(v);
+		controller.getKeys();
+		System.out.println();
 	}
 }
