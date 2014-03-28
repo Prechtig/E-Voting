@@ -12,8 +12,9 @@ import org.evoting.common.EncryptedCandidateList;
  */
 public class Controller extends JavaService
 {
-	/*
-	 * Sets the candidates that can be voted for.
+	/**
+	 * Sets the list of candidates that can be voted for.
+	 * @param encryptedCandidates The value representation of the candidate object.
 	 */
 	public static void setCandidateList(Value encryptedCandidates)
 	{

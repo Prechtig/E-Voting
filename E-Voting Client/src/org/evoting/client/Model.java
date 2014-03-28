@@ -18,8 +18,9 @@ public class Model
 	// The number of candidates contained in the candidateList.
 	private static int numberOfCandidates = 0;
 	
-	/*
+	/**
 	 * Sets the list of available candidates.
+	 * @param candidates The candidates available for voting.
 	 */
 	public static void setCandidates(CandidateList candidates)
 	{
@@ -27,8 +28,10 @@ public class Model
 		numberOfCandidates = candidateNames.size();
 	}
 	
-	/*
-	 * Returns the number of candidates available for voting. Returns zero if setCandidates has not been called.
+	
+	/**
+	 * Gets the number of candidates available for voting. Returns zero if setCandidates has not been called.
+	 * @return The number of candidates available for voting.
 	 */
 	public static int getNumberOfCandidates()
 	{
@@ -51,8 +54,10 @@ public class Model
 		return new EncryptedBallot(userInputData.getUserId(), userInputData.getPassword(), candidateListTime, votes);
 	}
 	
-	/*
+	/**
 	 * Returns a boolean array with indexes representing each candidate id and value representing whether or not he/she is voted for.
+	 * @param candidateId The index that is true in the return array.
+	 * @return Boolean array with one value set to true.
 	 */
 	private static boolean[] getBooleanArrayFromCandidateId(int candidateId)
 	{
