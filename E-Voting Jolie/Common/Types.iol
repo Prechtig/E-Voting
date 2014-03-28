@@ -9,11 +9,14 @@ type EncryptedCandidateList: void {
 	.candidates: raw
 }
 
-type ElGamalPublicKey: void {
-	.y: string
-	.parameters: void {
-		.p: string
-		.g: string
-		.l: int
+type PublicKeys: void {
+	.elgamalPublicKey: void {
+		.y: string
+		.parameters: void {
+			.p: string
+			.g: string
+			.l: int
+		}
 	}
+	.rsaPublicKey: raw
 }
