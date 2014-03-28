@@ -14,14 +14,22 @@ import org.evoting.security.Security;
 
 public class EncryptedCandidateList
 {
+	// Name of the time stamp ciphertext in the value object.
 	private static final String TIMESTAMP_VALUE_NAME = "timestamp";
+	// Name of the candidates ciphertext in the value object.
 	private static final String CANDIDATES_VALUE_NAME = "candidates";
+	// Character used for converting a list of strings to a single string. Each string is seperated by this string.
 	private static final String SEPERATION_CHARACTER = "|";
 	private Security security = new Security();
 	// All the fields below are ciphertext.
 	private byte[] timestamp;
 	private byte[] candidates;
 	
+	/**
+	 * Encrypts the names in the candidate list and constructs an object containing the encrypted names and the encrypted time stamp.
+	 * @param candidates The list of candidates to be encrypted.
+	 * @param timestamp The time stamp.
+	 */
 	public EncryptedCandidateList(List<Candidate> candidates, byte[] timestamp)
 	{
 		ArrayList<String> candidateNames = new ArrayList<String>(candidates.size());
@@ -49,6 +57,10 @@ public class EncryptedCandidateList
 		candidates = vector.first().byteArrayValue().getBytes();		
 	}
 	
+	/**
+	 * Decrypts the list and returns a decrypted object. Does not decrypt the timestamp.
+	 * @return The decrypted candidate list.
+	 */
 	public CandidateList getCandidateList()
 	{
 		byte[] b = security.decryptElgamal(candidates, null);
@@ -57,7 +69,11 @@ public class EncryptedCandidateList
 		return new CandidateList(Arrays.asList(names), timestamp);
 		
 	}
-		
+	
+	/**
+	 * Gets the value representation of this object.
+	 * @return The value representation of this object.
+	 */
 	public Value getValue()
 	{
 		Value result = Value.create();
