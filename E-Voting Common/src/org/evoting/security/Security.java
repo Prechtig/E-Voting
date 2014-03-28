@@ -13,6 +13,8 @@ import org.bouncycastle.crypto.params.ElGamalPublicKeyParameters;
 public class Security implements ISecurity {
 	
 	private static boolean keysGenerated;
+	
+	private static Security instance = new Security();
 
 	public static void main(String[] paramArrayOfString) {
 		generateKeys();
@@ -117,5 +119,10 @@ public class Security implements ISecurity {
 
 	public void setRSAPrivateKey(PrivateKey privK) {
 		RSA.setPrivateKey(privK);
+	}
+	
+	public static Security getInstance()
+	{
+		return instance;
 	}
 }

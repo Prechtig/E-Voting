@@ -7,8 +7,10 @@ import org.evoting.client.exceptions.NoCandidateListException;
 import org.evoting.common.CandidateList;
 import org.evoting.common.EncryptedCandidateList;
 
-/*
+/**
  * Contains the methods that the client jolie script calls.
+ * @author Mark
+ *
  */
 public class Controller extends JavaService
 {
@@ -23,6 +25,11 @@ public class Controller extends JavaService
 		// Decrypts the candidate list.
 		CandidateList candidateList = encryptedCandidateList.getCandidateList();
 		Model.setCandidates(candidateList);
+	}
+	
+	public static void setPublicKeys(Value publicKeyValues)
+	{
+		Model.setPublicKeys(publicKeyValues);
 	}
 	
 	/**

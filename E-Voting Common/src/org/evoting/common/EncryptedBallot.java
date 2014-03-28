@@ -20,8 +20,6 @@ public class EncryptedBallot {
 	private final String valuePasswordHash = "passwordHash";
 	private final String valueTimestamp = "timestamp";
 	private final String valueVote = "vote";
-	
-	private Security security;
 
 	/**
 	 * @param userId The userId of the voter
@@ -35,7 +33,6 @@ public class EncryptedBallot {
 		this.passwordHash = encryptPasswordHash(passwordHash);
 		this.timestamp = timeStamp;
 		this.vote = encryptVote(vote);
-		security = new Security();
 	}
 	
 	/**
@@ -63,14 +60,14 @@ public class EncryptedBallot {
 	 */
 	private byte[] encryptUserId(int userId) {
 		byte[] value = Converter.toByteArray(userId);
-		return security.encryptElGamal(value, null); //TODO: Set the key
+		return Security.getInstance().encryptElGamal(value, null); //TODO: Set the key
 	}
 	
 	/**
 	 * @return The decrypted userId
 	 */
 	private int decryptUserId() {
-		byte[] value = security.decryptElgamal(userId, null); //TODO: Set the key 
+		byte[] value = Security.getInstance().decryptElgamal(userId, null); //TODO: Set the key 
 		return Converter.toInt(value);
 	}
 
@@ -80,14 +77,14 @@ public class EncryptedBallot {
 	 * @return The encrypted passwordHash
 	 */
 	private byte[] encryptPasswordHash(String passwordHash) {
-		return security.encryptElGamal(passwordHash, null); //TODO: Set the key
+		return Security.getInstance().encryptElGamal(passwordHash, null); //TODO: Set the key
 	}
 	
 	/**
 	 * @return The decrypted passwordHash
 	 */
 	private String decryptPasswordHash() {
-		byte[] value = security.decryptElgamal(passwordHash, null); //TODO: Set the key
+		byte[] value = Security.getInstance().decryptElgamal(passwordHash, null); //TODO: Set the key
 		return new String(value);
 	}
 
@@ -107,7 +104,7 @@ public class EncryptedBallot {
 					sb.append("0");
 				}
 			}
-			return security.encryptElGamal(sb.toString(), null); //TODO: Set the key
+			return Security.getInstance().encryptElGamal(sb.toString(), null); //TODO: Set the key
 		} else {
 			throw new InvalidVoteException("Multiple candidate-votes detected.");
 		}

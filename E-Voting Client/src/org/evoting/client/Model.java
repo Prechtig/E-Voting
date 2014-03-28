@@ -2,12 +2,18 @@ package org.evoting.client;
 
 import java.util.List;
 
+import jolie.runtime.Value;
+
 import org.evoting.client.exceptions.NoCandidateListException;
 import org.evoting.common.CandidateList;
 import org.evoting.common.EncryptedBallot;
+import org.evoting.security.Security;
 
-/*
+
+/**
  * Contains data about the candidates and logic that supports ballot creation.
+ * @author Mark
+ *
  */
 public class Model
 { 
@@ -26,6 +32,17 @@ public class Model
 	{
 		candidateNames = candidates.getCandidates();
 		numberOfCandidates = candidateNames.size();
+	}
+	
+	/**
+	 * Sets the public keys for signing the ballot and decrypting the candidate list.
+	 * @param publicKeyValues
+	 */
+	public static void setPublicKeys(Value publicKeyValues)
+	{
+		Value rsaPublicKeyValue = publicKeyValues.getFirstChild("rsaPublicKey");
+		Security.getInstance().setRSAPublicKey(rsaPublicKeyValue.byteArrayValue().getBytes());
+		
 	}
 	
 	

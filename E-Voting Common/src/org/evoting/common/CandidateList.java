@@ -2,6 +2,11 @@ package org.evoting.common;
 
 import java.util.List;
 
+/**
+ * Contains names of the candidates available for voting and a time stamp.
+ * @author Mark
+ *
+ */
 public class CandidateList
 {
 	private byte[] timeStamp;

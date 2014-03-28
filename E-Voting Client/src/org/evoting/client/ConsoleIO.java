@@ -4,8 +4,10 @@ import java.io.Console;
 
 public class ConsoleIO
 {	
-	/*
+	/**
 	 * Gets user input data required to create a ballot from console.
+	 * @param numberOfCandidates the number of candidates available for voting.
+	 * @return Object containing the input data.
 	 */
 	public static UserInputData getUserInput(int numberOfCandidates)
 	{
