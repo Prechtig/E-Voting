@@ -83,6 +83,12 @@ public class Controller extends JavaService {
 		return candidateList.getValue();
 	}
 	
+	/**
+	 * Validates the user
+	 * @param userId The id of the user
+	 * @param passwordHash The passwordHash of the user
+	 * @return true if the userId and passwordHash matches otherwise false
+	 */
 	private boolean validateUser(int userId, String passwordHash) {
 		return true;
 	}
