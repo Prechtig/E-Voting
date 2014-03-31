@@ -41,11 +41,11 @@ public class ElGamalHandler {
 		ElGamalEngine engine = new ElGamalEngine();
 		engine.init(true, localElGamalPublicKeyParameters);
 		byte[] encrypted = engine.processBlock(bytem, 0, bytem.length);
-		byte[] encrypted4 = engine.processBlock(bytem, 0, bytem.length);
+		//byte[] encrypted4 = engine.processBlock(bytem, 0, bytem.length);
 		engine.init(true, localElGamalPublicKeyParameters);
-		byte[] encrypted2 = engine.processBlock(bytem, 0, bytem.length);
+		//byte[] encrypted2 = engine.processBlock(bytem, 0, bytem.length);
 		engine.init(true, localElGamalPublicKeyParameters);
-		byte[] encrypted3 = engine.processBlock(bytem, 0, bytem.length);
+		//byte[] encrypted3 = engine.processBlock(bytem, 0, bytem.length);
 		
 		
 		//String a = bytes2String(encrypted);
@@ -67,24 +67,19 @@ public class ElGamalHandler {
 	}
 	
 	
+	//TODO: Why is this not used but still here?
+	@SuppressWarnings("unused")
+	private static String bytes2String(byte[] bytes) {
+	    StringBuilder string = new StringBuilder();
+	    for (byte b : bytes) {
+	        String hexString = Integer.toHexString(0x00FF & b);
+	        string.append(hexString.length() == 1 ? "0" + hexString : hexString);
+	    }
+	    return string.toString();
+	}
 	
-	   private static String bytes2String(byte[] bytes) {
-		    StringBuilder string = new StringBuilder();
-		    for (byte b : bytes) {
-		        String hexString = Integer.toHexString(0x00FF & b);
-		        string.append(hexString.length() == 1 ? "0" + hexString : hexString);
-		    }
-		    return string.toString();
-		}
-	
-	
-	
-	
-	
-	
-	
-	
-	
+	//TODO: Why is this not used but still here?
+	@SuppressWarnings("unused")
 	private void testGeneration(int paramInt) {
 		ElGamalParametersGenerator localElGamalParametersGenerator = new ElGamalParametersGenerator();
 		localElGamalParametersGenerator.init(paramInt, 10, new SecureRandom());
@@ -116,6 +111,5 @@ public class ElGamalHandler {
 		
 		
 		System.out.println();
-		
 	}
 }
