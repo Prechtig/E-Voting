@@ -40,7 +40,7 @@ public class Controller extends JavaService {
 			throw new InvalidUserInformationException("userId and passwordHash did not match.");
 		}
 		
-		EntityManager entMgr = EntityManagerUtil.getEntityManagerFactory().createEntityManager();
+		EntityManager entMgr = EntityManagerUtil.getEntityManager();
 		VoteRepository vr = new VoteRepository(entMgr);
 		//Make a transaction
 		EntityTransaction transaction = entMgr.getTransaction();
@@ -59,6 +59,7 @@ public class Controller extends JavaService {
 		}
 		//Commit the transaction
 		transaction.commit();
+		entMgr.getEntityManagerFactory().close();
 		
 		return true;
 	}
@@ -67,28 +68,23 @@ public class Controller extends JavaService {
 	 * @return Returns the candidatelist as a Value, used in Jolie 
 	 */
 	public Value getCandidateList() {
-		try {
-			EntityManager entMgr = EntityManagerUtil.getEntityManagerFactory().createEntityManager();
-			EntityTransaction transaction = entMgr.getTransaction();
-			transaction.begin();
-			
-			CandidateRepository cRepo = new CandidateRepository(entMgr);
-			List<Candidate> candidates = cRepo.findAll();
-			
-			TimestampRepository tRepo = new TimestampRepository(entMgr);
-			Timestamp timestamp = tRepo.findTime();
-			
-			EncryptedCandidateList candidateList = new EncryptedCandidateList(candidates, timestamp.getTime());
-			
-			//Close the connection to the persistant storage
-			transaction.commit();
-			entMgr.close();
-			
-			return candidateList.getValue();
-		} catch(PersistenceException pe) {
-			pe.printStackTrace();
-		}
-		return null;
+		EntityManager entMgr = EntityManagerUtil.getEntityManagerFactory().createEntityManager();
+		EntityTransaction transaction = entMgr.getTransaction();
+		transaction.begin();
+		
+		CandidateRepository cRepo = new CandidateRepository(entMgr);
+		List<Candidate> candidates = cRepo.findAll();
+		
+		TimestampRepository tRepo = new TimestampRepository(entMgr);
+		Timestamp timestamp = tRepo.findTime();
+		
+		EncryptedCandidateList candidateList = new EncryptedCandidateList(candidates, timestamp.getTime());
+		
+		//Close the connection to the persistant storage
+		transaction.commit();
+		entMgr.getEntityManagerFactory().close();
+
+		return candidateList.getValue();
 	}
 	
 	public Value getPublicKeys() {

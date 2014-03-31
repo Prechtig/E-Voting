@@ -98,4 +98,9 @@ public class EncryptedCandidateList
 		}
 		return Security.getInstance().encryptRSA(sb.toString(), Security.getInstance().getRSAPrivateKey());
 	}
+	
+	public String toString()
+	{
+		return "Candidate ciphertext: " + candidates.toString() + "\n Timestamp ciphertext: " + timestamp.toString(); 
+	}
 }

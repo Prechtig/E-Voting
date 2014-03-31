@@ -22,8 +22,10 @@ public class Controller extends JavaService
 	{
 		// Interprets the value object as an encrypted candidate list.
 		EncryptedCandidateList encryptedCandidateList = new EncryptedCandidateList(encryptedCandidates);
+		System.out.println(encryptedCandidateList);
 		// Decrypts the candidate list.
 		CandidateList candidateList = encryptedCandidateList.getCandidateList();
+		System.out.println(candidateList.getCandidates().size());
 		Model.setCandidates(candidateList);
 	}
 	

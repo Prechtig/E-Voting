@@ -18,7 +18,6 @@ main
 	println@Console( publicKeys.elgamalPublicKey.parameters.l )(  );
 	println@Console( publicKeys.rsaPublicKey )(  );
 	getCandidateList@BulletinBoardService( )( candidateList );
-	println@Console("Got candidate list of size " + #candidateList.candidates)();
     setCandidateList@Controller( candidateList )()
 	/*
 	println@Console( "Requesting candidate list..." )(  );

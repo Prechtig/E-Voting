@@ -1,7 +1,6 @@
 package org.evoting.database;
 
 import javax.persistence.EntityManager;
-import javax.persistence.EntityTransaction;
 
 import org.evoting.database.entities.Candidate;
 import org.evoting.database.entities.Vote;
@@ -14,10 +13,8 @@ public class HibernateTest {
 		Vote v2 = new Vote(1, new byte[] { 0x7f, 0x02});
 		Candidate c1 = new Candidate(0, "First Candidate");
 
-		EntityManager entMgr = EntityManagerUtil.getEntityManagerFactory()
-				.createEntityManager();
-		EntityTransaction transaction = entMgr.getTransaction();
-		transaction.begin();
+		EntityManager entMgr = EntityManagerUtil.getEntityManager();
+		entMgr.getTransaction().begin();
 
 		VoteRepository vr = new VoteRepository(entMgr);
 		if (vr.findById(v1.getId()) == null) {
@@ -32,7 +29,7 @@ public class HibernateTest {
 			entMgr.persist(c1);
 		}
 
-		transaction.commit();
-		entMgr.close();
+		entMgr.getTransaction().commit();
+		entMgr.getEntityManagerFactory().close();
 	}
 }
