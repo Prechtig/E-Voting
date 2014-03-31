@@ -1,5 +1,39 @@
 package org.evoting.authority;
 
-public class Controller {
+import org.evoting.security.Security;
+import jolie.runtime.JavaService;
 
+public class Controller extends JavaService {
+	private static String ElGamalPublicKeyFile = "ElGamalPublicKey";
+	private static String ElGamalPrivateKeyFile = "ElGamalPrivateKey";
+	
+	public static void startElection(){
+		
+	}
+	
+	public static void stopElection(){
+		
+	}
+	
+	public static void countVotes(){
+		
+	}
+	
+	public static void generateElGamalKeys(){
+		Security.generateElGamalKeys();
+		Security.saveElGamalPrivateKey(Security.getInstance().getElgamalPrivatecKey(), ElGamalPrivateKeyFile);
+		Security.saveElGamalPublicKey(Security.getInstance().getElgamalPublicKey(), ElGamalPublicKeyFile);
+	}
+	
+	public static void loadKeys(String fileName){
+		
+	}
+	
+	public static void loadCandidates(String fileName){
+		
+	}
+	
+	public static void sendCandidates(){
+		
+	}
 }

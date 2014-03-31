@@ -23,8 +23,8 @@ public class HibernateTest {
 		Candidate c2 = new Candidate(2, "Andreas Precht Poulsen");
 		Date date = new SimpleDateFormat("yyyy-MM-dd kk").parse("2014-06-30 20");
 		Security sec = new Security();
-		if(!Security.keysGenerated()) {
-			Security.generateKeys();
+		if(!Security.RSAKeysGenerated()) {
+			Security.generateRSAKeys();
 		}
 		Timestamp t0 = new Timestamp(0, sec.encryptRSA(date.toString(), sec.getRSAPrivateKey()));
 

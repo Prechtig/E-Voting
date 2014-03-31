@@ -19,6 +19,9 @@ public class SecurityTest {
 	private static PrivateKey RSAPrivateKey;
 	private static PublicKey RSAPublicKey;
 	
+	private static String ElGamalPublicKeyFile = "ElGamalPublicKey";
+	private static String ElGamalPrivateKeyFile = "ElGamalPrivateKey";
+	
 	@BeforeClass
 	public static void setup(){
 		s = new Security();
@@ -73,5 +76,19 @@ public class SecurityTest {
 		if (!hash.equals(trueHash)) {
 			fail("SHA1 hashing failed");
 		}
+	}
+	
+	@Test
+	public void saveElgamalKeyPublic(){
+		Security.saveElGamalPublicKey(ElGamalPublicKey, ElGamalPublicKeyFile);
+		ElGamalPublicKeyParameters savedParams = Security.loadElGamalPublicKey(ElGamalPublicKeyFile);
+		assert(savedParams.equals(ElGamalPublicKey));
+	}
+	
+	@Test
+	public void saveElgamalKeyPrivate(){
+		Security.saveElGamalPrivateKey(ElGamalPrivateKey, ElGamalPrivateKeyFile);
+		ElGamalPrivateKeyParameters savedParams = Security.loadElGamalPrivateKey(ElGamalPrivateKeyFile);
+		assert(savedParams.equals(ElGamalPrivateKey));
 	}
 }
