@@ -19,7 +19,7 @@ import org.evoting.security.Security;
 public class EncryptedCandidateList
 {
 	// Character used for converting a list of strings to a single string. Each string is seperated by this string.
-	private static final String SEPERATION_CHARACTER = "|";
+	private static final String SEPERATION_CHARACTER = ".";
 	// All the fields below are ciphertext.
 	private byte[] timestamp;
 	private byte[] candidates;
@@ -65,7 +65,11 @@ public class EncryptedCandidateList
 	{
 		byte[] b = Security.getInstance().decryptRSA(candidates, Security.getInstance().getRSAPublicKey());
 		String s = new String(b, Charset.forName("UTF-8"));
+		System.out.println("candidatelist: " + s);
 		String[] names = s.split(SEPERATION_CHARACTER);
+		//String[] names = s.split(" ");
+		System.out.println(names[0]);
+		System.out.println(names[2]);
 		return new CandidateList(Arrays.asList(names), timestamp);
 		
 	}

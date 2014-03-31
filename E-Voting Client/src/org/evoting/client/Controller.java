@@ -25,7 +25,6 @@ public class Controller extends JavaService
 		System.out.println(encryptedCandidateList);
 		// Decrypts the candidate list.
 		CandidateList candidateList = encryptedCandidateList.getCandidateList();
-		System.out.println(candidateList.getCandidates().size());
 		Model.setCandidates(candidateList);
 	}
 	
