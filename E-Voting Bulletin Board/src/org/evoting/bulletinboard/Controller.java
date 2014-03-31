@@ -58,7 +58,8 @@ public class Controller extends JavaService {
 		}
 		//Commit the transaction
 		transaction.commit();
-		entMgr.getEntityManagerFactory().close();
+		//entMgr.getEntityManagerFactory().close();
+		entMgr.close();
 		
 		return true;
 	}
@@ -81,8 +82,9 @@ public class Controller extends JavaService {
 		
 		//Close the connection to the persistant storage
 		transaction.commit();
-		entMgr.getEntityManagerFactory().close();
-
+		//entMgr.getEntityManagerFactory().close();
+		entMgr.close();
+		
 		return candidateList.getValue();
 	}
 	

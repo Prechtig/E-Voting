@@ -17,6 +17,7 @@ main
 	println@Console( publicKeys.elgamalPublicKey.parameters.g )(  );
 	println@Console( publicKeys.elgamalPublicKey.parameters.l )(  );
 	println@Console( publicKeys.rsaPublicKey )(  );
+	setPublicKeys@Controller( publicKeys )();
 	getCandidateList@BulletinBoardService( )( candidateList );
     setCandidateList@Controller( candidateList )()
 	/*

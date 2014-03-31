@@ -4,6 +4,7 @@ include "../Common/IBulletinBoard.iol"
 interface IClientController {
     RequestResponse: getBallot( void )( EncryptedBallot )
     RequestResponse: setCandidateList( EncryptedCandidateList )( void )
+    RequestResponse: setPublicKeys( PublicKeys )( void )
 }
 
 outputPort BulletinBoardService {
