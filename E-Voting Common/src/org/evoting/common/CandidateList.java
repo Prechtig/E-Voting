@@ -9,17 +9,17 @@ import java.util.List;
  */
 public class CandidateList
 {
-	private byte[] timeStamp;
 	private List<String> candidates;
+	private byte[] timestamp;
 	
 	public CandidateList(List<String> candidates, byte[] timestamp)
 	{
 		this.candidates = candidates;
-		this.timeStamp = timestamp;
+		this.timestamp = timestamp;
 	}
 	
-	public byte[] getTimeStamp() {
-		return timeStamp;
+	public byte[] getTimestamp() {
+		return timestamp;
 	}
 
 	public List<String> getCandidates() {
