@@ -64,7 +64,7 @@ public class EncryptedCandidateList
 	 */
 	public CandidateList getCandidateList()
 	{
-		byte[] b = Security.getInstance().decryptElgamal(candidates, null);
+		byte[] b = Security.getInstance().decryptRSA(candidates, Security.getInstance().getRSAPublicKey());
 		String s = new String(b, Charset.forName("UTF-8"));
 		String[] names = s.split(SEPERATION_CHARACTER);
 		return new CandidateList(Arrays.asList(names), timestamp);
@@ -97,6 +97,6 @@ public class EncryptedCandidateList
 			sb.append(s);
 			sb.append(SEPERATION_CHARACTER);
 		}
-		return Security.getInstance().encryptElGamal(sb.toString(), null);
+		return Security.getInstance().encryptRSA(sb.toString(), Security.getInstance().getRSAPrivateKey());
 	}
 }
