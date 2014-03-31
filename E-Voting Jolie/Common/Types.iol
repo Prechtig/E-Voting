@@ -1,11 +1,12 @@
 type EncryptedBallot: void {
     .userId: raw
     .passwordHash: raw
-    .timeStamp: raw
+    .timestamp: raw
     .vote: raw
 }
 
 type EncryptedCandidateList: void {
+	.timestamp: raw
 	.candidates: raw
 }
 

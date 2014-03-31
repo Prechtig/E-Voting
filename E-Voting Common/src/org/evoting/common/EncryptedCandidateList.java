@@ -20,7 +20,6 @@ public class EncryptedCandidateList
 {
 	// Character used for converting a list of strings to a single string. Each string is seperated by this string.
 	private static final String SEPERATION_CHARACTER = "|";
-	private Security security = new Security();
 	// All the fields below are ciphertext.
 	private byte[] timestamp;
 	private byte[] candidates;

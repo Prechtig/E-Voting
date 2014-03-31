@@ -11,7 +11,7 @@ import org.evoting.security.Security;
 
 
 /**
- * Contains data about the candidates and logic that supports ballot creation.
+ * Contains data about the candidates and logic supporting ballot creation.
  * @author Mark
  *
  */
@@ -31,6 +31,9 @@ public class Model
 	public static void setCandidates(CandidateList candidates)
 	{
 		candidateNames = candidates.getCandidates();
+		for(String s : candidateNames) {
+			System.out.println("Candidate name in candidates: " + s);
+		}
 		numberOfCandidates = candidateNames.size();
 	}
 	

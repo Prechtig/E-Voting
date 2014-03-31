@@ -26,7 +26,7 @@ main {
 		getPublicKeys@BBJavaController( )( publicKeys )
 	} ] { nullProcess }
 
-	[ getCandidates( )( candidateList ) {
+	[ getCandidateList( )( candidateList ) {
 		println@Console("Someone is requesting the candidate list")(  );
 		//Get the candidatelist from the embedded Java service
 		getCandidateList@BBJavaController( )( candidateList );
@@ -35,7 +35,7 @@ main {
 
 	[ vote( encryptedBallot )( registered ) {
 		//Process the vote in the embedded Java service
-		processVote@BBJavaController( encryptedBallot )( registered );
+		vote@BBJavaController( encryptedBallot )( registered );
 		println@Console( "Registered: " + registered )()
 	} ]  { nullProcess }
 }

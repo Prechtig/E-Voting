@@ -15,7 +15,7 @@ public class CandidateList
 	public CandidateList(List<String> candidates, byte[] timestamp)
 	{
 		this.candidates = candidates;
-		this.timeStamp = timeStamp;
+		this.timeStamp = timestamp;
 	}
 	
 	public byte[] getTimeStamp() {

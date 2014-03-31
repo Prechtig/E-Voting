@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
+import javax.persistence.PersistenceException;
 
 import jolie.runtime.ByteArray;
 import jolie.runtime.JavaService;
@@ -26,7 +27,7 @@ import org.evoting.security.Security;
 
 public class Controller extends JavaService {
 
-	public boolean processVote(Value valueEncryptedBallot) {
+	public boolean vote(Value valueEncryptedBallot) {
 		Ballot ballot = new EncryptedBallot(valueEncryptedBallot).getBallot();
 		
 		//Extract needed information from the ballot
@@ -66,23 +67,28 @@ public class Controller extends JavaService {
 	 * @return Returns the candidatelist as a Value, used in Jolie 
 	 */
 	public Value getCandidateList() {
-		EntityManager entMgr = EntityManagerUtil.getEntityManagerFactory().createEntityManager();
-		EntityTransaction transaction = entMgr.getTransaction();
-		transaction.begin();
-		
-		CandidateRepository cRepo = new CandidateRepository(entMgr);
-		List<Candidate> candidates = cRepo.findAll();
-		
-		TimestampRepository tRepo = new TimestampRepository(entMgr);
-		Timestamp timestamp = tRepo.findTime();
-		
-		EncryptedCandidateList candidateList = new EncryptedCandidateList(candidates, timestamp.getTime());
-		
-		//Close the connection to the persistant storage
-		transaction.commit();
-		entMgr.close();
-
-		return candidateList.getValue();
+		try {
+			EntityManager entMgr = EntityManagerUtil.getEntityManagerFactory().createEntityManager();
+			EntityTransaction transaction = entMgr.getTransaction();
+			transaction.begin();
+			
+			CandidateRepository cRepo = new CandidateRepository(entMgr);
+			List<Candidate> candidates = cRepo.findAll();
+			
+			TimestampRepository tRepo = new TimestampRepository(entMgr);
+			Timestamp timestamp = tRepo.findTime();
+			
+			EncryptedCandidateList candidateList = new EncryptedCandidateList(candidates, timestamp.getTime());
+			
+			//Close the connection to the persistant storage
+			transaction.commit();
+			entMgr.close();
+			
+			return candidateList.getValue();
+		} catch(PersistenceException pe) {
+			pe.printStackTrace();
+		}
+		return null;
 	}
 	
 	public Value getPublicKeys() {
