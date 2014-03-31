@@ -22,12 +22,15 @@ public class Controller extends JavaService
 	{
 		// Interprets the value object as an encrypted candidate list.
 		EncryptedCandidateList encryptedCandidateList = new EncryptedCandidateList(encryptedCandidates);
-		System.out.println(encryptedCandidateList);
 		// Decrypts the candidate list.
 		CandidateList candidateList = encryptedCandidateList.getCandidateList();
 		Model.setCandidates(candidateList);
 	}
 	
+	/**
+	 * Sets the public keys for encryption and decryption.
+	 * @param publicKeyValues The value representation of the public keys.
+	 */
 	public static void setPublicKeys(Value publicKeyValues)
 	{
 		Model.setPublicKeys(publicKeyValues);
