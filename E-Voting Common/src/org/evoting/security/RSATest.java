@@ -17,7 +17,9 @@ public class RSATest {
 	public RSATest() {
 
 	}
-
+	
+	//TODO: Fix these warnings!
+	@SuppressWarnings("unused")
 	public void generateKeys() {
 		try {
 			KeyPairGenerator keyGen;

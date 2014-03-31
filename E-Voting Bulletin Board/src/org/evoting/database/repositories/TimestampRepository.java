@@ -33,4 +33,10 @@ public class TimestampRepository extends EntityRepository<Timestamp> {
 		}
 		return timestamps.get(0);
 	}
+	
+	public boolean timestampExists() {
+		String query = "SELECT t FROM Timestamp t";
+		List<Timestamp> timestamps = super.findByQuery(query);
+		return timestamps.size() == 1;
+	}
 }
