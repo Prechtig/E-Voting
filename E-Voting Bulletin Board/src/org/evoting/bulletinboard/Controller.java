@@ -26,7 +26,7 @@ import org.evoting.security.Security;
 
 public class Controller extends JavaService {
 
-	public boolean processVote(Value valueEncryptedBallot) {
+	public boolean vote(Value valueEncryptedBallot) {
 		Ballot ballot = new EncryptedBallot(valueEncryptedBallot).getBallot();
 		
 		//Extract needed information from the ballot
@@ -39,7 +39,7 @@ public class Controller extends JavaService {
 			throw new InvalidUserInformationException("userId and passwordHash did not match.");
 		}
 		
-		EntityManager entMgr = EntityManagerUtil.getEntityManagerFactory().createEntityManager();
+		EntityManager entMgr = EntityManagerUtil.getEntityManager();
 		VoteRepository vr = new VoteRepository(entMgr);
 		//Make a transaction
 		EntityTransaction transaction = entMgr.getTransaction();
@@ -58,6 +58,7 @@ public class Controller extends JavaService {
 		}
 		//Commit the transaction
 		transaction.commit();
+		entMgr.getEntityManagerFactory().close();
 		
 		return true;
 	}
@@ -80,7 +81,7 @@ public class Controller extends JavaService {
 		
 		//Close the connection to the persistant storage
 		transaction.commit();
-		entMgr.close();
+		entMgr.getEntityManagerFactory().close();
 
 		return candidateList.getValue();
 	}
