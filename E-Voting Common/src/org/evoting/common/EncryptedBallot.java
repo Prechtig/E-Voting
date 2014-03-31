@@ -16,11 +16,6 @@ public class EncryptedBallot {
 	private byte[] timestamp;
 	private byte[] vote;
 	
-	private final String valueUserId = "userId";
-	private final String valuePasswordHash = "passwordHash";
-	private final String valueTimestamp = "timestamp";
-	private final String valueVote = "vote";
-
 	/**
 	 * @param userId The userId of the voter
 	 * @param passwordHash The passwordHash of the voter
@@ -60,14 +55,14 @@ public class EncryptedBallot {
 	 */
 	private byte[] encryptUserId(int userId) {
 		byte[] value = Converter.toByteArray(userId);
-		return Security.getInstance().encryptElGamal(value, null); //TODO: Set the key
+		return Security.getInstance().encryptElGamal(value, Security.getInstance().getElgamalPublicKey());
 	}
 	
 	/**
 	 * @return The decrypted userId
 	 */
 	private int decryptUserId() {
-		byte[] value = Security.getInstance().decryptElgamal(userId, null); //TODO: Set the key 
+		byte[] value = Security.getInstance().decryptElgamal(userId, null); //TODO: Set the key
 		return Converter.toInt(value);
 	}
 
@@ -77,7 +72,7 @@ public class EncryptedBallot {
 	 * @return The encrypted passwordHash
 	 */
 	private byte[] encryptPasswordHash(String passwordHash) {
-		return Security.getInstance().encryptElGamal(passwordHash, null); //TODO: Set the key
+		return Security.getInstance().encryptRSA(passwordHash, null); //TODO: Set the key
 	}
 	
 	/**
