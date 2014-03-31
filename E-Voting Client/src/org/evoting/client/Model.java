@@ -44,7 +44,7 @@ public class Model
 	public static void setPublicKeys(Value publicKeyValues)
 	{
 		Value rsaPublicKeyValue = publicKeyValues.getFirstChild("rsaPublicKey");
-		Security.getInstance().setRSAPublicKey(rsaPublicKeyValue.byteArrayValue().getBytes());
+		Security.setRSAPublicKey(rsaPublicKeyValue.byteArrayValue().getBytes());
 		
 	}
 	

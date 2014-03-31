@@ -21,8 +21,8 @@ public class Controller extends JavaService {
 	
 	public static void generateElGamalKeys(){
 		Security.generateElGamalKeys();
-		Security.saveElGamalPrivateKey(Security.getInstance().getElgamalPrivatecKey(), ElGamalPrivateKeyFile);
-		Security.saveElGamalPublicKey(Security.getInstance().getElgamalPublicKey(), ElGamalPublicKeyFile);
+		Security.saveElGamalPrivateKey(Security.getElgamalPrivatecKey(), ElGamalPrivateKeyFile);
+		Security.saveElGamalPublicKey(Security.getElgamalPublicKey(), ElGamalPublicKeyFile);
 	}
 	
 	public static void loadKeys(String fileName){

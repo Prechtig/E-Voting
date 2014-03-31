@@ -22,11 +22,11 @@ public class HibernateTest {
 		Candidate c1 = new Candidate(1, "Mark Thorhauge");
 		Candidate c2 = new Candidate(2, "Andreas Precht Poulsen");
 		Date date = new SimpleDateFormat("yyyy-MM-dd kk").parse("2014-06-30 20");
-		Security sec = new Security();
+		//Security sec = new Security();
 		if(!Security.RSAKeysGenerated()) {
 			Security.generateRSAKeys();
 		}
-		Timestamp t0 = new Timestamp(0, sec.encryptRSA(date.toString(), sec.getRSAPrivateKey()));
+		Timestamp t0 = new Timestamp(0, Security.encryptRSA(date.toString(), Security.getRSAPrivateKey()));
 
 		EntityManager entMgr = EntityManagerUtil.getEntityManager();
 		entMgr.getTransaction().begin();

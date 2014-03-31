@@ -63,7 +63,7 @@ public class EncryptedCandidateList
 	 */
 	public CandidateList getCandidateList()
 	{
-		byte[] b = Security.getInstance().decryptRSA(candidates, Security.getInstance().getRSAPublicKey());
+		byte[] b = Security.decryptRSA(candidates, Security.getRSAPublicKey());
 		String s = new String(b, Charset.forName("UTF-8"));
 		String[] names = s.split(SEPERATION_CHARACTER);
 		return new CandidateList(Arrays.asList(names), timestamp);
@@ -96,7 +96,7 @@ public class EncryptedCandidateList
 			sb.append(s);
 			sb.append(SEPERATION_CHARACTER);
 		}
-		return Security.getInstance().encryptRSA(sb.toString(), Security.getInstance().getRSAPrivateKey());
+		return Security.encryptRSA(sb.toString(), Security.getRSAPrivateKey());
 	}
 	
 	public String toString()

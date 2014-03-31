@@ -55,14 +55,14 @@ public class EncryptedBallot {
 	 */
 	private byte[] encryptUserId(int userId) {
 		byte[] value = Converter.toByteArray(userId);
-		return Security.getInstance().encryptRSA(value, null);
+		return Security.encryptRSA(value, null);
 	}
 	
 	/**
 	 * @return The decrypted userId
 	 */
 	private int decryptUserId() {
-		byte[] value = Security.getInstance().decryptRSA(userId, null); //TODO: Set the key
+		byte[] value = Security.decryptRSA(userId, null); //TODO: Set the key
 		return Converter.toInt(value);
 	}
 
@@ -72,14 +72,14 @@ public class EncryptedBallot {
 	 * @return The encrypted passwordHash
 	 */
 	private byte[] encryptPasswordHash(String passwordHash) {
-		return Security.getInstance().encryptRSA(passwordHash, null); //TODO: Set the key
+		return Security.encryptRSA(passwordHash, null); //TODO: Set the key
 	}
 	
 	/**
 	 * @return The decrypted passwordHash
 	 */
 	private String decryptPasswordHash() {
-		byte[] value = Security.getInstance().decryptRSA(passwordHash, null); //TODO: Set the key
+		byte[] value = Security.decryptRSA(passwordHash, null); //TODO: Set the key
 		return new String(value);
 	}
 
@@ -99,7 +99,7 @@ public class EncryptedBallot {
 					sb.append("0");
 				}
 			}
-			return Security.getInstance().encryptElGamal(sb.toString(), null); //TODO: Set the key
+			return Security.encryptElGamal(sb.toString(), null); //TODO: Set the key
 		} else {
 			throw new InvalidVoteException("Multiple candidate-votes detected.");
 		}

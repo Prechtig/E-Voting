@@ -18,12 +18,12 @@ import org.bouncycastle.crypto.params.ElGamalParameters;
 import org.bouncycastle.crypto.params.ElGamalPrivateKeyParameters;
 import org.bouncycastle.crypto.params.ElGamalPublicKeyParameters;
 
-public class Security implements ISecurity {
+public class Security {
 	
 	private static boolean RASKeysGenerated;
 	private static boolean ElGamalKeysGenerated;
 	
-	private static Security instance = new Security();
+	//private static Security instance = new Security();
 
 	public static void main(String[] paramArrayOfString) {
 		generateKeys();
@@ -56,43 +56,35 @@ public class Security implements ISecurity {
 		return RASKeysGenerated && ElGamalKeysGenerated;
 	}
 
-	@Override
-	public byte[] encryptElGamal(String m, ElGamalPublicKeyParameters pK) {
+	public static byte[] encryptElGamal(String m, ElGamalPublicKeyParameters pK) {
 		return ElGamal.encrypt(m, pK);
 	}
 
-	@Override
-	public byte[] encryptElGamal(byte[] m, ElGamalPublicKeyParameters pK) {
+	public static byte[] encryptElGamal(byte[] m, ElGamalPublicKeyParameters pK) {
 		return ElGamal.encrypt(m, pK);
 	}
 
-	@Override
-	public byte[] decryptElgamal(byte[] m, ElGamalPrivateKeyParameters pK) {
+	public static byte[] decryptElgamal(byte[] m, ElGamalPrivateKeyParameters pK) {
 		return ElGamal.decrypt(m, pK);
 	}
 
-	@Override
-	public byte[] encryptRSA(String hash, PrivateKey pK) {
+	public static byte[] encryptRSA(String hash, PrivateKey pK) {
 		return RSA.encrypt(hash, pK);
 	}
 
-	@Override
-	public byte[] encryptRSA(byte[] hash, PrivateKey pK) {
+	public static byte[] encryptRSA(byte[] hash, PrivateKey pK) {
 		return RSA.encrypt(hash, pK);
 	}
 
-	@Override
-	public byte[] decryptRSA(byte[] m, PublicKey pK) {
+	public static byte[] decryptRSA(byte[] m, PublicKey pK) {
 		return RSA.decrypt(m, pK);
 	}
 
-	@Override
-	public String hash(String m) {
+	public static String hash(String m) {
 		return SHA1.hash(m);
 	}
 
-	@Override
-	public byte[] sign(String m, PrivateKey pK) {
+	public static byte[] sign(String m, PrivateKey pK) {
 		String hash = hash(m);
 		return encryptRSA(hash, pK);
 	}
@@ -246,39 +238,39 @@ public class Security implements ISecurity {
 
 	
 	//Temporary
-	public ElGamalPublicKeyParameters getElgamalPublicKey() {
+	public static ElGamalPublicKeyParameters getElgamalPublicKey() {
 		return ElGamal.getPublicKey();
 	}
 
-	public ElGamalPrivateKeyParameters getElgamalPrivatecKey() {
+	public static ElGamalPrivateKeyParameters getElgamalPrivatecKey() {
 		return ElGamal.getPrivateKey();
 	}
 
-	public PublicKey getRSAPublicKey() {
+	public static PublicKey getRSAPublicKey() {
 		return RSA.getPublicKey();
 	}
 	
-	public byte[] getRSAPublicKeyBytes() {
+	public static byte[] getRSAPublicKeyBytes() {
 		return getRSAPublicKey().getEncoded();
 	}
 
-	public PrivateKey getRSAPrivateKey() {
+	public static PrivateKey getRSAPrivateKey() {
 		return RSA.getPrivateKey();
 	}
 
-	public void setElGamalPublicKey(ElGamalPublicKeyParameters pubK) {
+	public static void setElGamalPublicKey(ElGamalPublicKeyParameters pubK) {
 		ElGamal.setPublicKey(pubK);
 	}
 
-	public void setElGamalPrivateKey(ElGamalPrivateKeyParameters privK) {
+	public static void setElGamalPrivateKey(ElGamalPrivateKeyParameters privK) {
 		ElGamal.setPrivateKey(privK);
 	}
 
-	public void setRSAPublicKey(PublicKey pubK) {
+	public static void setRSAPublicKey(PublicKey pubK) {
 		RSA.setPublicKey(pubK);
 	}
 	
-	public void setRSAPublicKey(byte[] pubK) {
+	public static void setRSAPublicKey(byte[] pubK) {
 		//TODO: Do proper exception handling
 		try {
 			PublicKey publicKey =  KeyFactory.getInstance("RSA").generatePublic(new X509EncodedKeySpec(pubK));
@@ -290,12 +282,12 @@ public class Security implements ISecurity {
 		}
 	}
 
-	public void setRSAPrivateKey(PrivateKey privK) {
+	public static void setRSAPrivateKey(PrivateKey privK) {
 		RSA.setPrivateKey(privK);
 	}
 	
-	public static Security getInstance()
+	/*public static Security getInstance()
 	{
 		return instance;
-	}
+	}*/
 }

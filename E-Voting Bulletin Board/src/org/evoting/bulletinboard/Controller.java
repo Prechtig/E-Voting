@@ -36,14 +36,14 @@ public class Controller extends JavaService {
 	}
 	
 	public Value getPublicKeys() {
-		Security security = Security.getInstance();
+		//Security security = Security.getInstance();
 		if(!Security.keysGenerated()) {
 			Security.generateKeys();
 		}
 		Value keys = Value.create();
 		
-		Model.setElGamalPublicKey(security, keys);
-		Model.setRSAPublicKey(security, keys);
+		Model.setElGamalPublicKey(keys);
+		Model.setRSAPublicKey(keys);
 		
 		return keys;
 	}

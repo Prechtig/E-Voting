@@ -11,8 +11,6 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 public class SecurityTest {
-	private static ISecurity s;
-	
 	private static ElGamalPrivateKeyParameters ElGamalPrivateKey;
 	private static ElGamalPublicKeyParameters ElGamalPublicKey;
 	
@@ -23,11 +21,7 @@ public class SecurityTest {
 	private static String ElGamalPrivateKeyFile = "ElGamalPrivateKey";
 	
 	@BeforeClass
-	public static void setup(){
-		s = new Security();
-		
-		
-		
+	public static void setup(){		
 		ElGamal.generateKeyPair(true);
 		ElGamalPrivateKey = ElGamal.getPrivateKey();
 		ElGamalPublicKey = ElGamal.getPublicKey();
@@ -42,8 +36,8 @@ public class SecurityTest {
 	public void testElGamal() {
 		String m = "Test String";
 
-		byte[] encrypted = s.encryptElGamal(m, ElGamalPublicKey);
-		byte[] decrypted = s.decryptElgamal(encrypted, ElGamalPrivateKey);
+		byte[] encrypted = Security.encryptElGamal(m, ElGamalPublicKey);
+		byte[] decrypted = Security.decryptElgamal(encrypted, ElGamalPrivateKey);
 
 		String result = new String(decrypted);
 
@@ -56,8 +50,8 @@ public class SecurityTest {
 	public void testRSA() {
 		String m = "Test String";
 
-		byte[] encrypted = s.encryptRSA(m, RSAPrivateKey);
-		byte[] decrypted = s.decryptRSA(encrypted, RSAPublicKey);
+		byte[] encrypted = Security.encryptRSA(m, RSAPrivateKey);
+		byte[] decrypted = Security.decryptRSA(encrypted, RSAPublicKey);
 
 		String result = new String(decrypted);
 
@@ -71,8 +65,7 @@ public class SecurityTest {
 		String m = "Test String";
 		String trueHash = "a5103f9c0b7d5ff69ddc38607c74e53d4ac120f2";
 
-		Security s = new Security();
-		String hash = s.hash(m);
+		String hash = Security.hash(m);
 		if (!hash.equals(trueHash)) {
 			fail("SHA1 hashing failed");
 		}

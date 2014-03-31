@@ -61,8 +61,8 @@ public class Model {
 		return candidateList;
 	}
 	
-	public static void setElGamalPublicKey(Security security, Value root) {
-		ElGamalPublicKeyParameters elgamalPublicKey = security.getElgamalPublicKey();
+	public static void setElGamalPublicKey(Value root) {
+		ElGamalPublicKeyParameters elgamalPublicKey = Security.getElgamalPublicKey();
 		ElGamalParameters elgamalParameters = elgamalPublicKey.getParameters();
 		
 		Value elgamalPublicKeyValue = root.getNewChild("elgamalPublicKey");
@@ -73,8 +73,8 @@ public class Model {
 		elgamalParametersValue.getNewChild("l").setValue(elgamalParameters.getL());
 	}
 	
-	public static void setRSAPublicKey(Security security, Value root) {
-		byte[] rsaPublicKey = security.getRSAPublicKeyBytes();
+	public static void setRSAPublicKey(Value root) {
+		byte[] rsaPublicKey = Security.getRSAPublicKeyBytes();
 		root.getNewChild("rsaPublicKey").setValue(new ByteArray(rsaPublicKey));
 	}
 }
