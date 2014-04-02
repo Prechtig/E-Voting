@@ -1,5 +1,6 @@
 package org.evoting.security;
 
+import java.security.Key;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.NoSuchAlgorithmException;
@@ -40,11 +41,11 @@ public class RSA {
 		return privK;
 	}
 
-	public static byte[] encrypt(String m, PrivateKey pK) {
+	public static byte[] encrypt(String m, Key pK) {
 		return encrypt(m.getBytes(), pK);
 	}
 
-	public static byte[] encrypt(byte[] m, PrivateKey pK) {
+	public static byte[] encrypt(byte[] m, Key pK) {
 		// ENCRYPT
 		byte[] result = null;
 		try {
@@ -60,11 +61,11 @@ public class RSA {
 		return result;
 	}
 
-	public static byte[] decrypt(String m, PublicKey pK) {
+	public static byte[] decrypt(String m, Key pK) {
 		return decrypt(m.getBytes(), pK);
 	}
 
-	public static byte[] decrypt(byte[] m, PublicKey pK) {
+	public static byte[] decrypt(byte[] m, Key pK) {
 		// DECRYPT
 		byte[] result = null;
 		try {

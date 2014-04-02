@@ -7,6 +7,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.math.BigInteger;
+import java.security.Key;
 import java.security.KeyFactory;
 import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
@@ -68,15 +69,15 @@ public class Security {
 		return ElGamal.decrypt(m, pK);
 	}
 
-	public static byte[] encryptRSA(String hash, PrivateKey pK) {
+	public static byte[] encryptRSA(String hash, Key pK) {
 		return RSA.encrypt(hash, pK);
 	}
 
-	public static byte[] encryptRSA(byte[] hash, PrivateKey pK) {
+	public static byte[] encryptRSA(byte[] hash, Key pK) {
 		return RSA.encrypt(hash, pK);
 	}
 
-	public static byte[] decryptRSA(byte[] m, PublicKey pK) {
+	public static byte[] decryptRSA(byte[] m, Key pK) {
 		return RSA.decrypt(m, pK);
 	}
 
