@@ -53,4 +53,9 @@ public class Controller extends JavaService
 		
 		return result;
     }
+    
+    public Value setCandidateListAndGetBallot(Value encryptedCandidates) {
+    	setCandidateList(encryptedCandidates);
+    	return getBallot();
+    }
 }

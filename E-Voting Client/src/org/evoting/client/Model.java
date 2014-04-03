@@ -31,6 +31,7 @@ public class Model
 	public static void setCandidates(CandidateList candidates)
 	{
 		candidateNames = candidates.getCandidates();
+		System.out.println("Number of canditates recieved from the BulletinBoard is " + candidateNames.size());
 		for(String s : candidateNames) {
 			System.out.println("Candidate name in candidates: " + s);
 		}

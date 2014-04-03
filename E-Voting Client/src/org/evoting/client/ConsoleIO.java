@@ -12,6 +12,7 @@ public class ConsoleIO
 	public static UserInputData getUserInput(int numberOfCandidates)
 	{
 		Console console = System.console();
+		System.out.println("Number of canditates is: " + numberOfCandidates);
 		String input = "";
 		int userId, candidateId;
 		String password;
