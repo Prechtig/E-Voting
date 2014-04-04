@@ -1,6 +1,6 @@
 package org.evoting.authority;
 
-import java.io.Console;
+import java.sql.Timestamp;
 
 import org.bouncycastle.crypto.params.ElGamalPrivateKeyParameters;
 import org.bouncycastle.crypto.params.ElGamalPublicKeyParameters;
@@ -14,34 +14,60 @@ public class ConsoleIO {
 	private static ElGamalPublicKeyParameters elGamalPublicKey;
 	private static ElGamalPrivateKeyParameters elGamalPrivateKey;
 	
+	private static boolean electionRunning;
+	private static Timestamp endTime;
+	
+	public static void initialize(boolean e, Timestamp t){
+		electionRunning = e;
+		endTime = t;
+	}
+	
 	public static void getUserInput(int numberOfCandidates)
 	{
+		while(true){
 		System.out.println("Enter commmand: ");
 		String input = System.console().readLine().toLowerCase();
 		
 		switch (input) {
 		case "start":
-			//Start Election
+			if(!electionRunning){
+				//Start Election
+			}
 			break;
 		case "stop":
-			//Stop election
+			if(electionRunning){
+				//Stop election
+			}
 			break;
 		case "load":
-			//
+			if(!electionRunning){
+				userCommandLoad();
+			}	
 			break;
 		case "generate":
 			//Generate keys
-			generateElGamalKeys();
+			if(!electionRunning){
+				generateElGamalKeys();
+			}
 			break;
 		case "send":
-			//send candidates or key
+			if(!electionRunning){
+				//send candidates or key
+			}
+
 			break;
 		case "count":
-			//count votes, only if election is over
+			if(electionRunning){
+				//count votes, only if election is over
+			}
 			break;
+		case "exit":
+			return;
 		default:
 			//Command not found
+			System.out.println("Command not found");
 			break;
+		}
 		}
 	}
 	
@@ -51,7 +77,8 @@ public class ConsoleIO {
 		
 		switch (input) {
 		case "keys": case "key":
-			//load keys
+			loadKeys(ElGamalPrivateKeyFile);
+			loadKeys(ElGamalPublicKeyFile);
 			break;
 		case "candidates": case "candidate": case "candidate list": case "candidatelist":
 			//load candidatelist
@@ -61,6 +88,25 @@ public class ConsoleIO {
 		}
 	}
 	
+	public static void userCommandSend(){
+		System.out.println("Send key or candidate list?");
+		String input = System.console().readLine().toLowerCase();
+		
+		switch (input) {
+		case "keys": case "key":
+			// send key
+			break;
+		case "candidates": case "candidate": case "candidate list": case "candidatelist":
+			//load candidatelist
+			break;
+		default:
+			break;
+		}
+	}
+	
+	/**
+	 * Generates a new set of ElGamal keys and saves them to files, only if election is not running
+	 */
 	public static void generateElGamalKeys(){
 		//If election is not running
 		Security.generateElGamalKeys();

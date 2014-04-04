@@ -1,9 +1,5 @@
 package org.evoting.security;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.math.BigInteger;
 import java.security.Key;
 import java.security.KeyFactory;
@@ -19,15 +15,19 @@ import org.bouncycastle.crypto.params.ElGamalPublicKeyParameters;
 
 public class Security {
 	
+	//True if RSA keys have been generated
 	private static boolean RASKeysGenerated;
+	//True if ElGamal keys have been generated
 	private static boolean ElGamalKeysGenerated;
 	
-	//private static Security instance = new Security();
-
+	//Main method for testing
 	public static void main(String[] paramArrayOfString) {
 		generateKeys();
 	}
 
+	/**
+	 * Generates both RSA and ElGamal key sets
+	 */
 	public static void generateKeys() {
 		ElGamal.generateKeyPair(true);
 		RSA.generateKeyPair(true);
@@ -35,211 +35,125 @@ public class Security {
 		ElGamalKeysGenerated = true;
 	}
 	
+	/**
+	 * Generate ElGamal key set and will overwrite previous key set if there is any
+	 */
 	public static void generateElGamalKeys(){
 		ElGamal.generateKeyPair(true);
 	}
 	
+	/**
+	 * Generate RSA key set and will overwrite previous key set if there is any
+	 */
 	public static void generateRSAKeys(){
 		RSA.generateKeyPair(true);
 	}
 	
+	/**
+	 * Check if RSA keys have been generated
+	 * @return if RSA keys have been generated
+	 */
 	public static boolean RSAKeysGenerated() {
 		return RASKeysGenerated;
 	}
 	
+	/**
+	 * Check if ElGamal keys have been generated
+	 * @return if ElGamal keys have been generated
+	 */
 	public static boolean ElGamalKeysGenerated() {
 		return ElGamalKeysGenerated;
 	}
 	
+	/**
+	 * Check if both RSA and ElGamal key sets have been generated
+	 * @return if both key sets have been generated
+	 */
 	public static boolean keysGenerated() {
 		return RASKeysGenerated && ElGamalKeysGenerated;
 	}
-
+	
+	/**
+	 * Encrypts a string using ElGamal
+	 * @param m The string to encrypt
+	 * @param pK the ElGamal public key used to encrypt
+	 * @return The encrypted string
+	 */
 	public static byte[] encryptElGamal(String m, ElGamalPublicKeyParameters pK) {
 		return ElGamal.encrypt(m, pK);
 	}
 
+	/**
+	 * Encrypts a byte array using ElGamal
+	 * @param m The byte array to encrypt
+	 * @param pK the ElGamal public key used to encrypt
+	 * @return The encrypted byte array
+	 */
 	public static byte[] encryptElGamal(byte[] m, ElGamalPublicKeyParameters pK) {
 		return ElGamal.encrypt(m, pK);
 	}
 
+	/**
+	 * Decrypts a byte array
+	 * @param m The byte array to decrypt
+	 * @param pK The ElGamal private key used to decrypt
+	 * @return The decrypted byte array
+	 */
 	public static byte[] decryptElgamal(byte[] m, ElGamalPrivateKeyParameters pK) {
 		return ElGamal.decrypt(m, pK);
 	}
 
+	/**
+	 * Encrypt a string using RSA
+	 * @param hash The string to encrypt
+	 * @param pK The key used to encrypt. This can be either java.security.PublicKey or .PrivateKey
+	 * @return The encrypted byte array
+	 */
 	public static byte[] encryptRSA(String hash, Key pK) {
 		return RSA.encrypt(hash, pK);
 	}
-
+	
+	
+	/**
+	 * Encrypt a byte array using RSA
+	 * @param hash byte array to encrypt
+	 * @param pK The key used to encrypt. This can be either java.security.PublicKey or .PrivateKey
+	 * @return The encrypted byte array
+	 */
 	public static byte[] encryptRSA(byte[] hash, Key pK) {
 		return RSA.encrypt(hash, pK);
 	}
 
+	/**
+	 * Decrypt a byte array using RSA
+	 * @param m byte array to decrypt
+	 * @param pK The key used to decrypt. This can be either java.security.PublicKey or .PrivateKey
+	 * @return The decrypted byte array
+	 */
 	public static byte[] decryptRSA(byte[] m, Key pK) {
 		return RSA.decrypt(m, pK);
 	}
 
+	/**
+	 * Has a string using SHA-1
+	 * @param m The string to hash
+	 * @return The hashed string
+	 */
 	public static String hash(String m) {
 		return SHA1.hash(m);
 	}
 
-	public static byte[] sign(String m, PrivateKey pK) {
+	/**
+	 * Method used to sign a string using an RSA key.
+	 * It both hashes the given string and encrypt it using the given key
+	 * @param m String to sign
+	 * @param pK The RSA key to encrypt with
+	 * @return The encrypted byte array
+	 */
+	public static byte[] sign(String m, Key pK) {
 		String hash = hash(m);
 		return encryptRSA(hash, pK);
 	}
-	
-	
-	// FILE HANDLING
-	public static ElGamalPublicKeyParameters loadElGamalPublicKey(String fileName) {
-		return null;
-		/*
-		BigInteger y = null;
-		BigInteger g = null;
-		BigInteger p = null;
-
-		try {
-			File file = new File(fileName);
-
-			if (file.exists()) {
-				FileReader fr = new FileReader(file);
-				BufferedReader br = new BufferedReader(fr);
-				String line;
-				while ((line = br.readLine()) != null) {
-					switch (line.charAt(0)) {
-					case 'y':
-						y = new BigInteger(line.substring(2));
-						break;
-					case 'g':
-						g = new BigInteger(line.substring(2));
-						break;
-					case 'p':
-						p = new BigInteger(line.substring(2));
-						break;
-					default:
-						throw new IOException("Corrupted file");
-					}
-				}
-				br.close();
-			}
-
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-		return new ElGamalPublicKeyParameters(y, new ElGamalParameters(g, p));
-		*/
-	}
-
-	public static ElGamalPrivateKeyParameters loadElGamalPrivateKey(String fileName) {
-		return null;
-		// load file
-		// get
-		/*
-		BigInteger x = null;
-		BigInteger g = null;
-		BigInteger p = null;
-
-		try {
-			File file = new File(fileName);
-
-			if (file.exists()) {
-				FileReader fr = new FileReader(file);
-				BufferedReader br = new BufferedReader(fr);
-				String line;
-				while ((line = br.readLine()) != null) {
-					switch (line.charAt(0)) {
-					case 'x':
-						x = new BigInteger(line.substring(2));
-						break;
-					case 'g':
-						g = new BigInteger(line.substring(2));
-						break;
-					case 'p':
-						p = new BigInteger(line.substring(2));
-						break;
-					default:
-						throw new IOException("Corrupted file");
-					}
-				}
-				br.close();
-			}
-
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-		return new ElGamalPrivateKeyParameters(x, new ElGamalParameters(g, p));
-		*/
-	}
-
-	public static void saveElGamalPublicKey(ElGamalPublicKeyParameters pubK, String fileName) {
-		BigInteger y = pubK.getY();
-		ElGamalParameters param = pubK.getParameters();
-		BigInteger g = param.getG();
-		BigInteger p = param.getP();
-
-		StringBuilder sb = new StringBuilder();
-		sb.append("y:");
-		sb.append(y);
-		sb.append(System.getProperty("line.separator"));
-		sb.append("g:");
-		sb.append(g);
-		sb.append(System.getProperty("line.separator"));
-		sb.append("p:");
-		sb.append(p);
-		sb.append(System.getProperty("line.separator"));
-
-		try {
-			File file = new File(fileName);
-
-			if (!file.exists()) {
-				file.createNewFile();
-			}
-
-			FileWriter fw = new FileWriter(file.getAbsoluteFile());
-			BufferedWriter bw = new BufferedWriter(fw);
-			bw.write(sb.toString());
-			bw.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-
-	// write one method to save a given string to a given filename. A static class to handle that maybe? to load and save files
-	public static void saveElGamalPrivateKey(ElGamalPrivateKeyParameters privK, String fileName) {
-		BigInteger x = privK.getX();
-		ElGamalParameters param = privK.getParameters();
-		BigInteger g = param.getG();
-		BigInteger p = param.getP();
-
-		StringBuilder sb = new StringBuilder();
-		sb.append("x:");
-		sb.append(x);
-		sb.append(System.getProperty("line.separator"));
-		sb.append("g:");
-		sb.append(g);
-		sb.append(System.getProperty("line.separator"));
-		sb.append("p:");
-		sb.append(p);
-		sb.append(System.getProperty("line.separator"));
-
-		try {
-			File file = new File(fileName);
-
-			if (!file.exists()) {
-				file.createNewFile();
-			}
-
-			FileWriter fw = new FileWriter(file.getAbsoluteFile());
-			BufferedWriter bw = new BufferedWriter(fw);
-			bw.write(sb.toString());
-			bw.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-	
-	
 
 	
 	//Temporary
