@@ -1,5 +1,6 @@
 package org.evoting.client;
 
+import java.math.BigInteger;
 import java.util.List;
 
 import jolie.runtime.Value;
@@ -7,6 +8,7 @@ import jolie.runtime.Value;
 import org.evoting.client.exceptions.NoCandidateListException;
 import org.evoting.common.CandidateList;
 import org.evoting.common.EncryptedBallot;
+import org.evoting.common.ValueIdentifiers;
 import org.evoting.security.Security;
 
 
@@ -44,7 +46,15 @@ public class Model
 	 */
 	public static void setPublicKeys(Value publicKeyValues)
 	{
-		Value rsaPublicKeyValue = publicKeyValues.getFirstChild("rsaPublicKey");
+		Value elGamalPublicKey = publicKeyValues.getFirstChild(ValueIdentifiers.ELGAMALPK);
+		Value parameters = elGamalPublicKey.getFirstChild(ValueIdentifiers.PARAMETERS);
+		Value rsaPublicKeyValue = publicKeyValues.getFirstChild(ValueIdentifiers.RSAPK);
+		BigInteger y = new BigInteger(elGamalPublicKey.getFirstChild(ValueIdentifiers.Y).strValue());
+		BigInteger p = new BigInteger(parameters.getFirstChild(ValueIdentifiers.P).strValue());
+		BigInteger g = new BigInteger(parameters.getFirstChild(ValueIdentifiers.G).strValue());
+		int l = Integer.parseInt(parameters.getFirstChild(ValueIdentifiers.L).strValue());
+		
+		Security.setElGamalPublicKey(y, p, g, l);
 		Security.setRSAPublicKey(rsaPublicKeyValue.byteArrayValue().getBytes());
 		
 	}

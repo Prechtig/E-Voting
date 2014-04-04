@@ -8,4 +8,12 @@ public class ValueIdentifiers {
 	public static String VOTE = "vote";
 	// Name of the candidates cipher text in the value object.
 	public static String CANDIDATES = "candidates";
+	//Names of the public keys and parameters in the public keys value object.
+	public static String ELGAMALPK = "elgamalPublicKey";
+	public static String PARAMETERS = "parameters";
+	public static String Y = "y";
+	public static String P = "p";
+	public static String G = "g";
+	public static String L = "l";
+	public static String RSAPK = "RSAPublicKey"; 
 }
