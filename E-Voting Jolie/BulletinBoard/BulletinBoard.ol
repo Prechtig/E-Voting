@@ -36,6 +36,6 @@ main {
 	[ vote( encryptedBallot )( registered ) {
 		//Process the vote in the embedded Java service
 		vote@BBJavaController( encryptedBallot )( registered );
-		println@Console( "Registered: " + registered )()
+		println@Console( "Registered vote: " + registered )()
 	} ]  { nullProcess }
 }

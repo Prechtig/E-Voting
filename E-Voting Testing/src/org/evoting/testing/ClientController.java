@@ -17,6 +17,7 @@ public class ClientController {
 		
 		Value encryptedCandidateList = BBController.getCandidateList();
 		Value ballot = CController.setCandidateListAndGetBallot(encryptedCandidateList);
+		BBController.vote(ballot);
 		fail("Not yet implemented");
 	}
 

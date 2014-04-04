@@ -70,7 +70,7 @@ public class EncryptedBallot {
 	 * @return The decrypted userId
 	 */
 	private int decryptUserId() {
-		byte[] value = Security.decryptRSA(userId, Security.getRSAPublicKey()); //TODO: Set the key
+		byte[] value = Security.decryptRSA(userId, Security.getRSAPrivateKey());
 		return Converter.toInt(value);
 	}
 
@@ -80,14 +80,14 @@ public class EncryptedBallot {
 	 * @return The encrypted passwordHash
 	 */
 	private byte[] encryptPasswordHash(String passwordHash) {
-		return Security.encryptRSA(passwordHash, Security.getRSAPublicKey()); //TODO: Set the key
+		return Security.encryptRSA(passwordHash, Security.getRSAPublicKey());
 	}
 	
 	/**
 	 * @return The decrypted passwordHash
 	 */
 	private String decryptPasswordHash() {
-		byte[] value = Security.decryptRSA(passwordHash, Security.getRSAPublicKey()); //TODO: Set the key
+		byte[] value = Security.decryptRSA(passwordHash, Security.getRSAPrivateKey());
 		return new String(value);
 	}
 
