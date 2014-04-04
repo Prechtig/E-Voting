@@ -54,6 +54,11 @@ public class Controller extends JavaService
 		return result;
     }
     
+    /**
+     * Sets the candidate list and requests a ballot from user input based on the candidate list provided.
+     * @param encryptedCandidates The candidate list that the ballot is to be made of.
+     * @return A value representation of the encrypted ballot.
+     */
     public Value setCandidateListAndGetBallot(Value encryptedCandidates) {
     	setCandidateList(encryptedCandidates);
     	return getBallot();

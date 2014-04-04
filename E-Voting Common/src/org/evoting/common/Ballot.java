@@ -8,9 +8,9 @@ public class Ballot
 	// The hashed password.
 	private String passwordHash;
 	// Contains the encrypted vote
-	private byte[] vote;
+	private byte[][] vote;
 	
-	public Ballot(int userId, String passwordHash, byte[] vote)
+	public Ballot(int userId, String passwordHash, byte[][] vote)
 	{
 		this.userId = userId;
 		this.passwordHash = passwordHash;
@@ -25,7 +25,7 @@ public class Ballot
 		return passwordHash;
 	}
 
-	public byte[] getVote() {
+	public byte[][] getVote() {
 		return vote;
 	}
 }
