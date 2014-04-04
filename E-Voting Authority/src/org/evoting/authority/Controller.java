@@ -21,7 +21,7 @@ public class Controller extends JavaService {
 	public static void generateElGamalKeys(){
 		//If election is not running
 		Security.generateElGamalKeys();
-		Security.saveElGamalPrivateKey(Security.getElgamalPrivatecKey(), ElGamalPrivateKeyFile);
+		Security.saveElGamalPrivateKey(Security.getElgamalPrivateKey(), ElGamalPrivateKeyFile);
 		Security.saveElGamalPublicKey(Security.getElgamalPublicKey(), ElGamalPublicKeyFile);
 	}
 	
