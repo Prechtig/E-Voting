@@ -21,7 +21,7 @@ import org.evoting.security.Security;
 
 public class Model {
 	
-	public static void processVote(int userId, byte[] encryptedVote) {
+	public static void processVote(int userId, byte[][] encryptedVote) {
 		EntityManager entMgr = EntityManagerUtil.getEntityManager();
 		VoteRepository vr = new VoteRepository(entMgr);
 		

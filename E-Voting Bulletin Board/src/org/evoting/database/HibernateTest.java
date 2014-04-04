@@ -16,8 +16,8 @@ import org.evoting.security.Security;
 
 public class HibernateTest {
 	public static void main(String[] args) throws ParseException {
-		Vote v1 = new Vote(0, new byte[] { -0x80, 0x01});
-		Vote v2 = new Vote(1, new byte[] { 0x7f, 0x02});
+		Vote v1 = new Vote(0, new byte[][] { { -0x50, 0x01 }, { -0x50, 0x01 } });
+		Vote v2 = new Vote(1, new byte[][] { { -0x33, 0x21 }, { -0x42, 0x12 } });
 		Candidate c0 = new Candidate(0, "Mikkel Hvilshøj Funch");
 		Candidate c1 = new Candidate(1, "Mark Thorhauge");
 		Candidate c2 = new Candidate(2, "Andreas Precht Poulsen");

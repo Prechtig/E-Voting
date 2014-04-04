@@ -17,7 +17,7 @@ public class Controller extends JavaService {
 		//Extract needed information from the ballot
 		int userId = ballot.getUserId();
 		String passwordHash = ballot.getPasswordHash();
-		byte[] encryptedVote = ballot.getVote();
+		byte[][] encryptedVote = ballot.getVote();
 		
 		//Check the userId+passwordHash is a legal combination
 		validateUser(userId, passwordHash);
