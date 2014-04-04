@@ -20,6 +20,14 @@ main
 	setPublicKeys@Controller( publicKeys )();
 	getCandidateList@BulletinBoardService( )( candidateList );
     setCandidateListAndGetBallot@Controller( candidateList )( ballot );
+
+    println@Console( "userId: " + ballot.userId )( );
+    println@Console( "passwordHash: " + ballot.passwordHash )( );
+    println@Console( "timestamp: " + ballot.timestamp )( );
+    println@Console( "vote[0]: " + ballot.vote[0] )( );
+    println@Console( "vote[1]: " + ballot.vote[1] )( );
+    println@Console( "vote[2]: " + ballot.vote[2] )( );
+
     vote@BulletinBoardService( ballot )( registered );
     println@Console( "The vote is registered: " + registered )( )
 	/*
