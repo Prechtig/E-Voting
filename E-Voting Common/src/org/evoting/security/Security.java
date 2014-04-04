@@ -260,7 +260,7 @@ public class Security {
 	}
 
 	public static void setElGamalPublicKey(BigInteger y, BigInteger p, BigInteger g, int l) {
-		ElGamalParameters elGamalp = new ElGamalParameters(p, g, l);
+		ElGamalParameters elGamalp = new ElGamalParameters(p, g);
 		ElGamalPublicKeyParameters elGamalpkp = new ElGamalPublicKeyParameters(y, elGamalp);
 		ElGamal.setPublicKey(elGamalpkp);
 	}

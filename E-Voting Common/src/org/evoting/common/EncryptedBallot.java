@@ -99,7 +99,7 @@ public class EncryptedBallot {
 					sb.append("0");
 				}
 			}
-			return Security.encryptElGamal(sb.toString(), null); //TODO: Set the key
+			return Security.encryptElGamal(sb.toString(), Security.getElgamalPublicKey());
 		} else {
 			throw new InvalidVoteException("Multiple candidate-votes detected.");
 		}
