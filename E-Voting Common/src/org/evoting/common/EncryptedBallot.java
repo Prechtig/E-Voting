@@ -36,16 +36,16 @@ public class EncryptedBallot {
 	 * @throws InvalidVoteException
 	 */
 	public EncryptedBallot(Value encryptedBallot) throws InvalidVoteException {
-		if(!encryptedBallot.hasChildren(ValueIdentifiers.USER_ID) ||
-			!encryptedBallot.hasChildren(ValueIdentifiers.PASSWORD_HASH) ||
-			!encryptedBallot.hasChildren(ValueIdentifiers.TIMESTAMP) ||
-			!encryptedBallot.hasChildren(ValueIdentifiers.VOTE)) {
+		if(!encryptedBallot.hasChildren(ValueIdentifiers.getUserId()) ||
+			!encryptedBallot.hasChildren(ValueIdentifiers.getPasswordHash()) ||
+			!encryptedBallot.hasChildren(ValueIdentifiers.getTimestamp()) ||
+			!encryptedBallot.hasChildren(ValueIdentifiers.getVote())) {
 			throw new InvalidVoteException("A required child was missing");
 		}
-		this.userId = encryptedBallot.getFirstChild(ValueIdentifiers.USER_ID).byteArrayValue().getBytes();
-		this.passwordHash = encryptedBallot.getFirstChild(ValueIdentifiers.PASSWORD_HASH).byteArrayValue().getBytes();
-		this.timestamp = encryptedBallot.getFirstChild(ValueIdentifiers.TIMESTAMP).byteArrayValue().getBytes();
-		this.vote = encryptedBallot.getFirstChild(ValueIdentifiers.VOTE).byteArrayValue().getBytes();
+		this.userId = encryptedBallot.getFirstChild(ValueIdentifiers.getUserId()).byteArrayValue().getBytes();
+		this.passwordHash = encryptedBallot.getFirstChild(ValueIdentifiers.getPasswordHash()).byteArrayValue().getBytes();
+		this.timestamp = encryptedBallot.getFirstChild(ValueIdentifiers.getTimestamp()).byteArrayValue().getBytes();
+		this.vote = encryptedBallot.getFirstChild(ValueIdentifiers.getVote()).byteArrayValue().getBytes();
 	}
 
 	/**
@@ -129,10 +129,10 @@ public class EncryptedBallot {
 	 */
 	public Value getValue() {
 		Value result = Value.create();
-		result.getNewChild(ValueIdentifiers.USER_ID).setValue(new ByteArray(userId));
-		result.getNewChild(ValueIdentifiers.PASSWORD_HASH).setValue(new ByteArray(passwordHash));
-		result.getNewChild(ValueIdentifiers.TIMESTAMP).setValue(new ByteArray(timestamp));
-		result.getNewChild(ValueIdentifiers.VOTE).setValue(new ByteArray(vote));
+		result.getNewChild(ValueIdentifiers.getUserId()).setValue(new ByteArray(userId));
+		result.getNewChild(ValueIdentifiers.getPasswordHash()).setValue(new ByteArray(passwordHash));
+		result.getNewChild(ValueIdentifiers.getTimestamp()).setValue(new ByteArray(timestamp));
+		result.getNewChild(ValueIdentifiers.getVote()).setValue(new ByteArray(vote));
 
 		return result;
 	}

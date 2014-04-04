@@ -7,6 +7,7 @@ import jolie.runtime.Value;
 import org.evoting.client.exceptions.NoCandidateListException;
 import org.evoting.common.CandidateList;
 import org.evoting.common.EncryptedBallot;
+import org.evoting.common.ValueIdentifiers;
 import org.evoting.security.Security;
 
 
@@ -44,7 +45,7 @@ public class Model
 	 */
 	public static void setPublicKeys(Value publicKeyValues)
 	{
-		Value rsaPublicKeyValue = publicKeyValues.getFirstChild("rsaPublicKey");
+		Value rsaPublicKeyValue = publicKeyValues.getFirstChild(ValueIdentifiers.getRsaPublicKey());
 		Security.setRSAPublicKey(rsaPublicKeyValue.byteArrayValue().getBytes());
 		
 	}
