@@ -19,9 +19,9 @@ main
 	println@Console( publicKeys.rsaPublicKey )(  );
 	setPublicKeys@Controller( publicKeys )();
 	getCandidateList@BulletinBoardService( )( candidateList );
-    setCandidateListAndGetBallot@Controller( candidateList )( ballot )
-    //vote@BulletinBoardService( ballot )( status );
-    //println@Console( status )( )
+    setCandidateListAndGetBallot@Controller( candidateList )( ballot );
+    vote@BulletinBoardService( ballot )( registered );
+    println@Console( "The vote is registered: " + registered )( )
 	/*
 	println@Console( "Requesting candidate list..." )(  );
 	getCandidateList@BulletinBoardService( )( candidateList );

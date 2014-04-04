@@ -33,6 +33,7 @@ public class Model {
 		
 		if(vote == null) {
 			//Persist the vote if the user hasn't voted yet
+			vote = new Vote(userId, encryptedVote);
 			entMgr.persist(vote);
 		} else {
 			//Update the vote if the user has voted before
