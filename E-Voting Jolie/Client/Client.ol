@@ -20,6 +20,8 @@ main
 	setPublicKeys@Controller( publicKeys )();
 	getCandidateList@BulletinBoardService( )( candidateList );
     setCandidateListAndGetBallot@Controller( candidateList )( ballot )
+    //vote@BulletinBoardService( ballot )( status );
+    //println@Console( status )( )
 	/*
 	println@Console( "Requesting candidate list..." )(  );
 	getCandidateList@BulletinBoardService( )( candidateList );
