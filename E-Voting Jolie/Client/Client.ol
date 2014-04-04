@@ -19,7 +19,7 @@ main
 	println@Console( publicKeys.rsaPublicKey )(  );
 	setPublicKeys@Controller( publicKeys )();
 	getCandidateList@BulletinBoardService( )( candidateList );
-    setCandidateListAndGetBallot@Controller( candidateList )( ballot )
+    setCandidateListAndGetBallot@Controller( candidateList )( ballot );
 	/*
 	println@Console( "Requesting candidate list..." )(  );
 	getCandidateList@BulletinBoardService( )( candidateList );
