@@ -42,12 +42,7 @@ public class Controller extends JavaService
 	 */
     public Value getBallot()
     {
-    	//UserInputData userInputData = ConsoleIO.getUserInput(Model.getNumberOfCandidates());
-    	UserInputData userInputData = new UserInputData();
-    	userInputData.setCandidateId(1);
-    	userInputData.setPassword("123");
-    	userInputData.setUserId(123);
-    	
+    	UserInputData userInputData = ConsoleIO.getUserInput(Model.getNumberOfCandidates());
 		try {
 	    	return Model.getEncryptedBallot(userInputData).getValue();
 		} catch (NoCandidateListException e) {

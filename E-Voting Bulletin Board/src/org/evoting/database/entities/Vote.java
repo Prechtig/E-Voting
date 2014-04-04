@@ -11,7 +11,7 @@ import javax.persistence.Table;
 @Table(name = "Votes")
 public class Vote extends BaseEntity {
 	// The encrypted vote
-	@Column(name = "encryptedVote", nullable = false)
+	@Column(name = "encryptedVote", columnDefinition = "longblob", nullable = false)
 	private byte[][] encryptedVote;
 	
 	/**

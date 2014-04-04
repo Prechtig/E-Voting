@@ -1,8 +1,10 @@
 package org.evoting.testing;
 
-import static org.junit.Assert.fail;
 import jolie.runtime.Value;
 
+import org.evoting.client.Model;
+import org.evoting.client.UserInputData;
+import org.evoting.client.exceptions.NoCandidateListException;
 import org.junit.Test;
 
 public class ClientController {
@@ -16,9 +18,22 @@ public class ClientController {
 		CController.setPublicKeys(publicKeys);
 		
 		Value encryptedCandidateList = BBController.getCandidateList();
-		Value ballot = CController.setCandidateListAndGetBallot(encryptedCandidateList);
-		BBController.vote(ballot);
-		fail("Not yet implemented");
+		CController.setCandidateList(encryptedCandidateList);
+		
+		UserInputData userInputData = new UserInputData();
+    	userInputData.setCandidateId(1);
+    	userInputData.setPassword("123");
+    	userInputData.setUserId(123);
+    	
+    	Value ballot = null;
+    	try {
+	    	ballot = Model.getEncryptedBallot(userInputData).getValue();
+		} catch (NoCandidateListException e) {
+			System.out.println("No candidate list has been retrieved from server.");
+		}
+		
+    	if(ballot != null) {
+    		BBController.vote(ballot);
+    	}
 	}
-
 }
