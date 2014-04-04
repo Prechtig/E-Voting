@@ -24,10 +24,10 @@ public class EncryptedBallot {
 	 * @param vote The vote of the voter
 	 * @throws InvalidVoteException Is thrown if the vote is invalid
 	 */
-	public EncryptedBallot(int userId, String passwordHash, byte[] timeStamp, boolean[] vote) throws InvalidVoteException {
+	public EncryptedBallot(int userId, String passwordHash, byte[] timestamp, boolean[] vote) throws InvalidVoteException {
 		this.userId = encryptUserId(userId);
 		this.passwordHash = encryptPasswordHash(passwordHash);
-		this.timestamp = timeStamp;
+		this.timestamp = timestamp;
 		this.vote = encryptVote(vote);
 	}
 	
