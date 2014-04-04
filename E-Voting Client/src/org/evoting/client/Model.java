@@ -1,5 +1,6 @@
 package org.evoting.client;
 
+import java.math.BigInteger;
 import java.util.List;
 
 import jolie.runtime.Value;
@@ -45,7 +46,15 @@ public class Model
 	 */
 	public static void setPublicKeys(Value publicKeyValues)
 	{
+		Value elGamalPublicKey = publicKeyValues.getFirstChild(ValueIdentifiers.getElGamalPublicKey());
+		Value parameters = elGamalPublicKey.getFirstChild(ValueIdentifiers.getParameters());
 		Value rsaPublicKeyValue = publicKeyValues.getFirstChild(ValueIdentifiers.getRsaPublicKey());
+		BigInteger y = new BigInteger(elGamalPublicKey.getFirstChild(ValueIdentifiers.getY()).strValue());
+		BigInteger p = new BigInteger(parameters.getFirstChild(ValueIdentifiers.getP()).strValue());
+		BigInteger g = new BigInteger(parameters.getFirstChild(ValueIdentifiers.getG()).strValue());
+		int l = Integer.parseInt(parameters.getFirstChild(ValueIdentifiers.getL()).strValue());
+		
+		Security.setElGamalPublicKey(y, p, g, l);
 		Security.setRSAPublicKey(rsaPublicKeyValue.byteArrayValue().getBytes());
 		
 	}

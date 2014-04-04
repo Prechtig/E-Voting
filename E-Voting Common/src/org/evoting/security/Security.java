@@ -259,8 +259,10 @@ public class Security {
 		return RSA.getPrivateKey();
 	}
 
-	public static void setElGamalPublicKey(ElGamalPublicKeyParameters pubK) {
-		ElGamal.setPublicKey(pubK);
+	public static void setElGamalPublicKey(BigInteger y, BigInteger p, BigInteger g, int l) {
+		ElGamalParameters elGamalp = new ElGamalParameters(p, g, l);
+		ElGamalPublicKeyParameters elGamalpkp = new ElGamalPublicKeyParameters(y, elGamalp);
+		ElGamal.setPublicKey(elGamalpkp);
 	}
 
 	public static void setElGamalPrivateKey(ElGamalPrivateKeyParameters privK) {
@@ -286,9 +288,4 @@ public class Security {
 	public static void setRSAPrivateKey(PrivateKey privK) {
 		RSA.setPrivateKey(privK);
 	}
-	
-	/*public static Security getInstance()
-	{
-		return instance;
-	}*/
 }
