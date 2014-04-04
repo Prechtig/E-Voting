@@ -1,9 +1,7 @@
 package org.evoting.security;
 
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.math.BigInteger;
@@ -93,6 +91,8 @@ public class Security {
 	
 	// FILE HANDLING
 	public static ElGamalPublicKeyParameters loadElGamalPublicKey(String fileName) {
+		return null;
+		/*
 		BigInteger y = null;
 		BigInteger g = null;
 		BigInteger p = null;
@@ -127,11 +127,14 @@ public class Security {
 		}
 
 		return new ElGamalPublicKeyParameters(y, new ElGamalParameters(g, p));
+		*/
 	}
 
 	public static ElGamalPrivateKeyParameters loadElGamalPrivateKey(String fileName) {
+		return null;
 		// load file
 		// get
+		/*
 		BigInteger x = null;
 		BigInteger g = null;
 		BigInteger p = null;
@@ -166,6 +169,7 @@ public class Security {
 		}
 
 		return new ElGamalPrivateKeyParameters(x, new ElGamalParameters(g, p));
+		*/
 	}
 
 	public static void saveElGamalPublicKey(ElGamalPublicKeyParameters pubK, String fileName) {
@@ -243,7 +247,7 @@ public class Security {
 		return ElGamal.getPublicKey();
 	}
 
-	public static ElGamalPrivateKeyParameters getElgamalPrivatecKey() {
+	public static ElGamalPrivateKeyParameters getElgamalPrivateKey() {
 		return ElGamal.getPrivateKey();
 	}
 
@@ -288,9 +292,4 @@ public class Security {
 	public static void setRSAPrivateKey(PrivateKey privK) {
 		RSA.setPrivateKey(privK);
 	}
-	
-	/*public static Security getInstance()
-	{
-		return instance;
-	}*/
 }

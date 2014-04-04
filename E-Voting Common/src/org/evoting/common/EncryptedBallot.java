@@ -37,10 +37,10 @@ public class EncryptedBallot {
 	 * @throws InvalidVoteException
 	 */
 	public EncryptedBallot(Value encryptedBallot) throws InvalidVoteException {
-		if(!encryptedBallot.hasChildren(ValueIdentifiers.USER_ID) ||
-			!encryptedBallot.hasChildren(ValueIdentifiers.PASSWORD_HASH) ||
-			!encryptedBallot.hasChildren(ValueIdentifiers.TIMESTAMP) ||
-			!encryptedBallot.hasChildren(ValueIdentifiers.VOTE)) {
+		if(!encryptedBallot.hasChildren(ValueIdentifiers.getUserId()) ||
+			!encryptedBallot.hasChildren(ValueIdentifiers.getPasswordHash()) ||
+			!encryptedBallot.hasChildren(ValueIdentifiers.getTimestamp()) ||
+			!encryptedBallot.hasChildren(ValueIdentifiers.getVote())) {
 			throw new InvalidVoteException("A required child was missing");
 		}
 		this.userId = encryptedBallot.getFirstChild(ValueIdentifiers.USER_ID).byteArrayValue().getBytes();
@@ -139,7 +139,6 @@ public class EncryptedBallot {
 		for(int i = 0; i < vote.length; i++) {
 			result.getNewChild(ValueIdentifiers.VOTE).setValue(new ByteArray(vote[i]));
 		}
-		
 
 		return result;
 	}

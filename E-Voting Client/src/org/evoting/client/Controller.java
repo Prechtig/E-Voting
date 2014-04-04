@@ -18,7 +18,7 @@ public class Controller extends JavaService
 	 * Sets the list of candidates that can be voted for.
 	 * @param encryptedCandidates The value representation of the candidate object.
 	 */
-	public static void setCandidateList(Value encryptedCandidates)
+	public void setCandidateList(Value encryptedCandidates)
 	{
 		// Interprets the value object as an encrypted candidate list.
 		EncryptedCandidateList encryptedCandidateList = new EncryptedCandidateList(encryptedCandidates);
@@ -31,7 +31,7 @@ public class Controller extends JavaService
 	 * Sets the public keys for encryption and decryption.
 	 * @param publicKeyValues The value representation of the public keys.
 	 */
-	public static void setPublicKeys(Value publicKeyValues)
+	public void setPublicKeys(Value publicKeyValues)
 	{
 		Model.setPublicKeys(publicKeyValues);
 	}
@@ -42,16 +42,18 @@ public class Controller extends JavaService
 	 */
     public Value getBallot()
     {
-    	UserInputData userInputData = ConsoleIO.getUserInput(Model.getNumberOfCandidates());
-    	Value result = null;
+    	//UserInputData userInputData = ConsoleIO.getUserInput(Model.getNumberOfCandidates());
+    	UserInputData userInputData = new UserInputData();
+    	userInputData.setCandidateId(1);
+    	userInputData.setPassword("123");
+    	userInputData.setUserId(123);
+    	
 		try {
-	    	result = Model.getEncryptedBallot(userInputData).getValue();
-	    	return result;
+	    	return Model.getEncryptedBallot(userInputData).getValue();
 		} catch (NoCandidateListException e) {
-			System.err.println("No candidate list has been retrieved from server.");
+			System.out.println("No candidate list has been retrieved from server.");
 		}
-		
-		return result;
+		return null;
     }
     
     /**

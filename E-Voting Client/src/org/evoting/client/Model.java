@@ -46,13 +46,13 @@ public class Model
 	 */
 	public static void setPublicKeys(Value publicKeyValues)
 	{
-		Value elGamalPublicKey = publicKeyValues.getFirstChild(ValueIdentifiers.ELGAMALPK);
-		Value parameters = elGamalPublicKey.getFirstChild(ValueIdentifiers.PARAMETERS);
-		Value rsaPublicKeyValue = publicKeyValues.getFirstChild(ValueIdentifiers.RSAPK);
-		BigInteger y = new BigInteger(elGamalPublicKey.getFirstChild(ValueIdentifiers.Y).strValue());
-		BigInteger p = new BigInteger(parameters.getFirstChild(ValueIdentifiers.P).strValue());
-		BigInteger g = new BigInteger(parameters.getFirstChild(ValueIdentifiers.G).strValue());
-		int l = Integer.parseInt(parameters.getFirstChild(ValueIdentifiers.L).strValue());
+		Value elGamalPublicKey = publicKeyValues.getFirstChild(ValueIdentifiers.getElGamalPublicKey());
+		Value parameters = elGamalPublicKey.getFirstChild(ValueIdentifiers.getParameters());
+		Value rsaPublicKeyValue = publicKeyValues.getFirstChild(ValueIdentifiers.getRsaPublicKey());
+		BigInteger y = new BigInteger(elGamalPublicKey.getFirstChild(ValueIdentifiers.getY()).strValue());
+		BigInteger p = new BigInteger(parameters.getFirstChild(ValueIdentifiers.getP()).strValue());
+		BigInteger g = new BigInteger(parameters.getFirstChild(ValueIdentifiers.getG()).strValue());
+		int l = Integer.parseInt(parameters.getFirstChild(ValueIdentifiers.getL()).strValue());
 		
 		Security.setElGamalPublicKey(y, p, g, l);
 		Security.setRSAPublicKey(rsaPublicKeyValue.byteArrayValue().getBytes());
