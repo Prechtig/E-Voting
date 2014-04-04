@@ -21,7 +21,7 @@ import org.evoting.security.Security;
 
 public class Model {
 	
-	public static void processVote(int userId, byte[] encryptedVote) {
+	public static void processVote(int userId, byte[][] encryptedVote) {
 		EntityManager entMgr = EntityManagerUtil.getEntityManager();
 		VoteRepository vr = new VoteRepository(entMgr);
 		
@@ -33,6 +33,7 @@ public class Model {
 		
 		if(vote == null) {
 			//Persist the vote if the user hasn't voted yet
+			vote = new Vote(userId, encryptedVote);
 			entMgr.persist(vote);
 		} else {
 			//Update the vote if the user has voted before
@@ -52,6 +53,7 @@ public class Model {
 		
 		TimestampRepository tRepo = new TimestampRepository(entMgr);
 		Timestamp timestamp = tRepo.findTime();
+		System.out.println("Found timestamp: " + timestamp.getTime());
 		
 		EncryptedCandidateList candidateList = new EncryptedCandidateList(candidates, timestamp.getTime());
 		

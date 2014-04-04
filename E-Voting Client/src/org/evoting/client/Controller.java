@@ -42,11 +42,11 @@ public class Controller extends JavaService
 	 */
     public Value getBallot()
     {
-    	//UserInputData userInputData = ConsoleIO.getUserInput(Model.getNumberOfCandidates());
-    	UserInputData userInputData = new UserInputData();
-    	userInputData.setCandidateId(1);
-    	userInputData.setPassword("123");
-    	userInputData.setUserId(123);
+    	UserInputData userInputData = ConsoleIO.getUserInput(Model.getNumberOfCandidates());
+//    	UserInputData userInputData = new UserInputData();
+//    	userInputData.setCandidateId(1);
+//    	userInputData.setPassword("123");
+//    	userInputData.setUserId(123);
     	
 		try {
 	    	return Model.getEncryptedBallot(userInputData).getValue();
@@ -56,8 +56,17 @@ public class Controller extends JavaService
 		return null;
     }
     
+    /**
+     * Sets the candidate list and requests a ballot from user input based on the candidate list provided.
+     * @param encryptedCandidates The candidate list that the ballot is to be made of.
+     * @return A value representation of the encrypted ballot.
+     */
     public Value setCandidateListAndGetBallot(Value encryptedCandidates) {
     	setCandidateList(encryptedCandidates);
     	return getBallot();
     }
+    
+    public static void main(String[] args) {
+		
+	}
 }

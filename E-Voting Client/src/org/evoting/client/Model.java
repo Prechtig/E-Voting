@@ -37,6 +37,7 @@ public class Model
 		for(String s : candidateNames) {
 			System.out.println("Candidate name in candidates: " + s);
 		}
+		candidateListTime = candidates.getTimestamp();
 		numberOfCandidates = candidateNames.size();
 	}
 	
