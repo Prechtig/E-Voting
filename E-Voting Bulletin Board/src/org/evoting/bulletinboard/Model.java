@@ -53,7 +53,6 @@ public class Model {
 		
 		TimestampRepository tRepo = new TimestampRepository(entMgr);
 		Timestamp timestamp = tRepo.findTime();
-		System.out.println("Found timestamp: " + timestamp.getTime());
 		
 		EncryptedCandidateList candidateList = new EncryptedCandidateList(candidates, timestamp.getTime());
 		

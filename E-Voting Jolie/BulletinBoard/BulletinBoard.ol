@@ -29,8 +29,7 @@ main {
 	[ getCandidateList( )( candidateList ) {
 		println@Console("Someone is requesting the candidate list")(  );
 		//Get the candidatelist from the embedded Java service
-		getCandidateList@BBJavaController( )( candidateList );
-		println@Console( "Received candidate list of size " + #candidateList.candidates )(  )
+		getCandidateList@BBJavaController( )( candidateList )
 	} ]  { nullProcess }
 
 	[ vote( encryptedBallot )( registered ) {
