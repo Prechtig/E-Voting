@@ -2,6 +2,7 @@ package org.evoting.common;
 
 import jolie.runtime.ByteArray;
 import jolie.runtime.Value;
+import jolie.runtime.ValueVector;
 
 import org.evoting.common.exceptions.InvalidVoteException;
 import org.evoting.security.Security;
@@ -14,7 +15,7 @@ public class EncryptedBallot {
 	private byte[] userId;
 	private byte[] passwordHash;
 	private byte[] timestamp;
-	private byte[] vote;
+	private byte[][] vote;
 	
 	/**
 	 * @param userId The userId of the voter
@@ -23,10 +24,10 @@ public class EncryptedBallot {
 	 * @param vote The vote of the voter
 	 * @throws InvalidVoteException Is thrown if the vote is invalid
 	 */
-	public EncryptedBallot(int userId, String passwordHash, byte[] timeStamp, boolean[] vote) throws InvalidVoteException {
+	public EncryptedBallot(int userId, String passwordHash, byte[] timestamp, int[] vote) throws InvalidVoteException {
 		this.userId = encryptUserId(userId);
 		this.passwordHash = encryptPasswordHash(passwordHash);
-		this.timestamp = timeStamp;
+		this.timestamp = timestamp;
 		this.vote = encryptVote(vote);
 	}
 	
@@ -36,16 +37,23 @@ public class EncryptedBallot {
 	 * @throws InvalidVoteException
 	 */
 	public EncryptedBallot(Value encryptedBallot) throws InvalidVoteException {
-		if(!encryptedBallot.hasChildren(ValueIdentifiers.USER_ID) ||
-			!encryptedBallot.hasChildren(ValueIdentifiers.PASSWORD_HASH) ||
-			!encryptedBallot.hasChildren(ValueIdentifiers.TIMESTAMP) ||
-			!encryptedBallot.hasChildren(ValueIdentifiers.VOTE)) {
+		if(!encryptedBallot.hasChildren(ValueIdentifiers.getUserId()) ||
+			!encryptedBallot.hasChildren(ValueIdentifiers.getPasswordHash()) ||
+			!encryptedBallot.hasChildren(ValueIdentifiers.getTimestamp()) ||
+			!encryptedBallot.hasChildren(ValueIdentifiers.getVote())) {
 			throw new InvalidVoteException("A required child was missing");
 		}
-		this.userId = encryptedBallot.getFirstChild(ValueIdentifiers.USER_ID).byteArrayValue().getBytes();
-		this.passwordHash = encryptedBallot.getFirstChild(ValueIdentifiers.PASSWORD_HASH).byteArrayValue().getBytes();
-		this.timestamp = encryptedBallot.getFirstChild(ValueIdentifiers.TIMESTAMP).byteArrayValue().getBytes();
-		this.vote = encryptedBallot.getFirstChild(ValueIdentifiers.VOTE).byteArrayValue().getBytes();
+		this.userId = encryptedBallot.getFirstChild(ValueIdentifiers.getUserId()).byteArrayValue().getBytes();
+		this.passwordHash = encryptedBallot.getFirstChild(ValueIdentifiers.getPasswordHash()).byteArrayValue().getBytes();
+		this.timestamp = encryptedBallot.getFirstChild(ValueIdentifiers.getTimestamp()).byteArrayValue().getBytes();
+		
+		ValueVector valueVote = encryptedBallot.getChildren(ValueIdentifiers.getVote());
+		vote = new byte[valueVote.size()][];
+		int i = 0;
+		for(Value v : valueVote) {
+			vote[i] = v.byteArrayValue().getBytes();
+			i++;
+		}
 	}
 
 	/**
@@ -55,14 +63,14 @@ public class EncryptedBallot {
 	 */
 	private byte[] encryptUserId(int userId) {
 		byte[] value = Converter.toByteArray(userId);
-		return Security.encryptRSA(value, null);
+		return Security.encryptRSA(value, Security.getRSAPublicKey());
 	}
 	
 	/**
 	 * @return The decrypted userId
 	 */
 	private int decryptUserId() {
-		byte[] value = Security.decryptRSA(userId, null); //TODO: Set the key
+		byte[] value = Security.decryptRSA(userId, Security.getRSAPrivateKey());
 		return Converter.toInt(value);
 	}
 
@@ -72,14 +80,14 @@ public class EncryptedBallot {
 	 * @return The encrypted passwordHash
 	 */
 	private byte[] encryptPasswordHash(String passwordHash) {
-		return Security.encryptRSA(passwordHash, null); //TODO: Set the key
+		return Security.encryptRSA(passwordHash, Security.getRSAPublicKey());
 	}
 	
 	/**
 	 * @return The decrypted passwordHash
 	 */
 	private String decryptPasswordHash() {
-		byte[] value = Security.decryptRSA(passwordHash, null); //TODO: Set the key
+		byte[] value = Security.decryptRSA(passwordHash, Security.getRSAPrivateKey());
 		return new String(value);
 	}
 
@@ -89,17 +97,13 @@ public class EncryptedBallot {
 	 * @return The encrypted vote
 	 * @throws InvalidVoteException Is thrown if the vote is invalid
 	 */
-	private byte[] encryptVote(boolean[] vote) {
+	private byte[][] encryptVote(int[] vote) {
+		byte[][] result = new byte[vote.length][];
 		if(voteIsValid(vote)) {
-			StringBuilder sb = new StringBuilder();
 			for(int i = 0; i < vote.length; i++) {
-				if(vote[0]) {
-					sb.append("1");
-				} else {
-					sb.append("0");
-				}
+				result[i] = Security.encryptElGamal(new byte[]{(byte) vote[i]}, Security.getElgamalPublicKey());
 			}
-			return Security.encryptElGamal(sb.toString(), null); //TODO: Set the key
+			return result;
 		} else {
 			throw new InvalidVoteException("Multiple candidate-votes detected.");
 		}
@@ -109,10 +113,10 @@ public class EncryptedBallot {
 	 * @param vote The vote to check
 	 * @return True if the vote is valid
 	 */
-	private boolean voteIsValid(boolean[] vote) {
+	private boolean voteIsValid(int[] vote) {
 		boolean voted = false;
 		for(int i = 0; i < vote.length; i++) {
-			if(vote[i]) {
+			if(vote[i] == 1) {
 				if(voted) {
 					return false;
 				}
@@ -129,10 +133,12 @@ public class EncryptedBallot {
 	 */
 	public Value getValue() {
 		Value result = Value.create();
-		result.getNewChild(ValueIdentifiers.USER_ID).setValue(new ByteArray(userId));
-		result.getNewChild(ValueIdentifiers.PASSWORD_HASH).setValue(new ByteArray(passwordHash));
-		result.getNewChild(ValueIdentifiers.TIMESTAMP).setValue(new ByteArray(timestamp));
-		result.getNewChild(ValueIdentifiers.VOTE).setValue(new ByteArray(vote));
+		result.getNewChild(ValueIdentifiers.getUserId()).setValue(new ByteArray(userId));
+		result.getNewChild(ValueIdentifiers.getPasswordHash()).setValue(new ByteArray(passwordHash));
+		result.getNewChild(ValueIdentifiers.getTimestamp()).setValue(new ByteArray(timestamp));
+		for(int i = 0; i < vote.length; i++) {
+			result.getNewChild(ValueIdentifiers.getVote()).setValue(new ByteArray(vote[i]));
+		}
 
 		return result;
 	}

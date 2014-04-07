@@ -11,14 +11,14 @@ import javax.persistence.Table;
 @Table(name = "Votes")
 public class Vote extends BaseEntity {
 	// The encrypted vote
-	@Column(name = "encryptedVote", nullable = false)
-	private byte[] encryptedVote;
+	@Column(name = "encryptedVote", columnDefinition = "longblob", nullable = false)
+	private byte[][] encryptedVote;
 	
 	/**
 	 * @param userId The id of the user
 	 * @param encryptedVote The encrypted vote for the user
 	 */
-	public Vote(int userId, byte[] encryptedVote) {
+	public Vote(int userId, byte[][] encryptedVote) {
 		super(userId);
 		this.encryptedVote = encryptedVote;
 	}
@@ -34,14 +34,14 @@ public class Vote extends BaseEntity {
 	/**
 	 * @return The encrypted vote
 	 */
-	public byte[] getEncryptedVote() {
+	public byte[][] getEncryptedVote() {
 		return this.encryptedVote;
 	}
 	
 	/**
 	 * @param ciphertext The new encrypted vote
 	 */
-	public void setEncryptedVote(byte[] encryptedVote) {
+	public void setEncryptedVote(byte[][] encryptedVote) {
 		this.encryptedVote = encryptedVote;
 	}
 }

@@ -2,6 +2,6 @@ include "Types.iol"
 
 interface IBulletinBoard {
 	RequestResponse: getCandidateList( void )( EncryptedCandidateList )
-	RequestResponse: vote( EncryptedBallot )( bool )
+	RequestResponse: processVote( EncryptedBallot )( bool )
 	RequestResponse: getPublicKeys( void )( PublicKeys )
 }

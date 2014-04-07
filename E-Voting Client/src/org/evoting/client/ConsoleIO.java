@@ -12,20 +12,17 @@ public class ConsoleIO
 	public static UserInputData getUserInput(int numberOfCandidates)
 	{
 		Console console = System.console();
+		System.out.println("Number of canditates is: " + numberOfCandidates);
 		String input = "";
 		int userId, candidateId;
 		String password;
 		UserInputData userData = new UserInputData();
 		
-		//Test
-		System.out.println(numberOfCandidates);
-		
 		while(!isCPRNumber(input)) {
 			System.out.println("Enter CPR number:");
 			input = console.readLine();
 			if(!isCPRNumber(input)) {
-				System.out.println("The input is not a CPR number.");
-				System.out.println("");
+				System.out.println("The input is not a CPR number.\n");
 			}
 		}
 		
@@ -36,8 +33,7 @@ public class ConsoleIO
 			System.out.println("Enter user password:");
 			input = console.readLine();
 			if(!isValidPassword(input)) {
-				System.out.println("The input does not meet the requirements for a password");
-				System.out.println("");
+				System.out.println("The input does not meet the requirements for a password.\n");
 			}
 		}
 		
@@ -48,8 +44,7 @@ public class ConsoleIO
 			System.out.println("Enter the ID of the candidate that you want to vote for:");
 			input = console.readLine();
 			if(!isCandidateId(input, numberOfCandidates)) {
-				System.out.println("The input does not match any legal candidate IDs");
-				System.out.println("");
+				System.out.println("The input does not match any legal candidate IDs.\n");
 			}
 		}
 		

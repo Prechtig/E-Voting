@@ -7,6 +7,8 @@ import java.security.PublicKey;
 
 import org.bouncycastle.crypto.params.ElGamalPrivateKeyParameters;
 import org.bouncycastle.crypto.params.ElGamalPublicKeyParameters;
+import org.evoting.common.Exporter;
+import org.evoting.common.Importer;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -73,15 +75,15 @@ public class SecurityTest {
 	
 	@Test
 	public void saveElgamalKeyPublic(){
-		Security.saveElGamalPublicKey(ElGamalPublicKey, ElGamalPublicKeyFile);
-		ElGamalPublicKeyParameters savedParams = Security.loadElGamalPublicKey(ElGamalPublicKeyFile);
+		Exporter.exportElGamalPublicKeyParameters(ElGamalPublicKey, ElGamalPublicKeyFile);
+		ElGamalPublicKeyParameters savedParams =  Importer.importElGamalPublicKeyParameters(ElGamalPublicKeyFile);
 		assert(savedParams.equals(ElGamalPublicKey));
 	}
 	
 	@Test
 	public void saveElgamalKeyPrivate(){
-		Security.saveElGamalPrivateKey(ElGamalPrivateKey, ElGamalPrivateKeyFile);
-		ElGamalPrivateKeyParameters savedParams = Security.loadElGamalPrivateKey(ElGamalPrivateKeyFile);
+		Exporter.exportElGamalPrivateKeyParameters(ElGamalPrivateKey, ElGamalPrivateKeyFile);
+		ElGamalPrivateKeyParameters savedParams = Importer.importElGamalPrivateKeyParameters(ElGamalPrivateKeyFile);
 		assert(savedParams.equals(ElGamalPrivateKey));
 	}
 }

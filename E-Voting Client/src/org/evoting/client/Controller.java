@@ -18,7 +18,7 @@ public class Controller extends JavaService
 	 * Sets the list of candidates that can be voted for.
 	 * @param encryptedCandidates The value representation of the candidate object.
 	 */
-	public static void setCandidateList(Value encryptedCandidates)
+	public void setCandidateList(Value encryptedCandidates)
 	{
 		// Interprets the value object as an encrypted candidate list.
 		EncryptedCandidateList encryptedCandidateList = new EncryptedCandidateList(encryptedCandidates);
@@ -31,7 +31,7 @@ public class Controller extends JavaService
 	 * Sets the public keys for encryption and decryption.
 	 * @param publicKeyValues The value representation of the public keys.
 	 */
-	public static void setPublicKeys(Value publicKeyValues)
+	public void setPublicKeys(Value publicKeyValues)
 	{
 		Model.setPublicKeys(publicKeyValues);
 	}
@@ -43,14 +43,25 @@ public class Controller extends JavaService
     public Value getBallot()
     {
     	UserInputData userInputData = ConsoleIO.getUserInput(Model.getNumberOfCandidates());
-    	Value result = null;
 		try {
-	    	result = Model.getEncryptedBallot(userInputData).getValue();
-	    	return result;
+	    	return Model.getEncryptedBallot(userInputData).getValue();
 		} catch (NoCandidateListException e) {
-			System.err.println("No candidate list has been retrieved from server.");
+			System.out.println("No candidate list has been retrieved from server.");
 		}
-		
-		return result;
+		return null;
     }
+    
+    /**
+     * Sets the candidate list and requests a ballot from user input based on the candidate list provided.
+     * @param encryptedCandidates The candidate list that the ballot is to be made of.
+     * @return A value representation of the encrypted ballot.
+     */
+    public Value setCandidateListAndGetBallot(Value encryptedCandidates) {
+    	setCandidateList(encryptedCandidates);
+    	return getBallot();
+    }
+    
+    public static void main(String[] args) {
+		
+	}
 }

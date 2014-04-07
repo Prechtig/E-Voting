@@ -1,5 +1,6 @@
 package org.evoting.client;
 
+import java.math.BigInteger;
 import java.util.List;
 
 import jolie.runtime.Value;
@@ -7,6 +8,7 @@ import jolie.runtime.Value;
 import org.evoting.client.exceptions.NoCandidateListException;
 import org.evoting.common.CandidateList;
 import org.evoting.common.EncryptedBallot;
+import org.evoting.common.ValueIdentifiers;
 import org.evoting.security.Security;
 
 
@@ -31,9 +33,11 @@ public class Model
 	public static void setCandidates(CandidateList candidates)
 	{
 		candidateNames = candidates.getCandidates();
+		System.out.println("Number of canditates recieved from the BulletinBoard is " + candidateNames.size());
 		for(String s : candidateNames) {
 			System.out.println("Candidate name in candidates: " + s);
 		}
+		candidateListTime = candidates.getTimestamp();
 		numberOfCandidates = candidateNames.size();
 	}
 	
@@ -43,7 +47,15 @@ public class Model
 	 */
 	public static void setPublicKeys(Value publicKeyValues)
 	{
-		Value rsaPublicKeyValue = publicKeyValues.getFirstChild("rsaPublicKey");
+		Value elGamalPublicKey = publicKeyValues.getFirstChild(ValueIdentifiers.getElGamalPublicKey());
+		Value parameters = elGamalPublicKey.getFirstChild(ValueIdentifiers.getParameters());
+		Value rsaPublicKeyValue = publicKeyValues.getFirstChild(ValueIdentifiers.getRsaPublicKey());
+		BigInteger y = new BigInteger(elGamalPublicKey.getFirstChild(ValueIdentifiers.getY()).strValue());
+		BigInteger p = new BigInteger(parameters.getFirstChild(ValueIdentifiers.getP()).strValue());
+		BigInteger g = new BigInteger(parameters.getFirstChild(ValueIdentifiers.getG()).strValue());
+		int l = Integer.parseInt(parameters.getFirstChild(ValueIdentifiers.getL()).strValue());
+		
+		Security.setElGamalPublicKey(y, p, g, l);
 		Security.setRSAPublicKey(rsaPublicKeyValue.byteArrayValue().getBytes());
 		
 	}
@@ -70,7 +82,7 @@ public class Model
 		if(candidateNames == null) {
 			throw new NoCandidateListException();
 		}
-		boolean[] votes = getBooleanArrayFromCandidateId(userInputData.getCandidateId());
+		int[] votes = getVoteFromCandidateId(userInputData.getCandidateId());
 		return new EncryptedBallot(userInputData.getUserId(), userInputData.getPassword(), candidateListTime, votes);
 	}
 	
@@ -79,10 +91,10 @@ public class Model
 	 * @param candidateId The index that is true in the return array.
 	 * @return Boolean array with one value set to true.
 	 */
-	private static boolean[] getBooleanArrayFromCandidateId(int candidateId)
+	private static int[] getVoteFromCandidateId(int candidateId)
 	{
-		boolean[] result = new boolean[candidateNames.size()];
-		result[candidateId] = true;
+		int[] result = new int[candidateNames.size()];
+		result[candidateId] = 1;
 		return result;
 	}
 }

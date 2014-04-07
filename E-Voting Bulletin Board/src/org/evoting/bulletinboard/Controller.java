@@ -2,6 +2,7 @@ package org.evoting.bulletinboard;
 
 import jolie.runtime.JavaService;
 import jolie.runtime.Value;
+import jolie.runtime.embedding.RequestResponse;
 
 import org.evoting.bulletinboard.exceptions.InvalidUserInformationException;
 import org.evoting.common.Ballot;
@@ -11,20 +12,21 @@ import org.evoting.security.Security;
 
 public class Controller extends JavaService {
 
-	public boolean vote(Value valueEncryptedBallot) {
+	@RequestResponse
+	public Boolean processVote(Value valueEncryptedBallot) {
 		Ballot ballot = new EncryptedBallot(valueEncryptedBallot).getBallot();
 		
 		//Extract needed information from the ballot
 		int userId = ballot.getUserId();
 		String passwordHash = ballot.getPasswordHash();
-		byte[] encryptedVote = ballot.getVote();
+		byte[][] encryptedVote = ballot.getVote();
 		
 		//Check the userId+passwordHash is a legal combination
 		validateUser(userId, passwordHash);
 		
 		Model.processVote(userId, encryptedVote);
 		
-		return true;
+		return Boolean.TRUE;
 	}
 
 	/**
@@ -36,7 +38,6 @@ public class Controller extends JavaService {
 	}
 	
 	public Value getPublicKeys() {
-		//Security security = Security.getInstance();
 		if(!Security.keysGenerated()) {
 			Security.generateKeys();
 		}

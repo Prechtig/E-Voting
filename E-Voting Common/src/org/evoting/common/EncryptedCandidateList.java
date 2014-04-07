@@ -53,8 +53,8 @@ public class EncryptedCandidateList
 	 */
 	public EncryptedCandidateList(Value value)
 	{
-		timestamp = value.getFirstChild(ValueIdentifiers.TIMESTAMP).byteArrayValue().getBytes();
-		candidates = value.getFirstChild(ValueIdentifiers.CANDIDATES).byteArrayValue().getBytes();		
+		timestamp = value.getFirstChild(ValueIdentifiers.getTimestamp()).byteArrayValue().getBytes();
+		candidates = value.getFirstChild(ValueIdentifiers.getCandidates()).byteArrayValue().getBytes();		
 	}
 	
 	/**
@@ -78,8 +78,8 @@ public class EncryptedCandidateList
 	{
 		Value result = Value.create();
 		
-		result.getNewChild(ValueIdentifiers.TIMESTAMP).setValue(new ByteArray(timestamp));
-		result.getNewChild(ValueIdentifiers.CANDIDATES).setValue(new ByteArray(candidates));
+		result.getNewChild(ValueIdentifiers.getTimestamp()).setValue(new ByteArray(timestamp));
+		result.getNewChild(ValueIdentifiers.getCandidates()).setValue(new ByteArray(candidates));
 
 		return result;
 	}
