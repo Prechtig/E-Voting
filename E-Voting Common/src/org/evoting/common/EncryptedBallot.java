@@ -24,7 +24,7 @@ public class EncryptedBallot {
 	 * @param vote The vote of the voter
 	 * @throws InvalidVoteException Is thrown if the vote is invalid
 	 */
-	public EncryptedBallot(int userId, String passwordHash, byte[] timestamp, boolean[] vote) throws InvalidVoteException {
+	public EncryptedBallot(int userId, String passwordHash, byte[] timestamp, int[] vote) throws InvalidVoteException {
 		this.userId = encryptUserId(userId);
 		this.passwordHash = encryptPasswordHash(passwordHash);
 		this.timestamp = timestamp;
@@ -70,7 +70,7 @@ public class EncryptedBallot {
 	 * @return The decrypted userId
 	 */
 	private int decryptUserId() {
-		byte[] value = Security.decryptRSA(userId, Security.getRSAPublicKey()); //TODO: Set the key
+		byte[] value = Security.decryptRSA(userId, Security.getRSAPrivateKey());
 		return Converter.toInt(value);
 	}
 
@@ -80,14 +80,14 @@ public class EncryptedBallot {
 	 * @return The encrypted passwordHash
 	 */
 	private byte[] encryptPasswordHash(String passwordHash) {
-		return Security.encryptRSA(passwordHash, Security.getRSAPublicKey()); //TODO: Set the key
+		return Security.encryptRSA(passwordHash, Security.getRSAPublicKey());
 	}
 	
 	/**
 	 * @return The decrypted passwordHash
 	 */
 	private String decryptPasswordHash() {
-		byte[] value = Security.decryptRSA(passwordHash, Security.getRSAPublicKey()); //TODO: Set the key
+		byte[] value = Security.decryptRSA(passwordHash, Security.getRSAPrivateKey());
 		return new String(value);
 	}
 
@@ -97,11 +97,11 @@ public class EncryptedBallot {
 	 * @return The encrypted vote
 	 * @throws InvalidVoteException Is thrown if the vote is invalid
 	 */
-	private byte[][] encryptVote(boolean[] vote) {
+	private byte[][] encryptVote(int[] vote) {
 		byte[][] result = new byte[vote.length][];
 		if(voteIsValid(vote)) {
 			for(int i = 0; i < vote.length; i++) {
-				result[i] = Security.encryptElGamal(new byte[]{(byte) (vote[i] ? 1 : 0)}, Security.getElgamalPublicKey());
+				result[i] = Security.encryptElGamal(new byte[]{(byte) vote[i]}, Security.getElgamalPublicKey());
 			}
 			return result;
 		} else {
@@ -113,10 +113,10 @@ public class EncryptedBallot {
 	 * @param vote The vote to check
 	 * @return True if the vote is valid
 	 */
-	private boolean voteIsValid(boolean[] vote) {
+	private boolean voteIsValid(int[] vote) {
 		boolean voted = false;
 		for(int i = 0; i < vote.length; i++) {
-			if(vote[i]) {
+			if(vote[i] == 1) {
 				if(voted) {
 					return false;
 				}

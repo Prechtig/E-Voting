@@ -82,7 +82,7 @@ public class Model
 		if(candidateNames == null) {
 			throw new NoCandidateListException();
 		}
-		boolean[] votes = getBooleanArrayFromCandidateId(userInputData.getCandidateId());
+		int[] votes = getVoteFromCandidateId(userInputData.getCandidateId());
 		return new EncryptedBallot(userInputData.getUserId(), userInputData.getPassword(), candidateListTime, votes);
 	}
 	
@@ -91,10 +91,10 @@ public class Model
 	 * @param candidateId The index that is true in the return array.
 	 * @return Boolean array with one value set to true.
 	 */
-	private static boolean[] getBooleanArrayFromCandidateId(int candidateId)
+	private static int[] getVoteFromCandidateId(int candidateId)
 	{
-		boolean[] result = new boolean[candidateNames.size()];
-		result[candidateId] = true;
+		int[] result = new int[candidateNames.size()];
+		result[candidateId] = 1;
 		return result;
 	}
 }

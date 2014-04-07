@@ -28,7 +28,7 @@ main
     println@Console( "vote[1]: " + ballot.vote[1] )( );
     println@Console( "vote[2]: " + ballot.vote[2] )( );
 
-    vote@BulletinBoardService( ballot )( registered );
+    processVote@BulletinBoardService( ballot )( registered );
     println@Console( "The vote is registered: " + registered )( )
 	/*
 	println@Console( "Requesting candidate list..." )(  );
