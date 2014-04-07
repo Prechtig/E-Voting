@@ -10,118 +10,124 @@ import org.evoting.security.Security;
 public class ConsoleIO {
 	private static String ElGamalPublicKeyFile = "ElGamalPublicKey";
 	private static String ElGamalPrivateKeyFile = "ElGamalPrivateKey";
-	
+
 	private static ElGamalPublicKeyParameters elGamalPublicKey;
 	private static ElGamalPrivateKeyParameters elGamalPrivateKey;
-	
+
 	private static boolean electionRunning;
 	private static Timestamp endTime;
-	
-	public static void initialize(boolean e, Timestamp t){
+
+	public static void initialize(boolean e, Timestamp t) {
 		electionRunning = e;
 		endTime = t;
 	}
-	
-	public static void getUserInput(int numberOfCandidates)
-	{
-		while(true){
-		System.out.println("Enter commmand: ");
-		String input = System.console().readLine().toLowerCase();
-		
-		switch (input) {
-		case "start":
-			if(!electionRunning){
-				//Start Election
-			}
-			break;
-		case "stop":
-			if(electionRunning){
-				//Stop election
-			}
-			break;
-		case "load":
-			if(!electionRunning){
-				userCommandLoad();
-			}	
-			break;
-		case "generate":
-			//Generate keys
-			if(!electionRunning){
-				generateElGamalKeys();
-			}
-			break;
-		case "send":
-			if(!electionRunning){
-				//send candidates or key
-			}
 
-			break;
-		case "count":
-			if(electionRunning){
-				//count votes, only if election is over
+	public static void getUserInput(int numberOfCandidates) {
+		while (true) {
+			System.out.println("Enter commmand: ");
+			String input = System.console().readLine().toLowerCase();
+
+			switch (input) {
+			case "start":
+				if (!electionRunning) {
+					// Start Election
+				}
+				break;
+			case "stop":
+				if (electionRunning) {
+					// Stop election
+				}
+				break;
+			case "load":
+				if (!electionRunning) {
+					userCommandLoad();
+				}
+				break;
+			case "generate":
+				// Generate keys
+				if (!electionRunning) {
+					generateElGamalKeys();
+				}
+				break;
+			case "send":
+				if (!electionRunning) {
+					// send candidates or key
+				}
+
+				break;
+			case "count":
+				if (electionRunning) {
+					// count votes, only if election is over
+				}
+				break;
+			case "exit":
+				return;
+			default:
+				// Command not found
+				System.out.println("Command not found");
+				break;
 			}
-			break;
-		case "exit":
-			return;
-		default:
-			//Command not found
-			System.out.println("Command not found");
-			break;
-		}
 		}
 	}
-	
-	public static void userCommandLoad(){
+
+	public static void userCommandLoad() {
 		System.out.println("Load keys or candidate list?");
 		String input = System.console().readLine().toLowerCase();
-		
+
 		switch (input) {
-		case "keys": case "key":
+		case "keys":
+		case "key":
 			loadKeys(ElGamalPrivateKeyFile);
 			loadKeys(ElGamalPublicKeyFile);
 			break;
-		case "candidates": case "candidate": case "candidate list": case "candidatelist":
-			//load candidatelist
+		case "candidates":
+		case "candidate":
+		case "candidate list":
+		case "candidatelist":
+			// load candidatelist
 			break;
 		default:
 			break;
 		}
 	}
-	
-	public static void userCommandSend(){
+
+	public static void userCommandSend() {
 		System.out.println("Send key or candidate list?");
 		String input = System.console().readLine().toLowerCase();
-		
+
 		switch (input) {
-		case "keys": case "key":
+		case "keys":
+		case "key":
 			// send key
 			break;
-		case "candidates": case "candidate": case "candidate list": case "candidatelist":
-			//load candidatelist
+		case "candidates":
+		case "candidate":
+		case "candidate list":
+		case "candidatelist":
+			// load candidatelist
 			break;
 		default:
 			break;
 		}
 	}
-	
+
 	/**
 	 * Generates a new set of ElGamal keys and saves them to files, only if election is not running
 	 */
-	public static void generateElGamalKeys(){
-		//If election is not running
+	public static void generateElGamalKeys() {
+		// If election is not running
 		Security.generateElGamalKeys();
 		elGamalPublicKey = Security.getElgamalPublicKey();
 		elGamalPrivateKey = Security.getElgamalPrivateKey();
-		
-		//Export keys
-		
-		
+
+		// Export keys
+
 		elGamalPublicKey = Importer.importElGamalPublicKeyParameters(ElGamalPublicKeyFile);
 		elGamalPrivateKey = Importer.importElGamalPrivateKeyParameters(ElGamalPrivateKeyFile);
 	}
-	
-	public static void loadKeys(String fileName){
-		//If election is not running
+
+	public static void loadKeys(String fileName) {
+		// If election is not running
 		elGamalPublicKey = Importer.importElGamalPublicKeyParameters(ElGamalPublicKeyFile);
 		elGamalPrivateKey = Importer.importElGamalPrivateKeyParameters(ElGamalPrivateKeyFile);
 	}
