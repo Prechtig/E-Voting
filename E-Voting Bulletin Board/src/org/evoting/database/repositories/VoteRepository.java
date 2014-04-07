@@ -1,5 +1,7 @@
 package org.evoting.database.repositories;
 
+import java.util.List;
+
 import javax.persistence.EntityManager;
 
 import org.evoting.database.entities.Vote;
@@ -23,5 +25,10 @@ public class VoteRepository extends EntityRepository<Vote> {
 	public Vote findById(int userId) {
 		String query = "SELECT v FROM Vote v WHERE id = ?";
 		return super.findSingleByQuery(query, userId);
+	}
+	
+	public List<Vote> findAll() {
+		String query = "SELECT v FROM Vote v";
+		return super.findByQuery(query);
 	}
 }

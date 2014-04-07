@@ -29,7 +29,15 @@ main
     println@Console( "vote[2]: " + ballot.vote[2] )( );
 
     processVote@BulletinBoardService( ballot )( registered );
-    println@Console( "The vote is registered: " + registered )( )
+    println@Console( "The vote is registered: " + registered )( );
+
+    getAllVotes@BulletinBoardService( )( allVotes );
+    for(i = 0, i < #allVotes.votes, i++) {
+    	for(j = 0, j < #allVotes.votes.vote, j++) {
+    		print@Console("vote[" + i + "][" + j + "] = ")( );
+    		println@Console( allVotes.votes[i].votes[j] )( )
+    	}
+    }
 	/*
 	println@Console( "Requesting candidate list..." )(  );
 	getCandidateList@BulletinBoardService( )( candidateList );

@@ -5,6 +5,16 @@ type EncryptedBallot: void {
     .vote*: raw
 }
 
+type EncryptedBallotList: void {
+	.votes: void {
+		.vote*: void {
+			.candidateId: int
+			.encryptedVote: raw	
+		}
+		
+	}
+}
+
 type EncryptedCandidateList: void {
 	.timestamp: raw
 	.candidates: raw
