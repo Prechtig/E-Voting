@@ -77,6 +77,9 @@ public class Model {
 	
 	public static Value toValue(List<Vote> allVotes) {
 		Value result = Value.create();
+		if(allVotes.size() > 0) {
+			result.getNewChild("numberOfCandidates").setValue(allVotes.get(0).getEncryptedVote().length);
+		}
 		
 		for(Vote v : allVotes) {
 			Value votes = result.getNewChild("votes");

@@ -6,6 +6,7 @@ type EncryptedBallot: void {
 }
 
 type EncryptedBallotList: void {
+	.numberOfCandidates: int
 	.votes*: void {
 		.vote*: void {
 			.candidateId: int
