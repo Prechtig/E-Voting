@@ -6,19 +6,19 @@ type EncryptedBallot: void {
 }
 
 type EncryptedBallotList: void {
-	.numberOfCandidates: int
+	.numberOfElectionOptions: int
 	.votes*: void {
 		.vote*: void {
-			.candidateId: int
+			.electionOptionId: int
 			.encryptedVote: raw	
 		}
 		
 	}
 }
 
-type EncryptedCandidateList: void {
+type EncryptedElectionOptions: void {
 	.timestamp: raw
-	.candidates: raw
+	.electionOptions: raw
 }
 
 type PublicKeys: void {

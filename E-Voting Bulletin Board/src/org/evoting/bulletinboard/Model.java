@@ -9,12 +9,12 @@ import jolie.runtime.Value;
 
 import org.bouncycastle.crypto.params.ElGamalParameters;
 import org.bouncycastle.crypto.params.ElGamalPublicKeyParameters;
-import org.evoting.common.EncryptedCandidateList;
+import org.evoting.common.EncryptedElectionOptions;
 import org.evoting.database.EntityManagerUtil;
-import org.evoting.database.entities.Candidate;
+import org.evoting.database.entities.ElectionOption;
 import org.evoting.database.entities.Timestamp;
 import org.evoting.database.entities.Vote;
-import org.evoting.database.repositories.CandidateRepository;
+import org.evoting.database.repositories.ElectionOptionRepository;
 import org.evoting.database.repositories.TimestampRepository;
 import org.evoting.database.repositories.VoteRepository;
 import org.evoting.security.Security;
@@ -44,22 +44,22 @@ public class Model {
 		entMgr.close();
 	}
 	
-	public static EncryptedCandidateList getEncryptedCandidateList() {
+	public static EncryptedElectionOptions getEncryptedElectionOptions() {
 		EntityManager entMgr = EntityManagerUtil.getEntityManager();
 		entMgr.getTransaction().begin();
 		
-		CandidateRepository cRepo = new CandidateRepository(entMgr);
-		List<Candidate> candidates = cRepo.findAll();
+		ElectionOptionRepository cRepo = new ElectionOptionRepository(entMgr);
+		List<ElectionOption> electionOptionsList = cRepo.findAll();
 		
 		TimestampRepository tRepo = new TimestampRepository(entMgr);
 		Timestamp timestamp = tRepo.findTime();
 		
-		EncryptedCandidateList candidateList = new EncryptedCandidateList(candidates, timestamp.getTime());
+		EncryptedElectionOptions electionOptions = new EncryptedElectionOptions(electionOptionsList, timestamp.getTime());
 		
 		//Close the connection to the persistent storage
 		entMgr.getTransaction().commit();
 		entMgr.close();
-		return candidateList;
+		return electionOptions;
 	}
 	
 	public static List<Vote> getAllVotes() {
@@ -78,14 +78,14 @@ public class Model {
 	public static Value toValue(List<Vote> allVotes) {
 		Value result = Value.create();
 		if(allVotes.size() > 0) {
-			result.getNewChild("numberOfCandidates").setValue(allVotes.get(0).getEncryptedVote().length);
+			result.getNewChild("numberOfElectionOptions").setValue(allVotes.get(0).getEncryptedVote().length);
 		}
 		
 		for(Vote v : allVotes) {
 			Value votes = result.getNewChild("votes");
 			for(int i = 0; i < v.getEncryptedVote().length; i++) {
 				Value vote = votes.getNewChild("vote");
-				vote.getNewChild("candidateId").setValue(i);
+				vote.getNewChild("electionOptionId").setValue(i);
 				vote.getNewChild("encryptedVote").setValue(new ByteArray(v.getEncryptedVote()[i]));
 			}
 		}

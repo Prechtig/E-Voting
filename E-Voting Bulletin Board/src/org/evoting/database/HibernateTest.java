@@ -8,10 +8,10 @@ import javax.persistence.EntityManager;
 
 import org.bouncycastle.crypto.params.ElGamalPublicKeyParameters;
 import org.evoting.common.Converter;
-import org.evoting.database.entities.Candidate;
+import org.evoting.database.entities.ElectionOption;
 import org.evoting.database.entities.Timestamp;
 import org.evoting.database.entities.Vote;
-import org.evoting.database.repositories.CandidateRepository;
+import org.evoting.database.repositories.ElectionOptionRepository;
 import org.evoting.database.repositories.TimestampRepository;
 import org.evoting.database.repositories.VoteRepository;
 import org.evoting.security.Security;
@@ -30,10 +30,10 @@ public class HibernateTest {
 		
 		Vote v1 = new Vote(0, new byte[][] { Security.encryptElGamal(Converter.toByteArray(1), pubKey), Security.encryptElGamal(Converter.toByteArray(0), pubKey), Security.encryptElGamal(Converter.toByteArray(0), pubKey) });
 		Vote v2 = new Vote(1, new byte[][] { Security.encryptElGamal(Converter.toByteArray(0), pubKey), Security.encryptElGamal(Converter.toByteArray(1), pubKey), Security.encryptElGamal(Converter.toByteArray(0), pubKey) });
-		Candidate c0 = new Candidate(0, "Mikkel Hvilshøj Funch");
-		Candidate c1 = new Candidate(1, "Mark Thorhauge");
-		Candidate c2 = new Candidate(2, "Andreas Precht Poulsen");
-		Candidate c3 = new Candidate(3, "Gregers Jensen");
+		ElectionOption c0 = new ElectionOption(0, "Mikkel Hvilshøj Funch");
+		ElectionOption c1 = new ElectionOption(1, "Mark Thorhauge");
+		ElectionOption c2 = new ElectionOption(2, "Andreas Precht Poulsen");
+		ElectionOption c3 = new ElectionOption(3, "Gregers Jensen");
 		Date date = new SimpleDateFormat("yyyy-MM-dd kk").parse("2014-06-30 20");
 
 		Timestamp t0 = new Timestamp(0, Security.encryptRSA(date.toString(), Security.getRSAPrivateKey()));
@@ -49,7 +49,7 @@ public class HibernateTest {
 			entMgr.persist(v2);
 		}
 
-		CandidateRepository cr = new CandidateRepository(entMgr);
+		ElectionOptionRepository cr = new ElectionOptionRepository(entMgr);
 		if (cr.findById(c0.getId()) == null) {
 			entMgr.persist(c0);
 		}
@@ -67,11 +67,6 @@ public class HibernateTest {
 		if(!tr.timestampExists()) {
 			entMgr.persist(t0);
 		}
-		
-		Vote vote = vr.findById(0);
-		byte[] b = Security.decryptElgamal(vote.getEncryptedVote()[0], Security.getElgamalPrivateKey());
-		Converter.toInt(b);
-		
 		
 		entMgr.getTransaction().commit();
 		entMgr.getEntityManagerFactory().close();

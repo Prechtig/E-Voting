@@ -8,7 +8,7 @@
 		<provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
 
 		<!-- This is where we tell JPA/Hibernate about our @Entity objects -->
-		<class>org.evoting.database.entities.Candidate</class>
+		<class>org.evoting.database.entities.ElectionOption</class>
 		<class>org.evoting.database.entities.Timestamp</class>
 		<class>org.evoting.database.entities.Vote</class>
 

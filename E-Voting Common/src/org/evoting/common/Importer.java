@@ -87,7 +87,7 @@ public class Importer {
 		return new ElGamalPrivateKeyParameters(x, new ElGamalParameters(g, p));
 	}
 	
-	public static void importCandidateList(String fileName){
+	public static void importElectionOptions(String fileName){
 		try {
 			File file = new File(fileName);
 
@@ -100,7 +100,7 @@ public class Importer {
 				String line;
 				while ((line = br.readLine()) != null) {
 					String[] parts = line.split(delimiter);
-					//TODO: How should the candidate list look
+					//TODO: How should the electionOption list look
 				}
 				br.close();
 			}

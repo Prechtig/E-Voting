@@ -5,8 +5,8 @@ import java.util.List;
 
 import jolie.runtime.Value;
 
-import org.evoting.client.exceptions.NoCandidateListException;
-import org.evoting.common.CandidateList;
+import org.evoting.client.exceptions.NoElectionOptionsException;
+import org.evoting.common.ElectionOptions;
 import org.evoting.common.EncryptedBallot;
 import org.evoting.common.ValueIdentifiers;
 import org.evoting.common.exceptions.BadValueException;
@@ -14,36 +14,32 @@ import org.evoting.security.Security;
 
 
 /**
- * Contains data about the candidates and logic supporting ballot creation.
+ * Contains data about the electionOptions and logic supporting ballot creation.
  * @author Mark
  *
  */
 public class Model
 { 
-	// List of candidate names. The index is equal to the candidate id.
-	private static List<String> candidateNames;
-	// The time stamp that marks the candidate list.
-	private static byte[] candidateListTime;
-	// The number of candidates contained in the candidateList.
-	private static int numberOfCandidates = 0;
+	// List of electionOption names. The index is equal to the electionOption id.
+	private static List<String> electionOptionNames;
+	// The time stamp that marks the electionOption list.
+	private static byte[] electionOptionsTime;
+	// The number of electionOptions contained in the electionOptions.
+	private static int numberOfElectionOptions = 0;
 	
 	/**
-	 * Sets the list of available candidates.
-	 * @param candidates The candidates available for voting.
+	 * Sets the list of available electionOptions.
+	 * @param electionOptions The electionOptions available for voting.
 	 */
-	public static void setCandidates(CandidateList candidates)
+	public static void setElectionOptions(ElectionOptions electionOptions)
 	{
-		candidateNames = candidates.getCandidates();
-		System.out.println("Number of canditates recieved from the BulletinBoard is " + candidateNames.size());
-		for(String s : candidateNames) {
-			System.out.println("Candidate name in candidates: " + s);
-		}
-		candidateListTime = candidates.getTimestamp();
-		numberOfCandidates = candidateNames.size();
+		electionOptionNames = electionOptions.getElectionOptions();
+		electionOptionsTime = electionOptions.getTimestamp();
+		numberOfElectionOptions = electionOptionNames.size();
 	}
 	
 	/**
-	 * Sets the public keys for signing the ballot and decrypting the candidate list.
+	 * Sets the public keys for signing the ballot and decrypting the electionOption list.
 	 * @param publicKeyValues
 	 */
 	public static void setPublicKeys(Value publicKeyValues)
@@ -73,12 +69,12 @@ public class Model
 	
 	
 	/**
-	 * Gets the number of candidates available for voting. Returns zero if setCandidates has not been called.
-	 * @return The number of candidates available for voting.
+	 * Gets the number of electionOptions available for voting. Returns zero if setElectionOptions has not been called.
+	 * @return The number of electionOptions available for voting.
 	 */
-	public static int getNumberOfCandidates()
+	public static int getNumberOfElectionOptions()
 	{
-		return numberOfCandidates;
+		return numberOfElectionOptions;
 	}
 	
 	
@@ -86,26 +82,26 @@ public class Model
 	 * Creates an encrypted ballot from the user input.
 	 * @param userInputData The data that the user submitted to cast his vote.
 	 * @return An encrypted ballot.
-	 * @throws NoCandidateListException
+	 * @throws NoElectionOptionsException
 	 */
-	public static EncryptedBallot getEncryptedBallot(UserInputData userInputData) throws NoCandidateListException
+	public static EncryptedBallot getEncryptedBallot(UserInputData userInputData) throws NoElectionOptionsException
 	{
-		if(candidateNames == null) {
-			throw new NoCandidateListException();
+		if(electionOptionNames == null) {
+			throw new NoElectionOptionsException();
 		}
-		int[] votes = getVoteFromCandidateId(userInputData.getCandidateId());
-		return new EncryptedBallot(userInputData.getUserId(), userInputData.getPassword(), candidateListTime, votes);
+		int[] votes = getVoteFromElectionOptionId(userInputData.getElectionOptionId());
+		return new EncryptedBallot(userInputData.getUserId(), userInputData.getPassword(), electionOptionsTime, votes);
 	}
 	
 	/**
-	 * Returns a boolean array with indexes representing each candidate id and value representing whether or not he/she is voted for.
-	 * @param candidateId The index that is true in the return array.
+	 * Returns a boolean array with indexes representing each electionOption id and value representing whether or not he/she is voted for.
+	 * @param electionOptionId The index that is true in the return array.
 	 * @return Boolean array with one value set to true.
 	 */
-	private static int[] getVoteFromCandidateId(int candidateId)
+	private static int[] getVoteFromElectionOptionId(int electionOptionId)
 	{
-		int[] result = new int[candidateNames.size()];
-		result[candidateId] = 1;
+		int[] result = new int[electionOptionNames.size()];
+		result[electionOptionId] = 1;
 		return result;
 	}
 }

@@ -9,7 +9,7 @@ import jolie.runtime.embedding.RequestResponse;
 import org.evoting.bulletinboard.exceptions.InvalidUserInformationException;
 import org.evoting.common.Ballot;
 import org.evoting.common.EncryptedBallot;
-import org.evoting.common.EncryptedCandidateList;
+import org.evoting.common.EncryptedElectionOptions;
 import org.evoting.database.entities.Vote;
 import org.evoting.security.Security;
 
@@ -33,11 +33,11 @@ public class Controller extends JavaService {
 	}
 
 	/**
-	 * @return Returns the candidatelist as a Value, used in Jolie 
+	 * @return Returns the electionOptionlist as a Value, used in Jolie 
 	 */
-	public Value getCandidateList() {
-		EncryptedCandidateList candidateList = Model.getEncryptedCandidateList();
-		return candidateList.getValue();
+	public Value getElectionOptions() {
+		EncryptedElectionOptions electionOptions = Model.getEncryptedElectionOptions();
+		return electionOptions.getValue();
 	}
 	
 	public Value getPublicKeys() {

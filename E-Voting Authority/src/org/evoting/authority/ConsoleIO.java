@@ -22,7 +22,7 @@ public class ConsoleIO {
 		endTime = t;
 	}
 	
-	public static void getUserInput(int numberOfCandidates)
+	public static void getUserInput(int numberOfElectionOptions)
 	{
 		while(true){
 		System.out.println("Enter commmand: ");
@@ -52,7 +52,7 @@ public class ConsoleIO {
 			break;
 		case "send":
 			if(!electionRunning){
-				//send candidates or key
+				//send electionOptions or key
 			}
 
 			break;
@@ -72,7 +72,7 @@ public class ConsoleIO {
 	}
 	
 	public static void userCommandLoad(){
-		System.out.println("Load keys or candidate list?");
+		System.out.println("Load keys or electionOption list?");
 		String input = System.console().readLine().toLowerCase();
 		
 		switch (input) {
@@ -80,8 +80,8 @@ public class ConsoleIO {
 			loadKeys(ElGamalPrivateKeyFile);
 			loadKeys(ElGamalPublicKeyFile);
 			break;
-		case "candidates": case "candidate": case "candidate list": case "candidatelist":
-			//load candidatelist
+		case "electionOptions": case "electionOption": case "electionOption list": case "electionOptionlist":
+			//load electionOptionlist
 			break;
 		default:
 			break;
@@ -89,15 +89,15 @@ public class ConsoleIO {
 	}
 	
 	public static void userCommandSend(){
-		System.out.println("Send key or candidate list?");
+		System.out.println("Send key or electionOption list?");
 		String input = System.console().readLine().toLowerCase();
 		
 		switch (input) {
 		case "keys": case "key":
 			// send key
 			break;
-		case "candidates": case "candidate": case "candidate list": case "candidatelist":
-			//load candidatelist
+		case "electionOptions": case "electionOption": case "electionOption list": case "electionOptionlist":
+			//load electionOptionlist
 			break;
 		default:
 			break;
