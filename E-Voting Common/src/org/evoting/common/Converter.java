@@ -10,14 +10,12 @@ public class Converter {
 	 * @param value The byte value to convert
 	 * @return The value converted to an int
 	 */
-	public static int toInt(byte[] value) {
+	public static int toInt(byte[] value) {   
 		ByteBuffer bb = ByteBuffer.allocate(4);
 		bb.order(ByteOrder.BIG_ENDIAN);
 		ByteBuffer wrappedBytes = bb.put(value);
 		int i = wrappedBytes.getInt();
 		return i;
-		//byte[] wrappedValue = ByteBuffer.allocate(4).put(value).array();
-		//return ByteBuffer.wrap(wrappedValue).getInt();
 	}
 	
 	/**

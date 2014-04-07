@@ -156,7 +156,21 @@ public class Security {
 	}
 
 	
+	
 	//Temporary
+	/*public static byte[] encryptElGamal(int m, ElGamalPublicKeyParameters pK) {
+		return ElGamal.encrypt(m, pK);
+	}*/
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	public static ElGamalPublicKeyParameters getElgamalPublicKey() {
 		return ElGamal.getPublicKey();
 	}

@@ -83,4 +83,9 @@ public class ElGamal {
 		// TODO Auto-generated method stub
 		privK = privK2;
 	}
+
+	public static byte[] encrypt(int m, ElGamalPublicKeyParameters pK) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

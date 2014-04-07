@@ -7,6 +7,7 @@ import java.security.PublicKey;
 
 import org.bouncycastle.crypto.params.ElGamalPrivateKeyParameters;
 import org.bouncycastle.crypto.params.ElGamalPublicKeyParameters;
+import org.evoting.common.Converter;
 import org.evoting.common.Exporter;
 import org.evoting.common.Importer;
 import org.junit.BeforeClass;
@@ -35,7 +36,7 @@ public class SecurityTest {
 	}
 
 	@Test
-	public void testElGamal() {
+	public void testElGamalString() {
 		String m = "Test String";
 
 		byte[] encrypted = Security.encryptElGamal(m, ElGamalPublicKey);
@@ -47,7 +48,24 @@ public class SecurityTest {
 			fail("ElGamal encryption and decryption failed");
 		}
 	}
+	
+	
+	@Test
+	public void testElGamalInt() {
+		int m = 1;
+		
+		byte[] n = Converter.toByteArray(m);
 
+		byte[] encrypted = Security.encryptElGamal(n, ElGamalPublicKey);
+		byte[] decrypted = Security.decryptElgamal(encrypted, ElGamalPrivateKey);
+
+		int i = Converter.toInt(decrypted);
+		
+		if (m != i) {
+			fail("ElGamal encryption and decryption failed");
+		}
+	}
+	
 	@Test
 	public void testRSA() {
 		String m = "Test String";
@@ -85,5 +103,10 @@ public class SecurityTest {
 		Exporter.exportElGamalPrivateKeyParameters(ElGamalPrivateKey, ElGamalPrivateKeyFile);
 		ElGamalPrivateKeyParameters savedParams = Importer.importElGamalPrivateKeyParameters(ElGamalPrivateKeyFile);
 		assert(savedParams.equals(ElGamalPrivateKey));
+	}
+	
+	@Test
+	public void testIntegerElGamal(){
+		
 	}
 }
