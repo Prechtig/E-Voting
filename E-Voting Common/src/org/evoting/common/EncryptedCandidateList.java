@@ -8,6 +8,7 @@ import java.util.List;
 import jolie.runtime.ByteArray;
 import jolie.runtime.Value;
 
+import org.evoting.common.exceptions.BadValueException;
 import org.evoting.database.entities.Candidate;
 import org.evoting.security.Security;
 
@@ -51,10 +52,16 @@ public class EncryptedCandidateList
 	 * Interprets a value as an encrypted candidate list.
 	 * @param value The value object.
 	 */
-	public EncryptedCandidateList(Value value)
+	public EncryptedCandidateList(Value encryptedCandidateList)
 	{
-		timestamp = value.getFirstChild(ValueIdentifiers.getTimestamp()).byteArrayValue().getBytes();
-		candidates = value.getFirstChild(ValueIdentifiers.getCandidates()).byteArrayValue().getBytes();		
+		// Checks whether the value object has the required fields.
+		if(!encryptedCandidateList.hasChildren(ValueIdentifiers.getTimestamp()) ||
+			!encryptedCandidateList.hasChildren(ValueIdentifiers.getCandidates())) {
+				throw new BadValueException();
+		}
+		
+		timestamp = encryptedCandidateList.getFirstChild(ValueIdentifiers.getTimestamp()).byteArrayValue().getBytes();
+		candidates = encryptedCandidateList.getFirstChild(ValueIdentifiers.getCandidates()).byteArrayValue().getBytes();		
 	}
 	
 	/**

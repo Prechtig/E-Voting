@@ -9,6 +9,7 @@ import org.evoting.client.exceptions.NoCandidateListException;
 import org.evoting.common.CandidateList;
 import org.evoting.common.EncryptedBallot;
 import org.evoting.common.ValueIdentifiers;
+import org.evoting.common.exceptions.BadValueException;
 import org.evoting.security.Security;
 
 
@@ -47,6 +48,16 @@ public class Model
 	 */
 	public static void setPublicKeys(Value publicKeyValues)
 	{
+		// Checks whether the value object has the required fields.
+		if(!publicKeyValues.hasChildren(ValueIdentifiers.getElGamalPublicKey()) ||
+			!publicKeyValues.hasChildren(ValueIdentifiers.getRsaPublicKey()) ||
+			!publicKeyValues.getFirstChild(ValueIdentifiers.getElGamalPublicKey()).hasChildren(ValueIdentifiers.getY()) ||
+			!publicKeyValues.getFirstChild(ValueIdentifiers.getElGamalPublicKey()).getFirstChild(ValueIdentifiers.getParameters()).hasChildren(ValueIdentifiers.getP()) ||
+			!publicKeyValues.getFirstChild(ValueIdentifiers.getElGamalPublicKey()).getFirstChild(ValueIdentifiers.getParameters()).hasChildren(ValueIdentifiers.getG()) ||
+			!publicKeyValues.getFirstChild(ValueIdentifiers.getElGamalPublicKey()).getFirstChild(ValueIdentifiers.getParameters()).hasChildren(ValueIdentifiers.getL())) {
+				throw new BadValueException();
+		}
+		
 		Value elGamalPublicKey = publicKeyValues.getFirstChild(ValueIdentifiers.getElGamalPublicKey());
 		Value parameters = elGamalPublicKey.getFirstChild(ValueIdentifiers.getParameters());
 		Value rsaPublicKeyValue = publicKeyValues.getFirstChild(ValueIdentifiers.getRsaPublicKey());
