@@ -35,7 +35,7 @@ main
     for(i = 0, i < #allVotes.votes, i++) {
     	for(j = 0, j < #allVotes.votes.vote, j++) {
     		print@Console("vote[" + i + "][" + j + "] = ")( );
-    		println@Console( allVotes.votes[i].votes[j] )( )
+    		println@Console( allVotes.votes[i].vote[j].encryptedVote )( )
     	}
     }
 	/*
