@@ -8,6 +8,7 @@ import jolie.runtime.embedding.RequestResponse;
 
 import org.evoting.bulletinboard.exceptions.InvalidUserInformationException;
 import org.evoting.common.Ballot;
+import org.evoting.common.Converter;
 import org.evoting.common.EncryptedBallot;
 import org.evoting.common.EncryptedCandidateList;
 import org.evoting.database.entities.Vote;
@@ -71,5 +72,7 @@ public class Controller extends JavaService {
 	}
 	
 	public static void main(String[] args) {
+		byte[] bytes = Converter.toByteArray(651134);
+		int i = Converter.toInt(bytes);
 	}
 }
