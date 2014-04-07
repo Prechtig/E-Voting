@@ -38,7 +38,6 @@ public class Controller extends JavaService {
 	}
 	
 	public Value getPublicKeys() {
-		//Security security = Security.getInstance();
 		if(!Security.keysGenerated()) {
 			Security.generateKeys();
 		}
@@ -49,6 +48,10 @@ public class Controller extends JavaService {
 		
 		return keys;
 	}
+	
+//	public Value getAllVotes() {
+//		Model.
+//	}
 	
 	/**
 	 * Validates the user
@@ -64,8 +67,5 @@ public class Controller extends JavaService {
 	}
 	
 	public static void main(String[] args) {
-		Controller controller = new Controller();
-		controller.getPublicKeys();
-		System.out.println();
 	}
 }
