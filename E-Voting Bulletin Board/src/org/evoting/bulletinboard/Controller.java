@@ -1,13 +1,17 @@
 package org.evoting.bulletinboard;
 
+import java.util.List;
+
 import jolie.runtime.JavaService;
 import jolie.runtime.Value;
 import jolie.runtime.embedding.RequestResponse;
 
 import org.evoting.bulletinboard.exceptions.InvalidUserInformationException;
 import org.evoting.common.Ballot;
+import org.evoting.common.Converter;
 import org.evoting.common.EncryptedBallot;
 import org.evoting.common.EncryptedCandidateList;
+import org.evoting.database.entities.Vote;
 import org.evoting.security.Security;
 
 public class Controller extends JavaService {
@@ -49,9 +53,10 @@ public class Controller extends JavaService {
 		return keys;
 	}
 	
-//	public Value getAllVotes() {
-//		Model.
-//	}
+	public Value getAllVotes() {
+		List<Vote> allVotes = Model.getAllVotes();
+		return Model.toValue(allVotes);
+	}
 	
 	/**
 	 * Validates the user
@@ -67,5 +72,7 @@ public class Controller extends JavaService {
 	}
 	
 	public static void main(String[] args) {
+		byte[] bytes = Converter.toByteArray(651134);
+		int i = Converter.toInt(bytes);
 	}
 }

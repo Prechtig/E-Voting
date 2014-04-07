@@ -37,4 +37,8 @@ main {
 		processVote@BBJavaController( encryptedBallot )( registered );
 		println@Console( "Registered vote: " + registered )()
 	} ]  { nullProcess }
+
+	[ getAllVotes( )( allVotes ) {
+		getAllVotes@BBJavaController( )( allVotes )
+	} ] { nullProcess }
 }

@@ -62,6 +62,33 @@ public class Model {
 		return candidateList;
 	}
 	
+	public static List<Vote> getAllVotes() {
+		EntityManager entMgr = EntityManagerUtil.getEntityManager();
+		entMgr.getTransaction().begin();
+		
+		VoteRepository vRepo = new VoteRepository(entMgr);
+		List<Vote> allVotes = vRepo.findAll();
+		
+		entMgr.getTransaction().commit();
+		entMgr.close();
+		
+		return allVotes;
+	}
+	
+	public static Value toValue(List<Vote> allVotes) {
+		Value result = Value.create();
+		
+		for(Vote v : allVotes) {
+			Value votes = result.getNewChild("votes");
+			for(int i = 0; i < v.getEncryptedVote().length; i++) {
+				Value vote = votes.getNewChild("vote");
+				vote.getNewChild("candidateId").setValue(i);
+				vote.getNewChild("encryptedVote").setValue(new ByteArray(v.getEncryptedVote()[i]));
+			}
+		}
+		return result;
+	}
+	
 	public static void setElGamalPublicKey(Value root) {
 		ElGamalPublicKeyParameters elgamalPublicKey = Security.getElgamalPublicKey();
 		ElGamalParameters elgamalParameters = elgamalPublicKey.getParameters();
