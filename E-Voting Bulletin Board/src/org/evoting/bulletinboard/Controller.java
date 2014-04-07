@@ -2,6 +2,7 @@ package org.evoting.bulletinboard;
 
 import jolie.runtime.JavaService;
 import jolie.runtime.Value;
+import jolie.runtime.embedding.RequestResponse;
 
 import org.evoting.bulletinboard.exceptions.InvalidUserInformationException;
 import org.evoting.common.Ballot;
@@ -11,7 +12,8 @@ import org.evoting.security.Security;
 
 public class Controller extends JavaService {
 
-	public boolean vote(Value valueEncryptedBallot) {
+	@RequestResponse
+	public Boolean processVote(Value valueEncryptedBallot) {
 		Ballot ballot = new EncryptedBallot(valueEncryptedBallot).getBallot();
 		
 		//Extract needed information from the ballot
@@ -24,7 +26,7 @@ public class Controller extends JavaService {
 		
 		Model.processVote(userId, encryptedVote);
 		
-		return true;
+		return Boolean.TRUE;
 	}
 
 	/**

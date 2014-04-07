@@ -32,9 +32,9 @@ main {
 		getCandidateList@BBJavaController( )( candidateList )
 	} ]  { nullProcess }
 
-	[ vote( encryptedBallot )( registered ) {
+	[ processVote( encryptedBallot )( registered ) {
 		//Process the vote in the embedded Java service
-		vote@BBJavaController( encryptedBallot )( registered );
+		processVote@BBJavaController( encryptedBallot )( registered );
 		println@Console( "Registered vote: " + registered )()
 	} ]  { nullProcess }
 }
