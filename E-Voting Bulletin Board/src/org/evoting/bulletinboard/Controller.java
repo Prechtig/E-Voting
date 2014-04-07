@@ -50,6 +50,10 @@ public class Controller extends JavaService {
 		return keys;
 	}
 	
+//	public Value getAllVotes() {
+//		Model.
+//	}
+	
 	/**
 	 * Validates the user
 	 * @param userId The id of the user
@@ -64,8 +68,5 @@ public class Controller extends JavaService {
 	}
 	
 	public static void main(String[] args) {
-		Controller controller = new Controller();
-		controller.getPublicKeys();
-		System.out.println();
 	}
 }
