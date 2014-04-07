@@ -4,6 +4,7 @@ import jolie.runtime.ByteArray;
 import jolie.runtime.Value;
 import jolie.runtime.ValueVector;
 
+import org.evoting.common.exceptions.BadValueException;
 import org.evoting.common.exceptions.InvalidVoteException;
 import org.evoting.security.Security;
 
@@ -37,11 +38,12 @@ public class EncryptedBallot {
 	 * @throws InvalidVoteException
 	 */
 	public EncryptedBallot(Value encryptedBallot) throws InvalidVoteException {
+		// Checks whether the value object has the required fields.
 		if(!encryptedBallot.hasChildren(ValueIdentifiers.getUserId()) ||
 			!encryptedBallot.hasChildren(ValueIdentifiers.getPasswordHash()) ||
 			!encryptedBallot.hasChildren(ValueIdentifiers.getTimestamp()) ||
 			!encryptedBallot.hasChildren(ValueIdentifiers.getVote())) {
-			throw new InvalidVoteException("A required child was missing");
+			throw new BadValueException();
 		}
 		this.userId = encryptedBallot.getFirstChild(ValueIdentifiers.getUserId()).byteArrayValue().getBytes();
 		this.passwordHash = encryptedBallot.getFirstChild(ValueIdentifiers.getPasswordHash()).byteArrayValue().getBytes();

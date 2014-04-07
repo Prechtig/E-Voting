@@ -32,7 +32,7 @@ main
     println@Console( "The vote is registered: " + registered )( );
 
     getAllVotes@BulletinBoardService( )( allVotes );
-    println@Console( allVotes.numberOfCandidates )( );
+    println@Console( "The number of candidates are " + allVotes.numberOfCandidates )( );
     for(i = 0, i < #allVotes.votes, i++) {
     	for(j = 0, j < #allVotes.votes.vote, j++) {
     		println@Console("vote[" + i + "][" + j + "] = " + allVotes.votes[i].vote[j].encryptedVote )( )

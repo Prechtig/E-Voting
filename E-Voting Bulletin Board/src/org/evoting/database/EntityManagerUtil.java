@@ -15,7 +15,7 @@ public class EntityManagerUtil {
 	 * @return The EntityManagerFactory holding the connection to the persistent storage
 	 */
 	public static EntityManagerFactory getEntityManagerFactory() {
-		if(emf == null) {
+		if(emf == null || !emf.isOpen()) {
 			emf = Persistence.createEntityManagerFactory("mysql-db");
 		}
 		return emf; 
