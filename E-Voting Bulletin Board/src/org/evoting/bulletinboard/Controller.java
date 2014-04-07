@@ -71,5 +71,7 @@ public class Controller extends JavaService {
 	}
 	
 	public static void main(String[] args) {
+		Model.getAllVotes();
+		Model.getAllVotes();
 	}
 }
