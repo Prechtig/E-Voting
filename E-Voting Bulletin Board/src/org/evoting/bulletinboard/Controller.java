@@ -36,7 +36,6 @@ public class Controller extends JavaService {
 	}
 	
 	public Value getPublicKeys() {
-		//Security security = Security.getInstance();
 		if(!Security.keysGenerated()) {
 			Security.generateKeys();
 		}
