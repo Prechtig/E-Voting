@@ -4,6 +4,7 @@ import java.io.Console;
 
 public class ConsoleIO
 {	
+	public static final int CPR_NUMBER_LENGTH = 10;
 	/**
 	 * Gets user input data required to create a ballot from console.
 	 * @param numberOfCandidates the number of candidates available for voting.
@@ -68,6 +69,9 @@ public class ConsoleIO
 	}
 	
 	private static boolean isCPRNumber(String str) {
+		if(CPR_NUMBER_LENGTH < str.length()) {
+			return false;
+		}
 		return isNumber(str);
 	}
 	

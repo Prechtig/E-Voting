@@ -1,1 +1,2 @@
 add exceptions for bad value objects.
+Refactor candidateList to electionOptions.
