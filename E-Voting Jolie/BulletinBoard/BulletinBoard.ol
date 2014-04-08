@@ -26,10 +26,10 @@ main {
 		getPublicKeys@BBJavaController( )( publicKeys )
 	} ] { nullProcess }
 
-	[ getCandidateList( )( candidateList ) {
-		println@Console("Someone is requesting the candidate list")(  );
-		//Get the candidatelist from the embedded Java service
-		getCandidateList@BBJavaController( )( candidateList )
+	[ getElectionOptions( )( electionOptions ) {
+		println@Console("Someone is requesting the election options")(  );
+		//Get the election options from the embedded Java service
+		getElectionOptions@BBJavaController( )( electionOptions )
 	} ]  { nullProcess }
 
 	[ processVote( encryptedBallot )( registered ) {

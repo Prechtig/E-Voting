@@ -4,7 +4,7 @@ import jolie.runtime.Value;
 
 import org.evoting.client.Model;
 import org.evoting.client.UserInputData;
-import org.evoting.client.exceptions.NoCandidateListException;
+import org.evoting.client.exceptions.NoElectionOptionsException;
 import org.junit.Test;
 
 public class ClientController {
@@ -17,23 +17,23 @@ public class ClientController {
 		Value publicKeys = BBController.getPublicKeys();
 		CController.setPublicKeys(publicKeys);
 		
-		Value encryptedCandidateList = BBController.getCandidateList();
-		CController.setCandidateList(encryptedCandidateList);
+		Value encryptedCandidateList = BBController.getElectionOptions();
+		CController.setElectionOptions(encryptedCandidateList);
 		
 		UserInputData userInputData = new UserInputData();
-    	userInputData.setCandidateId(1);
+    	userInputData.setElectionOptionId(1);
     	userInputData.setPassword("123");
     	userInputData.setUserId(123);
     	
     	Value ballot = null;
     	try {
 	    	ballot = Model.getEncryptedBallot(userInputData).getValue();
-		} catch (NoCandidateListException e) {
+		} catch (NoElectionOptionsException e) {
 			System.out.println("No candidate list has been retrieved from server.");
 		}
 		
     	if(ballot != null) {
-    		BBController.vote(ballot);
+    		BBController.processVote(ballot);
     	}
 	}
 }

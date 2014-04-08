@@ -6,8 +6,8 @@ public class ValueIdentifiers {
 	// Name of the time stamp cipher text in the value object.
 	private static final String TIMESTAMP = "timestamp";
 	private static final String VOTE = "vote";
-	// Name of the candidates cipher text in the value object.
-	private static final String CANDIDATES = "candidates";
+	// Name of the electionOptions cipher text in the value object.
+	private static final String CANDIDATES = "electionOptions";
 	private static final String RSA_PUBLIC_KEY = "rsaPublicKey";
 	//Names of the public keys and parameters in the public keys value object.
 	private static final String ELGAMAL_PUBLIC_KEY = "elgamalPublicKey";
@@ -29,7 +29,7 @@ public class ValueIdentifiers {
 	public static String getVote() {
 		return VOTE;
 	}
-	public static String getCandidates() {
+	public static String getElectionOptions() {
 		return CANDIDATES;
 	}
 	public static String getRsaPublicKey() {

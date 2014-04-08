@@ -12,8 +12,8 @@ public interface ISecurity {
 	public byte[] encryptElGamal(String m, ElGamalPublicKeyParameters pK); //Used in C
 	public byte[] encryptElGamal(byte[] m, ElGamalPublicKeyParameters pK);
 	
-	//Encrypt candidate list from BB to C
-	//public String encryptCandidateList(String candidates);
+	//Encrypt electionOption list from BB to C
+	//public String encryptElectionOptions(String electionOptions);
 	public byte[] encryptRSA(String hash, PrivateKey pK); // Used in BB
 	public byte[] encryptRSA(byte[] hash, PrivateKey pK);
 	
@@ -21,7 +21,7 @@ public interface ISecurity {
 	//public String encryptBallot(String ballot);
 	//public String encryptElGamal(String b, ElGamalPublicKeyParameters pK); // Used in C
 	
-	//Encrypt response after receiving ballot from BB to C? Can be set together with encryptCandidateList
+	//Encrypt response after receiving ballot from BB to C? Can be set together with encryptElectionOptions
 	//public String encryptRSA(String response); // Used in BB
 	//public String encryptSignatureToCC(String response);)
 	

@@ -23,35 +23,35 @@ public class ConsoleIO {
 	}
 
 	public static void getUserInput(int numberOfCandidates) {
-		while (true) {
+		while(true){
 			System.out.println("Enter commmand: ");
 			String input = System.console().readLine().toLowerCase();
-
+			
 			switch (input) {
 			case "start":
-				if (!electionRunning) {
-					// Start Election
+				if(!electionRunning){
+					//Start Election
 				}
 				break;
 			case "stop":
-				if (electionRunning) {
-					// Stop election
+				if(electionRunning){
+					//Stop election
 				}
 				break;
 			case "load":
-				if (!electionRunning) {
+				if(!electionRunning){
 					userCommandLoad();
-				}
+				}	
 				break;
 			case "generate":
-				// Generate keys
-				if (!electionRunning) {
+				//Generate keys
+				if(!electionRunning){
 					generateElGamalKeys();
 				}
 				break;
 			case "send":
-				if (!electionRunning) {
-					// send candidates or key
+				if(!electionRunning){
+					//send electionOptions or key
 				}
 
 				break;
@@ -70,8 +70,8 @@ public class ConsoleIO {
 		}
 	}
 
-	public static void userCommandLoad() {
-		System.out.println("Load keys or candidate list?");
+	public static void userCommandLoad(){
+		System.out.println("Load keys or electionOption list?");
 		String input = System.console().readLine().toLowerCase();
 
 		switch (input) {
@@ -80,19 +80,16 @@ public class ConsoleIO {
 			loadKeys(ElGamalPrivateKeyFile);
 			loadKeys(ElGamalPublicKeyFile);
 			break;
-		case "candidates":
-		case "candidate":
-		case "candidate list":
-		case "candidatelist":
-			// load candidatelist
+		case "electionOptions": case "electionOption": case "electionOption list": case "electionOptionlist":
+			//load electionOptionlist
 			break;
 		default:
 			break;
 		}
 	}
 
-	public static void userCommandSend() {
-		System.out.println("Send key or candidate list?");
+	public static void userCommandSend(){
+		System.out.println("Send key or electionOption list?");
 		String input = System.console().readLine().toLowerCase();
 
 		switch (input) {
@@ -100,11 +97,8 @@ public class ConsoleIO {
 		case "key":
 			// send key
 			break;
-		case "candidates":
-		case "candidate":
-		case "candidate list":
-		case "candidatelist":
-			// load candidatelist
+		case "electionOptions": case "electionOption": case "electionOption list": case "electionOptionlist":
+			//load electionOptionlist
 			break;
 		default:
 			break;

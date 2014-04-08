@@ -7,15 +7,15 @@ public class ConsoleIO
 	public static final int CPR_NUMBER_LENGTH = 10;
 	/**
 	 * Gets user input data required to create a ballot from console.
-	 * @param numberOfCandidates the number of candidates available for voting.
+	 * @param numberOfElectionOptions the number of electionOptions available for voting.
 	 * @return Object containing the input data.
 	 */
-	public static UserInputData getUserInput(int numberOfCandidates)
+	public static UserInputData getUserInput(int numberOfElectionOptions)
 	{
 		Console console = System.console();
-		System.out.println("Number of canditates is: " + numberOfCandidates);
+		System.out.println("Number of canditates is: " + numberOfElectionOptions);
 		String input = "";
-		int userId, candidateId;
+		int userId, electionOptionId;
 		String password;
 		UserInputData userData = new UserInputData();
 		
@@ -41,19 +41,19 @@ public class ConsoleIO
 		password = input;
 		input = "";
 		
-		while(!isCandidateId(input, numberOfCandidates)) {
-			System.out.println("Enter the ID of the candidate that you want to vote for:");
+		while(!isElectionOptionId(input, numberOfElectionOptions)) {
+			System.out.println("Enter the ID of the electionOption that you want to vote for:");
 			input = console.readLine();
-			if(!isCandidateId(input, numberOfCandidates)) {
-				System.out.println("The input does not match any legal candidate IDs.\n");
+			if(!isElectionOptionId(input, numberOfElectionOptions)) {
+				System.out.println("The input does not match any legal electionOption IDs.\n");
 			}
 		}
 		
-		candidateId = Integer.parseInt(input);
+		electionOptionId = Integer.parseInt(input);
 		
 		userData.setUserId(userId);
 		userData.setPassword(password);
-		userData.setCandidateId(candidateId);
+		userData.setElectionOptionId(electionOptionId);
 		return userData;
 	}
 	
@@ -83,14 +83,14 @@ public class ConsoleIO
 		return true;
 	}
 	
-	private static boolean isCandidateId(String str, int numberOfCandidates)
+	private static boolean isElectionOptionId(String str, int numberOfElectionOptions)
 	{
-		int candidateId;
+		int electionOptionId;
 		if(isNumber(str)) {
-			candidateId = Integer.parseInt(str);
+			electionOptionId = Integer.parseInt(str);
 		} else {
 			return false;
 		}
-		return  0 <= candidateId && candidateId < numberOfCandidates;
+		return  0 <= electionOptionId && electionOptionId < numberOfElectionOptions;
 	}
 }

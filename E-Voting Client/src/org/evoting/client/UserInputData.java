@@ -9,7 +9,7 @@ public class UserInputData
 {
 	private int userId;
 	private String password;
-	private int candidateId;
+	private int electionOptionId;
 	
 	public int getUserId() {
 		return userId;
@@ -23,10 +23,10 @@ public class UserInputData
 	public void setPassword(String password) {
 		this.password = Hasher.hashPassword(password);
 	}
-	public int getCandidateId() {
-		return candidateId;
+	public int getElectionOptionId() {
+		return electionOptionId;
 	}
-	public void setCandidateId(int candidateId) {
-		this.candidateId = candidateId;
+	public void setElectionOptionId(int electionOptionId) {
+		this.electionOptionId = electionOptionId;
 	}
 }

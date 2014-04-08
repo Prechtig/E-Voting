@@ -3,9 +3,9 @@ package org.evoting.client;
 import jolie.runtime.JavaService;
 import jolie.runtime.Value;
 
-import org.evoting.client.exceptions.NoCandidateListException;
-import org.evoting.common.CandidateList;
-import org.evoting.common.EncryptedCandidateList;
+import org.evoting.client.exceptions.NoElectionOptionsException;
+import org.evoting.common.ElectionOptions;
+import org.evoting.common.EncryptedElectionOptions;
 
 /**
  * Contains the methods that the client jolie script calls.
@@ -15,16 +15,16 @@ import org.evoting.common.EncryptedCandidateList;
 public class Controller extends JavaService
 {
 	/**
-	 * Sets the list of candidates that can be voted for.
-	 * @param encryptedCandidates The value representation of the candidate object.
+	 * Sets the list of electionOptions that can be voted for.
+	 * @param encryptedElectionOptions The value representation of the electionOption object.
 	 */
-	public void setCandidateList(Value encryptedCandidates)
+	public void setElectionOptions(Value encryptedElectionOptionsValue)
 	{
-		// Interprets the value object as an encrypted candidate list.
-		EncryptedCandidateList encryptedCandidateList = new EncryptedCandidateList(encryptedCandidates);
-		// Decrypts the candidate list.
-		CandidateList candidateList = encryptedCandidateList.getCandidateList();
-		Model.setCandidates(candidateList);
+		// Interprets the value object as an encrypted election option list.
+		EncryptedElectionOptions encryptedElectionOptions = new EncryptedElectionOptions(encryptedElectionOptionsValue);
+		// Decrypts the electionOption list.
+		ElectionOptions electionOptions = encryptedElectionOptions.getElectionOptions();
+		Model.setElectionOptions(electionOptions);
 	}
 	
 	/**
@@ -42,22 +42,22 @@ public class Controller extends JavaService
 	 */
     public Value getBallot()
     {
-    	UserInputData userInputData = ConsoleIO.getUserInput(Model.getNumberOfCandidates());
+    	UserInputData userInputData = ConsoleIO.getUserInput(Model.getNumberOfElectionOptions());
 		try {
 	    	return Model.getEncryptedBallot(userInputData).getValue();
-		} catch (NoCandidateListException e) {
-			System.out.println("No candidate list has been retrieved from server.");
+		} catch (NoElectionOptionsException e) {
+			System.out.println("No electionOption list has been retrieved from server.");
 		}
 		return null;
     }
     
     /**
-     * Sets the candidate list and requests a ballot from user input based on the candidate list provided.
-     * @param encryptedCandidates The candidate list that the ballot is to be made of.
+     * Sets the electionOption list and requests a ballot from user input based on the electionOption list provided.
+     * @param encryptedElectionOptions The electionOption list that the ballot is to be made of.
      * @return A value representation of the encrypted ballot.
      */
-    public Value setCandidateListAndGetBallot(Value encryptedCandidates) {
-    	setCandidateList(encryptedCandidates);
+    public Value setElectionOptionsAndGetBallot(Value encryptedElectionOptions) {
+    	setElectionOptions(encryptedElectionOptions);
     	return getBallot();
     }
     

@@ -17,11 +17,11 @@ public class Controller extends JavaService {
 
 	
 	
-	public static void loadCandidates(String fileName){
+	public static void loadElectionOptions(String fileName){
 		
 	}
 	
-	public static void sendCandidates(){
+	public static void sendElectionOptions(){
 		
 	}
 	

@@ -18,8 +18,8 @@ main
 	println@Console( publicKeys.elgamalPublicKey.parameters.l )(  );
 	println@Console( publicKeys.rsaPublicKey )(  );
 	setPublicKeys@Controller( publicKeys )();
-	getCandidateList@BulletinBoardService( )( candidateList );
-    setCandidateListAndGetBallot@Controller( candidateList )( ballot );
+	getElectionOptions@BulletinBoardService( )( electionOptions );
+    setElectionOptionsAndGetBallot@Controller( electionOptions )( ballot );
 
     println@Console( "userId: " + ballot.userId )( );
     println@Console( "passwordHash: " + ballot.passwordHash )( );
@@ -32,23 +32,10 @@ main
     println@Console( "The vote is registered: " + registered )( );
 
     getAllVotes@BulletinBoardService( )( allVotes );
-    println@Console( "The number of candidates are " + allVotes.numberOfCandidates )( );
+    println@Console( "The number of election options are " + allVotes.numberOfElectionOptions )( );
     for(i = 0, i < #allVotes.votes, i++) {
     	for(j = 0, j < #allVotes.votes.vote, j++) {
     		println@Console("vote[" + i + "][" + j + "] = " + allVotes.votes[i].vote[j].encryptedVote )( )
     	}
     }
-	/*
-	println@Console( "Requesting candidate list..." )(  );
-	getCandidateList@BulletinBoardService( )( candidateList );
-	println@Console("Got candidate list of size " + #candidateList.candidates)();
-	
-	for(i = 0, i < #candidateList.candidates, i++) {
-    	println@Console("Candidate " + i + ": " + candidateList.candidates[i] )()
-    };
-	
-	setCandidateList@Controller( candidateList )();
-    getBallot@Controller()( b )
-    */
-    
 }
