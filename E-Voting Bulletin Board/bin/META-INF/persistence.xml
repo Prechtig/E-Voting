@@ -48,6 +48,7 @@
 			<property name="hibernate.c3p0.max_size" value="25" />
 			<property name="hibernate.c3p0.min_size" value="1" />
 			<property name="hibernate.c3p0.max_statement" value="0" />
+			<property name="hibernate.c3p0.maxIdleTime" value="0" />
 			<property name="hibernate.c3p0.preferredTestQuery" value="select 1;" />
         	
 		</properties>

@@ -6,7 +6,8 @@ import jolie.runtime.JavaService;
 import jolie.runtime.Value;
 import jolie.runtime.embedding.RequestResponse;
 
-import org.evoting.bulletinboard.exceptions.InvalidUserInformationException;
+import org.bouncycastle.crypto.params.ElGamalParameters;
+import org.bouncycastle.crypto.params.ElGamalPublicKeyParameters;
 import org.evoting.common.Ballot;
 import org.evoting.common.EncryptedBallot;
 import org.evoting.common.EncryptedElectionOptions;
@@ -25,7 +26,7 @@ public class Controller extends JavaService {
 		byte[][] encryptedVote = ballot.getVote();
 		
 		//Check the userId+passwordHash is a legal combination
-		validateUser(userId, passwordHash);
+		Model.validateUser(userId, passwordHash);
 		
 		Model.processVote(userId, encryptedVote);
 		
@@ -44,30 +45,17 @@ public class Controller extends JavaService {
 		if(!Security.keysGenerated()) {
 			Security.generateKeys();
 		}
-		Value keys = Value.create();
 		
-		Model.setElGamalPublicKey(keys);
-		Model.setRSAPublicKey(keys);
+		ElGamalPublicKeyParameters elgamalPublicKey = Security.getElgamalPublicKey();
+		ElGamalParameters elgamalParameters = elgamalPublicKey.getParameters();
+		byte[] rsaPublicKey = Security.getRSAPublicKeyBytes();
 		
-		return keys;
+		return Model.toValue(elgamalPublicKey, elgamalParameters, rsaPublicKey);
 	}
 	
 	public Value getAllVotes() {
 		List<Vote> allVotes = Model.getAllVotes();
 		return Model.toValue(allVotes);
-	}
-	
-	/**
-	 * Validates the user
-	 * @param userId The id of the user
-	 * @param passwordHash The passwordHash of the user
-	 * @return true if the userId and passwordHash matches otherwise false
-	 */
-	private boolean validateUser(int userId, String passwordHash) {
-		if(userId < 0) {
-			throw new InvalidUserInformationException("userId and passwordHash did not match.");
-		}
-		return true;
 	}
 	
 	public static void main(String[] args) {
