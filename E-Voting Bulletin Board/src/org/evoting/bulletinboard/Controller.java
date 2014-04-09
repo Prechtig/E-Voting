@@ -17,6 +17,12 @@ import org.evoting.security.Security;
 public class Controller extends JavaService {
 
 	@RequestResponse
+	/**
+	 * Processes a vote, effectively saving it in the persistent storage
+	 * if the userId + passwordHash matches, and the ballot is valid
+	 * @param valueEncryptedBallot The vote to process, as a value from Jolie
+	 * @return true if the vote is registered, otherwise false
+	 */
 	public Boolean processVote(Value valueEncryptedBallot) {
 		Ballot ballot = new EncryptedBallot(valueEncryptedBallot).getBallot();
 		
@@ -33,6 +39,7 @@ public class Controller extends JavaService {
 		return Boolean.TRUE;
 	}
 
+	@RequestResponse
 	/**
 	 * @return Returns the electionOptionlist as a Value, used in Jolie 
 	 */
@@ -41,6 +48,10 @@ public class Controller extends JavaService {
 		return electionOptions.getValue();
 	}
 	
+	@RequestResponse
+	/**
+	 * @return Returns the elgamal + rsa public key
+	 */
 	public Value getPublicKeys() {
 		if(!Security.keysGenerated()) {
 			Security.generateKeys();
@@ -53,6 +64,10 @@ public class Controller extends JavaService {
 		return Model.toValue(elgamalPublicKey, elgamalParameters, rsaPublicKey);
 	}
 	
+	@RequestResponse
+	/**
+	 * @return All votes in the database
+	 */
 	public Value getAllVotes() {
 		List<Vote> allVotes = Model.getAllVotes();
 		return Model.toValue(allVotes);

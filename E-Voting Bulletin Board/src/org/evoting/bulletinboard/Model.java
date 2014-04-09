@@ -21,6 +21,11 @@ import org.evoting.database.repositories.VoteRepository;
 
 public class Model {
 	
+	/**
+	 * Saves the vote in the database, overwriting the existing vote, if one is present
+	 * @param userId The id of the user
+	 * @param encryptedVote The encrypted ballot of the user
+	 */
 	public static void processVote(int userId, byte[][] encryptedVote) {
 		EntityManager entMgr = beginDatabaseSession();
 
@@ -39,6 +44,9 @@ public class Model {
 		endDatabaseSession(entMgr);
 	}
 	
+	/**
+	 * @return The election options encrypted with the private key of the BB
+	 */
 	public static EncryptedElectionOptions getEncryptedElectionOptions() {
 		EntityManager entMgr = beginDatabaseSession();
 		
@@ -54,6 +62,9 @@ public class Model {
 		return electionOptions;
 	}
 	
+	/**
+	 * @return All votes in the database
+	 */
 	public static List<Vote> getAllVotes() {
 		EntityManager entMgr = beginDatabaseSession();
 		
@@ -65,6 +76,11 @@ public class Model {
 		return allVotes;
 	}
 	
+	/**
+	 * Converts a list of votes to a value defined in Types.iol (Jolie)
+	 * @param allVotes The list of votes to be converted
+	 * @return The value representing the list of votes
+	 */
 	public static Value toValue(List<Vote> allVotes) {
 		Value result = Value.create();
 		if(allVotes.size() > 0) {
@@ -82,6 +98,13 @@ public class Model {
 		return result;
 	}
 	
+	/**
+	 * Converts the given parameters into a value defined in Types.iol (Jolie)
+	 * @param elgamalPublicKey The elgamal public key
+	 * @param elgamalParameters The parameters of the elgamal public key
+	 * @param rsaPublicKey The rsa public key
+	 * @return The given parameters converted to a Jolie value
+	 */
 	public static Value toValue(ElGamalPublicKeyParameters elgamalPublicKey, ElGamalParameters elgamalParameters, byte[] rsaPublicKey) {
 		Value keys = Value.create();
 		
@@ -112,12 +135,19 @@ public class Model {
 		return true;
 	}
 	
+	/**
+	 * @return An entitymanager with a open connection with an begun transaction
+	 */
 	private static EntityManager beginDatabaseSession() {
 		EntityManager entMgr = EntityManagerUtil.getEntityManager();
 		entMgr.getTransaction().begin();
 		return entMgr;
 	}
 	
+	/**
+	 * Ends a database session, committing the transaction and closing the entitymanager
+	 * @param entMgr The entitymanager holding the connection + transaction
+	 */
 	private static void endDatabaseSession(EntityManager entMgr) {
 		entMgr.getTransaction().commit();
 		entMgr.close();
