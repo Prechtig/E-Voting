@@ -67,7 +67,7 @@ public class ConsoleIO extends JavaService {
 				break;
 			case "send": //send electionOptions or key
 				if(!electionRunning){
-					
+					userCommandSend();
 				}
 
 				break;
