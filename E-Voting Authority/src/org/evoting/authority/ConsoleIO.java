@@ -1,13 +1,18 @@
 package org.evoting.authority;
 
+import java.io.IOException;
 import java.sql.Timestamp;
+
+import jolie.net.CommMessage;
+import jolie.runtime.JavaService;
+import jolie.runtime.Value;
 
 import org.bouncycastle.crypto.params.ElGamalPrivateKeyParameters;
 import org.bouncycastle.crypto.params.ElGamalPublicKeyParameters;
 import org.evoting.common.Importer;
 import org.evoting.security.Security;
 
-public class ConsoleIO {
+public class ConsoleIO extends JavaService {
 	private static String ElGamalPublicKeyFile = "ElGamalPublicKey";
 	private static String ElGamalPrivateKeyFile = "ElGamalPrivateKey";
 
@@ -17,60 +22,70 @@ public class ConsoleIO {
 	private static boolean electionRunning;
 	private static Timestamp endTime;
 
-	public static void initialize(boolean e, Timestamp t) {
-		electionRunning = e;
-		endTime = t;
+	/**
+	 * Used to get the initial information about the election
+	 * Sets if the election is running// ?and if it is, then what time it will end?
+	 */
+	public void initialize() {
+		CommMessage request = CommMessage.createRequest("ow", "/", Value.create( 6 ));
+		try {
+			CommMessage response = sendMessage( request ).recvResponseFor( request );
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 	}
 
-	public static void getUserInput(int numberOfCandidates) {
+	public void getUserInput() {
+		initialize();
+		
 		while(true){
 			System.out.println("Enter commmand: ");
 			String input = System.console().readLine().toLowerCase();
 			
 			switch (input) {
-			case "start":
+			case "start": // Start election
 				if(!electionRunning){
-					//Start Election
+					userStartElection();
 				}
 				break;
-			case "stop":
+			case "stop": // Stop election
 				if(electionRunning){
-					//Stop election
+					userStopElection();
 				}
 				break;
-			case "load":
+			case "load": // Load electionOptions or keys
 				if(!electionRunning){
 					userCommandLoad();
 				}	
 				break;
-			case "generate":
-				//Generate keys
+			case "generate": //Generate keys
 				if(!electionRunning){
 					generateElGamalKeys();
 				}
 				break;
-			case "send":
+			case "send": //send electionOptions or key
 				if(!electionRunning){
-					//send electionOptions or key
+					
 				}
 
 				break;
-			case "count":
+			case "count": // count votes, only if election is over
 				if (electionRunning) {
-					// count votes, only if election is over
+					
 				}
 				break;
-			case "exit":
+			case "exit": // Terminate program
 				return;
-			default:
-				// Command not found
+			default: // Command not found
 				System.out.println("Command not found");
 				break;
 			}
 		}
 	}
 
-	public static void userCommandLoad(){
+	private void userCommandLoad(){
 		System.out.println("Load keys or electionOption list?");
 		String input = System.console().readLine().toLowerCase();
 
@@ -88,7 +103,7 @@ public class ConsoleIO {
 		}
 	}
 
-	public static void userCommandSend(){
+	private void userCommandSend(){
 		System.out.println("Send key or electionOption list?");
 		String input = System.console().readLine().toLowerCase();
 
@@ -108,7 +123,7 @@ public class ConsoleIO {
 	/**
 	 * Generates a new set of ElGamal keys and saves them to files, only if election is not running
 	 */
-	public static void generateElGamalKeys() {
+	private void generateElGamalKeys() {
 		// If election is not running
 		Security.generateElGamalKeys();
 		elGamalPublicKey = Security.getElgamalPublicKey();
@@ -120,9 +135,17 @@ public class ConsoleIO {
 		elGamalPrivateKey = Importer.importElGamalPrivateKeyParameters(ElGamalPrivateKeyFile);
 	}
 
-	public static void loadKeys(String fileName) {
+	private void loadKeys(String fileName) {
 		// If election is not running
 		elGamalPublicKey = Importer.importElGamalPublicKeyParameters(ElGamalPublicKeyFile);
 		elGamalPrivateKey = Importer.importElGamalPrivateKeyParameters(ElGamalPrivateKeyFile);
+	}
+	
+	private void userStartElection(){
+		
+	}
+	
+	private void userStopElection() {
+		// TODO Auto-generated method stub
 	}
 }
