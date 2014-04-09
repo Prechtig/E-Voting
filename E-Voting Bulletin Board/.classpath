@@ -19,5 +19,8 @@
 	<classpathentry kind="lib" path="lib/libjolie.jar"/>
 	<classpathentry kind="lib" path="/E-Voting Common/lib/elgamal.jar"/>
 	<classpathentry kind="lib" path="/E-Voting Common/lib/bcprov-jdk15on-150.jar" sourcepath="D:/Downloads/src.zip"/>
+	<classpathentry kind="lib" path="lib/c3p0-0.9.2.1.jar"/>
+	<classpathentry kind="lib" path="lib/hibernate-c3p0-4.3.4.Final.jar"/>
+	<classpathentry kind="lib" path="lib/mchange-commons-java-0.2.3.4.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

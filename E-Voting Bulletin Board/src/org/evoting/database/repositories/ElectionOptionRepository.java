@@ -20,7 +20,7 @@ public class ElectionOptionRepository extends EntityRepository<ElectionOption>{
 	 * @return The electionOption with the given id if one exists, null otherwise
 	 */
 	public ElectionOption findById(int electionOptionId) {
-		String query = "SELECT c FROM ElectionOption c WHERE id = ?";
+		String query = "SELECT c FROM ElectionOption c WHERE id = ?1";
 		return super.findSingleByQuery(query, electionOptionId);
 	}
 	
