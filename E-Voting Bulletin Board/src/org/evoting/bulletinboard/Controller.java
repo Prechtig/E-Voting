@@ -6,7 +6,8 @@ import jolie.runtime.JavaService;
 import jolie.runtime.Value;
 import jolie.runtime.embedding.RequestResponse;
 
-import org.evoting.bulletinboard.exceptions.InvalidUserInformationException;
+import org.bouncycastle.crypto.params.ElGamalParameters;
+import org.bouncycastle.crypto.params.ElGamalPublicKeyParameters;
 import org.evoting.common.Ballot;
 import org.evoting.common.EncryptedBallot;
 import org.evoting.common.EncryptedElectionOptions;
@@ -16,6 +17,12 @@ import org.evoting.security.Security;
 public class Controller extends JavaService {
 
 	@RequestResponse
+	/**
+	 * Processes a vote, effectively saving it in the persistent storage
+	 * if the userId + passwordHash matches, and the ballot is valid
+	 * @param valueEncryptedBallot The vote to process, as a value from Jolie
+	 * @return true if the vote is registered, otherwise false
+	 */
 	public Boolean processVote(Value valueEncryptedBallot) {
 		Ballot ballot = new EncryptedBallot(valueEncryptedBallot).getBallot();
 		
@@ -25,13 +32,14 @@ public class Controller extends JavaService {
 		byte[][] encryptedVote = ballot.getVote();
 		
 		//Check the userId+passwordHash is a legal combination
-		validateUser(userId, passwordHash);
+		Model.validateUser(userId, passwordHash);
 		
 		Model.processVote(userId, encryptedVote);
 		
 		return Boolean.TRUE;
 	}
 
+	@RequestResponse
 	/**
 	 * @return Returns the electionOptionlist as a Value, used in Jolie 
 	 */
@@ -40,34 +48,29 @@ public class Controller extends JavaService {
 		return electionOptions.getValue();
 	}
 	
+	@RequestResponse
+	/**
+	 * @return Returns the elgamal + rsa public key
+	 */
 	public Value getPublicKeys() {
 		if(!Security.keysGenerated()) {
 			Security.generateKeys();
 		}
-		Value keys = Value.create();
 		
-		Model.setElGamalPublicKey(keys);
-		Model.setRSAPublicKey(keys);
+		ElGamalPublicKeyParameters elgamalPublicKey = Security.getElgamalPublicKey();
+		ElGamalParameters elgamalParameters = elgamalPublicKey.getParameters();
+		byte[] rsaPublicKey = Security.getRSAPublicKeyBytes();
 		
-		return keys;
+		return Model.toValue(elgamalPublicKey, elgamalParameters, rsaPublicKey);
 	}
 	
+	@RequestResponse
+	/**
+	 * @return All votes in the database
+	 */
 	public Value getAllVotes() {
 		List<Vote> allVotes = Model.getAllVotes();
 		return Model.toValue(allVotes);
-	}
-	
-	/**
-	 * Validates the user
-	 * @param userId The id of the user
-	 * @param passwordHash The passwordHash of the user
-	 * @return true if the userId and passwordHash matches otherwise false
-	 */
-	private boolean validateUser(int userId, String passwordHash) {
-		if(userId < 0) {
-			throw new InvalidUserInformationException("userId and passwordHash did not match.");
-		}
-		return true;
 	}
 	
 	public static void main(String[] args) {

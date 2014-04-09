@@ -23,7 +23,7 @@
 			<property name="hibernate.hbm2ddl.auto" value="update" />
 			
 			<!-- Echo all executed SQL to stdout -->
-			<property name="hibernate.show_sql" value="true" />
+			<property name="hibernate.show_sql" value="false" />
 			
 			<!-- Disable the second-level cache -->
 			<property name="hibernate.cache.provider_class" value="org.hibernate.cache.NoCacheProvicer" />
@@ -37,6 +37,20 @@
 			<property name="hibernate.connection.CharSet" value="utf8" />
         	<property name="hibernate.connection.characterEncoding" value="utf8" />
         	<property name="hibernate.connection.useUnicode" value="true" />
+        	
+        	<!-- Use C3p0 Connection Pool -->
+        	<property name="hibernate.connection.provider_class" value="org.hibernate.connection.C3P0ConnectionProvider" />
+        	
+        	<!-- C3p0 Connection Pool -->
+        	<property name="hibernate.c3p0.acquire_increment" value="1" />
+			<property name="hibernate.c3p0.idle_test_period" value="300" />
+			<property name="hibernate.c3p0.timeout" value="120" />
+			<property name="hibernate.c3p0.max_size" value="25" />
+			<property name="hibernate.c3p0.min_size" value="1" />
+			<property name="hibernate.c3p0.max_statement" value="0" />
+			<property name="hibernate.c3p0.maxIdleTime" value="0" />
+			<property name="hibernate.c3p0.preferredTestQuery" value="select 1;" />
+        	
 		</properties>
 	</persistence-unit>
 </persistence>
