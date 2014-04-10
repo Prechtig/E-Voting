@@ -9,5 +9,6 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/E-Voting Common"/>
 	<classpathentry kind="lib" path="lib/jolie.jar"/>
 	<classpathentry kind="lib" path="lib/libjolie.jar"/>
+	<classpathentry kind="lib" path="/E-Voting Common/lib/bcprov-jdk15on-150.jar" sourcepath="D:/Downloads/src.zip"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
