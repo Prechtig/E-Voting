@@ -21,13 +21,15 @@ public class ConsoleIO extends JavaService {
 
 	private static boolean electionRunning;
 	private static Timestamp endTime;
+	
+	private String aCommunication = "IAuthorityCommunication";
 
 	/**
 	 * Used to get the initial information about the election
 	 * Sets if the election is running// ?and if it is, then what time it will end?
 	 */
 	public void initialize() {
-		CommMessage request = CommMessage.createRequest("ow", "/", Value.create( 6 ));
+		CommMessage request = CommMessage.createRequest("operationName!!!!!!!!!", aCommunication, Value.create( 6 ));
 		try {
 			CommMessage response = sendMessage( request ).recvResponseFor( request );
 		} catch (IOException e) {

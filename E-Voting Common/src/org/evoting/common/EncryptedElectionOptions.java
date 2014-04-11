@@ -103,7 +103,8 @@ public class EncryptedElectionOptions
 			sb.append(s);
 			sb.append(SEPERATION_CHARACTER);
 		}
-		return Security.encryptRSA(sb.toString(), Security.getRSAPrivateKey());
+		return Security.sign(sb.toString(), Security.getRSAPrivateKey());
+		//return Security.encryptRSA(sb.toString(), Security.getRSAPrivateKey());
 	}
 	
 	public String toString()
