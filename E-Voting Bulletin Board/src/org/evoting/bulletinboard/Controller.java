@@ -14,7 +14,6 @@ import org.evoting.common.EncryptedElectionOptions;
 import org.evoting.common.Importer;
 import org.evoting.database.entities.Vote;
 import org.evoting.security.Security;
-import org.hibernate.cfg.ImprovedNamingStrategy;
 
 public class Controller extends JavaService {
 	static {
