@@ -7,8 +7,6 @@ import javax.persistence.EntityManager;
 import jolie.runtime.ByteArray;
 import jolie.runtime.Value;
 
-import org.bouncycastle.crypto.params.ElGamalParameters;
-import org.bouncycastle.crypto.params.ElGamalPublicKeyParameters;
 import org.evoting.bulletinboard.exceptions.InvalidUserInformationException;
 import org.evoting.common.EncryptedElectionOptions;
 import org.evoting.database.EntityManagerUtil;
@@ -20,6 +18,25 @@ import org.evoting.database.repositories.TimestampRepository;
 import org.evoting.database.repositories.VoteRepository;
 
 public class Model {
+	
+	private static byte[] rsaPublicKey = null;
+	private static boolean keysGenerated = false, keysValueGenerated = false;
+	private static String y = null, p = null, g = null;
+	private static int l;
+	private static Value publicKeys = null;
+	
+	public static boolean keysGenerated() {
+		return keysGenerated;
+	}
+	
+	public static void setKeys(String y, String p, String g, int l, byte[] rsaPublicKey) {
+		Model.y = y;
+		Model.p = p;
+		Model.g = g;
+		Model.l = l;
+		Model.rsaPublicKey = rsaPublicKey;
+		keysGenerated = true;
+	}
 	
 	/**
 	 * Saves the vote in the database, overwriting the existing vote, if one is present
@@ -99,27 +116,32 @@ public class Model {
 	}
 	
 	/**
-	 * Converts the given parameters into a value defined in Types.iol (Jolie)
-	 * @param elgamalPublicKey The elgamal public key
-	 * @param elgamalParameters The parameters of the elgamal public key
-	 * @param rsaPublicKey The rsa public key
-	 * @return The given parameters converted to a Jolie value
+	 * Returns the public keys as the value defined in Types.iol (Jolie)
+	 * @return The given public keys as a Jolie value
 	 */
-	public static Value toValue(ElGamalPublicKeyParameters elgamalPublicKey, ElGamalParameters elgamalParameters, byte[] rsaPublicKey) {
-		Value keys = Value.create();
-		
-		//Set the children regarding elgamal
-		Value elgamalPublicKeyValue = keys.getNewChild("elgamalPublicKey");
-		elgamalPublicKeyValue.getNewChild("y").setValue(elgamalPublicKey.getY().toString());
-		Value elgamalParametersValue = elgamalPublicKeyValue.getNewChild("parameters");
-		elgamalParametersValue.getNewChild("p").setValue(elgamalParameters.getP().toString());
-		elgamalParametersValue.getNewChild("g").setValue(elgamalParameters.getG().toString());
-		elgamalParametersValue.getNewChild("l").setValue(elgamalParameters.getL());
-		
-		//Set the children regarding rsa
-		keys.getNewChild("rsaPublicKey").setValue(new ByteArray(rsaPublicKey));
-		
-		return keys;
+	public static Value getPublicKeysValue() {
+		if(!keysGenerated) {
+			throw new RuntimeException("The Bulletin Board has not received the keys from the Authority yet");
+		}
+		if(!keysValueGenerated) {
+			Value keys = Value.create();
+			
+			//Set the children regarding elgamal
+			Value elgamalPublicKeyValue = keys.getNewChild("elgamalPublicKey");
+			elgamalPublicKeyValue.getNewChild("y").setValue(y);
+			Value elgamalParametersValue = elgamalPublicKeyValue.getNewChild("parameters");
+			elgamalParametersValue.getNewChild("p").setValue(p);
+			elgamalParametersValue.getNewChild("g").setValue(g);
+			elgamalParametersValue.getNewChild("l").setValue(l);
+			
+			//Set the children regarding rsa
+			keys.getNewChild("rsaPublicKey").setValue(new ByteArray(rsaPublicKey));
+			
+			publicKeys = keys;
+			keysValueGenerated = true;
+			return keys;
+		}
+		return publicKeys;
 	}
 	
 	/**
