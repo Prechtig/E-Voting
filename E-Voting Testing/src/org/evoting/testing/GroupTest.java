@@ -33,7 +33,6 @@ public class GroupTest
 		
 		log = Group.getInstance().discreteLogarithm(messagesProduct);
 		assertEquals(message + message2, log);
-		
 	}
 	
 	@Test
@@ -93,8 +92,6 @@ public class GroupTest
 		
 		long log = Group.getInstance().discreteLogarithm(messagesProductAsPower);
 		
-		assertEquals(message + message2, log);
-		
-		
+		assertEquals(message + message2, log);	
 	}
 }
