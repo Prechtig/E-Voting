@@ -1,7 +1,5 @@
 package org.evoting.common;
 
-import java.math.BigInteger;
-
 import jolie.runtime.ByteArray;
 import jolie.runtime.Value;
 import jolie.runtime.ValueVector;
