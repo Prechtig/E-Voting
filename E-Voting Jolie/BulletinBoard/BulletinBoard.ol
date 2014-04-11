@@ -30,13 +30,13 @@ main {
 		println@Console("Someone is requesting the election options")(  );
 		//Get the election options from the embedded Java service
 		getElectionOptions@BBJavaController( )( electionOptions )
-	} ]  { nullProcess }
+	} ] { nullProcess }
 
 	[ processVote( encryptedBallot )( registered ) {
 		//Process the vote in the embedded Java service
 		processVote@BBJavaController( encryptedBallot )( registered );
 		println@Console( "Registered vote: " + registered )()
-	} ]  { nullProcess }
+	} ] { nullProcess }
 
 	[ getAllVotes( )( allVotes ) {
 		getAllVotes@BBJavaController( )( allVotes )
