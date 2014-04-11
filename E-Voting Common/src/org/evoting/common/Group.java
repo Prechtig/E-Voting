@@ -47,9 +47,9 @@ public class Group
 	}
 	
 	/**
-	 * Applies the logarithm operator to a value, assuming that the value is a member of the group. This is done by bruteforce in the range provided.
+	 * Applies the logarithm operator to a value, assuming that the value is a member of the group. This is done by exhaustive search in the range provided.
 	 * The range is defined as from(including) searchRadius subtracted from expectedResult to(including) expectedResult added to searchRadius.
-	 * If the range does not contain the result, the result is obtained by brute in the entire range of non-negative integers.
+	 * If the range does not contain the result, the result is obtained by exhaustive search in the entire range of non-negative integers.
 	 * @param value The value that is a member of the group.
 	 * @param expectedResult The median value of the search range.
 	 * @param searchRadius The offset from the expectedResult, from which the range is defined. Cannot be greater than expectedResult or less than or equal to zero.
