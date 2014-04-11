@@ -2,39 +2,36 @@ package org.evoting.common;
 
 import java.math.BigInteger;
 
+/**
+ * Contains data defining a cyclic group, and methods for generating and finding group elements.
+ * @author Mark
+ *
+ */
 public class Group
 {
 	private static Group instance = new Group();
 	private BigInteger generator;
 	private BigInteger modulo;
 	
-	public BigInteger raiseGenerator(BigInteger power)
+	/**
+	 * Raises the group generator to the power of the input provided and applies the modulo operator with the modulo of the group on the result.
+	 * @param power The power to raise the generator to.
+	 * @return A group element.
+	 */
+	public BigInteger raiseGenerator(long power)
 	{
-		return generator.modPow(power, modulo);
+		return generator.modPow(BigInteger.valueOf(power), modulo);
 	}
 	
-	public int discreteLogarithm(BigInteger value)
+	/**
+	 * Applies the logarithm operator to a value, assuming that the value is a member of the group. This is done by exhaustive search.
+	 * @param value The value that is a member of the group.
+	 * @return The power which the generator is raised to, to get the value provided.
+	 */
+	public long discreteLogarithm(BigInteger value)
 	{
 		boolean logFound = false;
-		int power = 0;
-		BigInteger current;
-		while(!logFound)
-		{
-			current = raiseGenerator(BigInteger.valueOf(power));
-			if(current.equals(value)) {
-				logFound = true;
-			} else {
-				power++;
-			}
-		}
-		
-		return power;
-	}
-	
-	public int discreteLogarithm2(BigInteger value)
-	{
-		boolean logFound = false;
-		int power = 0;
+		long power = 0;
 		BigInteger current = BigInteger.valueOf(1);
 		while(!logFound)
 		{
@@ -47,6 +44,46 @@ public class Group
 		}
 		
 		return power;
+	}
+	
+	/**
+	 * Applies the logarithm operator to a value, assuming that the value is a member of the group. This is done by bruteforce in the range provided.
+	 * The range is defined as from(including) expectedResult subtracted with searchRadius to(including) expectedResult added with searchRadius.
+	 * If the range does not contain the result, the result is obtained by brute in the entire range of non-negative integers.
+	 * @param value The value that is a member of the group.
+	 * @param expectedResult The median value of the search range.
+	 * @param searchRadius The offset from the expectedResult, from which the range is defined. Cannot be greater than expectedResult or less than or equal to zero.
+	 * @return The power which the generator is raised to, to get the value provided.
+	 */
+	public long discreteLogarithmFromExpectedRange(BigInteger value, long expectedResult, long searchRadius)
+	{   
+		if(expectedResult - searchRadius < 0 || searchRadius == 0) {
+			throw new IllegalArgumentException();
+		}
+		
+		long start = expectedResult - searchRadius;
+		long end = expectedResult + searchRadius;
+		boolean logFound = false;
+		long power = start;
+		BigInteger current = raiseGenerator(power);
+		
+		while(!logFound && power <= end)
+		{
+			if(current.equals(value)) {
+				logFound = true;
+			} else {
+				power++;
+				current = multiplyMod(current);
+			}
+		}
+		
+		if(logFound) {
+			return power;
+		} else {
+			return discreteLogarithm(value);
+		}
+		
+		
 	}
 
 	private BigInteger multiplyMod(BigInteger value)
