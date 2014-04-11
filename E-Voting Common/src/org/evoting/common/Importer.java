@@ -2,9 +2,12 @@ package org.evoting.common;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.math.BigInteger;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 import org.bouncycastle.crypto.params.ElGamalParameters;
 import org.bouncycastle.crypto.params.ElGamalPrivateKeyParameters;
@@ -108,5 +111,9 @@ public class Importer {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public static byte[] importRsaPublicKey(String pathname) throws IOException {
+		return Files.readAllBytes(Paths.get(pathname));
 	}
 }
