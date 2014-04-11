@@ -105,7 +105,7 @@ public class EncryptedBallot {
 		byte[][] result = new byte[vote.length][];
 		if(voteIsValid(vote)) {
 			for(int i = 0; i < vote.length; i++) {
-				byte[] message = Group.getInstance().raiseGenerator(BigInteger.valueOf(vote[i])).toByteArray();
+				byte[] message = Group.getInstance().raiseGenerator((long)vote[i]).toByteArray();
 				result[i] = Security.encryptElGamal(message, Security.getElgamalPublicKey());
 			}
 			return result;
