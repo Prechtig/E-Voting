@@ -22,14 +22,14 @@ public class ConsoleIO extends JavaService {
 	private static boolean electionRunning;
 	private static Timestamp endTime;
 	
-	private String aCommunication = "IAuthorityCommunication";
+	private String aCommunicationPath = "IAuthorityCommunication";
 
 	/**
 	 * Used to get the initial information about the election
 	 * Sets if the election is running// ?and if it is, then what time it will end?
 	 */
 	public void initialize() {
-		CommMessage request = CommMessage.createRequest("operationName!!!!!!!!!", aCommunication, Value.create( 6 ));
+		CommMessage request = CommMessage.createRequest("getElectionStatus", aCommunicationPath, null); //TODO: null skal være void
 		try {
 			CommMessage response = sendMessage( request ).recvResponseFor( request );
 		} catch (IOException e) {
@@ -37,6 +37,8 @@ public class ConsoleIO extends JavaService {
 			e.printStackTrace();
 		}
 		
+		
+		//TODO: Handle response
 	}
 
 	public void getUserInput() {
@@ -49,12 +51,12 @@ public class ConsoleIO extends JavaService {
 			switch (input) {
 			case "start": // Start election
 				if(!electionRunning){
-					userStartElection();
+					startElection();
 				}
 				break;
 			case "stop": // Stop election
 				if(electionRunning){
-					userStopElection();
+					stopElection();
 				}
 				break;
 			case "load": // Load electionOptions or keys
@@ -75,7 +77,7 @@ public class ConsoleIO extends JavaService {
 				break;
 			case "count": // count votes, only if election is over
 				if (electionRunning) {
-					
+					countVotes();
 				}
 				break;
 			case "exit": // Terminate program
@@ -87,6 +89,19 @@ public class ConsoleIO extends JavaService {
 		}
 	}
 
+	private void countVotes() {
+		CommMessage request = CommMessage.createRequest("", aCommunicationPath, null); // TODO: null skal være void
+		try {
+			CommMessage response = sendMessage( request ).recvResponseFor( request );
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		// TODO: Handle response
+		
+	}
+
 	private void userCommandLoad(){
 		System.out.println("Load keys or electionOption list?");
 		String input = System.console().readLine().toLowerCase();
@@ -94,11 +109,11 @@ public class ConsoleIO extends JavaService {
 		switch (input) {
 		case "keys":
 		case "key":
-			loadKeys(ElGamalPrivateKeyFile);
+			loadKeys(ElGamalPrivateKeyFile); //TODO: should only be called once and should not take a filepath then
 			loadKeys(ElGamalPublicKeyFile);
 			break;
 		case "electionOptions": case "electionOption": case "electionOption list": case "electionOptionlist":
-			//load electionOptionlist
+			loadElectionOptions();
 			break;
 		default:
 			break;
@@ -112,10 +127,10 @@ public class ConsoleIO extends JavaService {
 		switch (input) {
 		case "keys":
 		case "key":
-			// send key
+			sendKey();
 			break;
 		case "electionOptions": case "electionOption": case "electionOption list": case "electionOptionlist":
-			//load electionOptionlist
+			sendElectionoptions();
 			break;
 		default:
 			break;
@@ -126,28 +141,71 @@ public class ConsoleIO extends JavaService {
 	 * Generates a new set of ElGamal keys and saves them to files, only if election is not running
 	 */
 	private void generateElGamalKeys() {
-		// If election is not running
+		//TODO: If election is not running
 		Security.generateElGamalKeys();
 		elGamalPublicKey = Security.getElgamalPublicKey();
 		elGamalPrivateKey = Security.getElgamalPrivateKey();
 
 		// Export keys
-
 		elGamalPublicKey = Importer.importElGamalPublicKeyParameters(ElGamalPublicKeyFile);
 		elGamalPrivateKey = Importer.importElGamalPrivateKeyParameters(ElGamalPrivateKeyFile);
 	}
 
 	private void loadKeys(String fileName) {
-		// If election is not running
+		//TODO: If election is not running
 		elGamalPublicKey = Importer.importElGamalPublicKeyParameters(ElGamalPublicKeyFile);
 		elGamalPrivateKey = Importer.importElGamalPrivateKeyParameters(ElGamalPrivateKeyFile);
 	}
 	
-	private void userStartElection(){
-		
+	private void loadElectionOptions(){
+		//TODO: load election options
 	}
 	
-	private void userStopElection() {
-		// TODO Auto-generated method stub
+	private void startElection(){
+		CommMessage request = CommMessage.createRequest("startElection", aCommunicationPath, null); // TODO: null skal være void
+		try {
+			CommMessage response = sendMessage( request ).recvResponseFor( request );
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		// TODO: Handle response
+	}
+	
+	private void stopElection() {
+		CommMessage request = CommMessage.createRequest("stopElection", aCommunicationPath, null); // TODO: null skal være void
+		try {
+			CommMessage response = sendMessage( request ).recvResponseFor( request );
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		// TODO: Handle response
+	}
+	
+	private void sendKey(){
+		CommMessage request = CommMessage.createRequest("sendPublicKey", aCommunicationPath, null); // TODO: null skal være publick key
+		try {
+			CommMessage response = sendMessage( request ).recvResponseFor( request );
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		// TODO: Handle response
+	}
+	
+	private void sendElectionoptions(){
+		CommMessage request = CommMessage.createRequest("sendElectionOptionList", aCommunicationPath, null); // TODO: null skal være election options
+		try {
+			CommMessage response = sendMessage( request ).recvResponseFor( request );
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		// TODO: Handle response
 	}
 }
