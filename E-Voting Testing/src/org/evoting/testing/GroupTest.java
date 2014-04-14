@@ -98,8 +98,6 @@ public class GroupTest
 		
 		byte[] cipherProduct = concat(cipherGammaProductByte, cipherPhiProductByte);
 		
-		System.out.println(cipherProduct.length);
-		
 		byte[] messageProductAsPowerByte = Security.decryptElgamal(cipherProduct, Security.getElgamalPrivateKey());
 		
 		BigInteger messagesProductAsPower = new BigInteger(messageProductAsPowerByte);
