@@ -6,6 +6,7 @@ import java.math.BigInteger;
 
 import org.bouncycastle.crypto.params.ElGamalParameters;
 import org.bouncycastle.crypto.params.ElGamalPrivateKeyParameters;
+import org.bouncycastle.util.Arrays;
 import org.evoting.common.Group;
 import org.evoting.security.Security;
 import org.junit.Test;
@@ -71,6 +72,42 @@ public class GroupTest
 		byte[] message2AsPowerAsByte = Group.getInstance().raiseGenerator(message2).toByteArray();
 		byte[] cipher2 = Security.encryptElGamal(message2AsPowerAsByte, Security.getElgamalPublicKey());
 		
+		System.out.println("cipher1 = " + java.util.Arrays.toString(cipher));
+		System.out.println("cipher2 = " + java.util.Arrays.toString(cipher2));
+		
+		byte[] cipherGamma = Arrays.copyOfRange(cipher, 0, cipher.length/2);
+		byte[] cipherPhi = Arrays.copyOfRange(cipher, cipher.length/2, cipher.length);
+		byte[] cipherGamma2 = Arrays.copyOfRange(cipher2, 0, cipher2.length/2);
+		byte[] cipherPhi2 = Arrays.copyOfRange(cipher2, cipher2.length/2, cipher2.length);	
+		
+		System.out.println("cipherGamma = " + java.util.Arrays.toString(cipherGamma));
+		System.out.println("cipherPhi = " + java.util.Arrays.toString(cipherPhi));
+		System.out.println("cipherGamma2 = " + java.util.Arrays.toString(cipherGamma2));
+		System.out.println("cipherPhi2 = " + java.util.Arrays.toString(cipherPhi2));
+		
+		BigInteger cipherGammaInt = new BigInteger(cipherGamma);
+		BigInteger cipherPhiInt = new BigInteger(cipherPhi);
+		BigInteger cipherGammaInt2 = new BigInteger(cipherGamma2);
+		BigInteger cipherPhiInt2 = new BigInteger(cipherPhi2);
+		
+		BigInteger cipherGammaProduct = cipherGammaInt.multiply(cipherGammaInt2).mod(Group.getInstance().getModulo());
+		BigInteger cipherPhiProduct = cipherPhiInt.multiply(cipherPhiInt2).mod(Group.getInstance().getModulo());
+		
+		byte[] cipherGammaProductByte = cipherGammaProduct.toByteArray();
+		byte[] cipherPhiProductByte = cipherGammaProduct.toByteArray();
+		
+		byte[] cipherProduct = concat(cipherGammaProductByte, cipherPhiProductByte);
+		
+		System.out.println(cipherProduct.length);
+		
+		byte[] messageProductAsPowerByte = Security.decryptElgamal(cipherProduct, Security.getElgamalPrivateKey());
+		
+		BigInteger messagesProductAsPower = new BigInteger(messageProductAsPowerByte);
+		
+		long log = Group.getInstance().discreteLogarithm(messagesProductAsPower);
+		
+		assertEquals(message + message2, log);	
+		/*
 		System.out.println(cipher.length);
 		System.out.println(cipher2.length);
 		
@@ -93,5 +130,12 @@ public class GroupTest
 		long log = Group.getInstance().discreteLogarithm(messagesProductAsPower);
 		
 		assertEquals(message + message2, log);	
+		*/
+	}
+	
+	public static byte[] concat(byte[] first, byte[] second) {
+		  byte[] result = Arrays.copyOf(first, first.length + second.length);
+		  System.arraycopy(second, 0, result, first.length, second.length);
+		  return result;
 	}
 }
