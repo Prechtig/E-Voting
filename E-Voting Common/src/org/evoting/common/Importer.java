@@ -89,7 +89,7 @@ public class Importer {
 		return new ElGamalPrivateKeyParameters(x, new ElGamalParameters(g, p));
 	}
 	
-	public static void importElectionOptions(String fileName){
+	public static ElectionOptions importElectionOptions(String fileName){
 		try {
 			File file = new File(fileName);
 
@@ -110,6 +110,10 @@ public class Importer {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		
+		
+		
+		return null;
 	}
 	
 	public static byte[] importRsaPublicKey(String pathname) throws IOException {
