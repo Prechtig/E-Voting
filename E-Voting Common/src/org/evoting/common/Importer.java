@@ -90,6 +90,9 @@ public class Importer {
 	}
 	
 	public static ElectionOptions importElectionOptions(String fileName){
+		//TODO:implement
+		ElectionOptions eOptions = null;
+		
 		try {
 			File file = new File(fileName);
 
@@ -103,6 +106,8 @@ public class Importer {
 				while ((line = br.readLine()) != null) {
 					String[] parts = line.split(delimiter);
 					//TODO: How should the electionOption list look
+					
+					
 				}
 				br.close();
 			}

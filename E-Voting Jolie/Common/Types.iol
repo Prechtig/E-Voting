@@ -32,3 +32,12 @@ type PublicKeys: void {
 	}
 	.rsaPublicKey: raw
 }
+
+type ElectionStatus: void {
+	.running: bool
+	.endTime: long
+}
+
+type Confirmation: void {
+	.confirmed: bool
+}

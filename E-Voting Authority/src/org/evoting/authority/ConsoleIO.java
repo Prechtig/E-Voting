@@ -1,7 +1,7 @@
 package org.evoting.authority;
 
 import java.io.IOException;
-import java.sql.Timestamp;
+import java.security.PublicKey;
 
 import jolie.net.CommMessage;
 import jolie.runtime.JavaService;
@@ -15,14 +15,16 @@ import org.evoting.common.Importer;
 import org.evoting.security.Security;
 
 public class ConsoleIO extends JavaService {
-	private static String ElGamalPublicKeyFile = "ElGamalPublicKey";
-	private static String ElGamalPrivateKeyFile = "ElGamalPrivateKey";
+	private PublicKey RASpublicKey;
+	
+	private String ElGamalPublicKeyFile = "ElGamalPublicKey";
+	private String ElGamalPrivateKeyFile = "ElGamalPrivateKey";
 
-	private static ElGamalPublicKeyParameters elGamalPublicKey;
-	private static ElGamalPrivateKeyParameters elGamalPrivateKey;
+	private ElGamalPublicKeyParameters elGamalPublicKey;
+	private ElGamalPrivateKeyParameters elGamalPrivateKey;
 
-	private static boolean electionRunning;
-	private static Timestamp endTime;
+	private boolean electionRunning;
+	private Long endTime; //TODO: is this used?
 
 	private String aCommunicationPath = "IAuthorityCommunication";
 	private String electionOptionsFile = "ElectionOptions.txt";
@@ -30,22 +32,30 @@ public class ConsoleIO extends JavaService {
 	private static ElectionOptions eOptions;
 
 	/**
-	 * Used to get the initial information about the election Sets if the election is running// ?and if it is, then what time it will end?
+	 * Used to get the initial information about the election. Sets if the election is running and, if it is, then what time it will end
 	 */
 	public void initialize() {
-		CommMessage request = CommMessage.createRequest("getElectionStatus", aCommunicationPath, null); // TODO: null skal være void
+		CommMessage request = CommMessage.createRequest("getElectionStatus", aCommunicationPath, null);
 		try {
-			CommMessage response = sendMessage(request).recvResponseFor(request); // Den skal tage imod en value? som indeholder om election er running og hvad endtime på den er
+			CommMessage response = sendMessage(request).recvResponseFor(request);
+			
+			electionRunning = response.value().getFirstChild("running").boolValue();
+			endTime = response.value().getFirstChild("endTime").longValue();
+			
+			//endTime is -1 if some error happenden in bullitinboard
+			if(endTime > -1){
+				System.out.println("Election running: " + electionRunning);
+			} else {
+				System.out.println("Error in bullitinboard when trying to update election details");
+			}
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
+			System.out.println("Error communicating with bullitinboard");
 			e.printStackTrace();
 		}
-
-		// TODO: Handle response
-		// set electionRunning and endTime
 	}
 
 	public void getUserInput() {
+		System.out.println("Initializing election details");
 		initialize();
 
 		while (true) {
@@ -71,6 +81,9 @@ public class ConsoleIO extends JavaService {
 			case "count": // count votes, only if election is over
 				countVotes();
 				break;
+			case "update": // update the election status
+				update();
+				break;
 			case "exit": // Terminate program
 				return;
 			default: // Command not found
@@ -82,16 +95,16 @@ public class ConsoleIO extends JavaService {
 
 	private void countVotes() {
 		if (electionRunning) {
-			CommMessage request = CommMessage.createRequest("", aCommunicationPath, null); // TODO: null skal være void
+			CommMessage request = CommMessage.createRequest("", aCommunicationPath, null);
 			try {
 				CommMessage response = sendMessage(request).recvResponseFor(request); // Den skal tage imod en value? som indeholder alle votes eller ingen votes hvis valget ikke er igang
+
+				// TODO: Handle response
+				// Count votes if there are any or write error message to user
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-
-			// TODO: Handle response
-			// Count votes if there are any or write error message to user
 		} else {
 			System.out.println("Election is not running");
 		}
@@ -149,8 +162,10 @@ public class ConsoleIO extends JavaService {
 			// Export keys
 			Exporter.exportElGamalPrivateKeyParameters(elGamalPrivateKey, ElGamalPrivateKeyFile);
 			Exporter.exportElGamalPublicKeyParameters(elGamalPublicKey, ElGamalPublicKeyFile);
+			
+			System.out.println("Generated and exported new ElGamal keys");
 		} else {
-			System.out.println("Election is running");
+			System.out.println("Cannot generate new ElGamal keys while election is running");
 		}
 	}
 
@@ -158,81 +173,106 @@ public class ConsoleIO extends JavaService {
 		if (!electionRunning) {
 			elGamalPublicKey = Importer.importElGamalPublicKeyParameters(ElGamalPublicKeyFile);
 			elGamalPrivateKey = Importer.importElGamalPrivateKeyParameters(ElGamalPrivateKeyFile);
+			
+			System.out.println("Loaded ElGamal keys");
 		} else {
-			System.out.println("Election is running");
+			System.out.println("Cannot load new ElGamal keys while election is running");
 		}
 	}
 
 	private void loadElectionOptions() {
 		if (!electionRunning) {
 			eOptions = Importer.importElectionOptions(electionOptionsFile);
-			// TODO: load election options
-			// set eOptions
+			System.out.println("Imported list of election options");
 		} else {
-			System.out.println("Election is running");
+			System.out.println("Cannot load new electionoptions while election is running");
 		}
 	}
 
 	private void startElection() {
 		if (!electionRunning) {
-			CommMessage request = CommMessage.createRequest("startElection", aCommunicationPath, null); // TODO: null skal være void
+			//TODO:Should it send an endtime?
+			CommMessage request = CommMessage.createRequest("startElection", aCommunicationPath, null);
 			try {
-				CommMessage response = sendMessage(request).recvResponseFor(request); // Den skal tage imod en value? som indeholder confirmation at election er startet og endtime? eller skal det sendes med?
+				CommMessage response = sendMessage(request).recvResponseFor(request);
+
+				if (response.value().getFirstChild("Confirmation").boolValue()) {
+					electionRunning = true;
+					System.out.println("Election has started");
+				} else {
+					System.out.println("Error in bullitinboard when trying to start election");
+				}
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
+				System.out.println("Error communicating with bullitinboard");
 				e.printStackTrace();
 			}
-
-			// TODO: Handle response
-			// show error if election is not started
-			// ?set endtime? and set electionRunning
 		} else {
-			System.out.println("Election is not running");
+			System.out.println("Cannot start election while it is running");
 		}
 	}
 
 	private void stopElection() {
 		if (electionRunning) {
-			CommMessage request = CommMessage.createRequest("stopElection", aCommunicationPath, null); // TODO: null skal være void
+			CommMessage request = CommMessage.createRequest("stopElection", aCommunicationPath, null);
 			try {
-				CommMessage response = sendMessage(request).recvResponseFor(request); // Den skal tage imod en value? som indeholder confirmation at election er stoppet
+				CommMessage response = sendMessage(request).recvResponseFor(request);
+
+				if (response.value().getFirstChild("Confirmation").boolValue()) {
+					electionRunning = false;
+					System.out.println("Election has stopped");
+				} else {
+					System.out.println("Error in bullitinboard when trying to stop election");
+				}
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
+				System.out.println("Error communicating with bullitinboard");
 				e.printStackTrace();
 			}
-
-			// TODO: Handle response
-			// Set electionRunning
 		} else {
-			System.out.println("Election is not running");
+			System.out.println("Cannot stop election while it is not running");
 		}
 	}
 
 	private void sendKey() {
 		if (!electionRunning) {
-			CommMessage request = CommMessage.createRequest("sendPublicKey", aCommunicationPath, null); // TODO: null skal være publick key
-			try {
-				CommMessage response = sendMessage(request).recvResponseFor(request); // Den skal tage imod en value? som indeholder confirmation
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			if (elGamalPublicKey != null && elGamalPrivateKey != null) {
+				Value key = getPublicKeyValue();
 
-			// TODO: Handle response
-			// show error if not confirmed
+				CommMessage request = CommMessage.createRequest("sendPublicKey", aCommunicationPath, key);
+				try {
+					CommMessage response = sendMessage(request).recvResponseFor(request);
+
+					if (response.value().getFirstChild("Confirmation").boolValue()) {
+						electionRunning = false;
+						System.out.println("ElGamal public Key successfully sent");
+					} else {
+						System.out.println("Error in bullitinboard when trying to send ElGamal public key");
+					}
+				} catch (IOException e) {
+					System.out.println("Error communicating with bullitinboard");
+					e.printStackTrace();
+				}
+			} else{
+				System.out.println("No ElGamal keys loaded");
+			}
 		} else {
-			System.out.println("Election is running");
+			System.out.println("Cannot send ElGamal key while election is running");
 		}
 	}
 
 	private void sendElectionoptions() {
 		if (!electionRunning) {
 			if (eOptions != null) {
+				//TODO:Create value containing all the electionoptions
 				CommMessage request = CommMessage.createRequest("sendElectionOptionList", aCommunicationPath, null); // TODO: null skal være election options
 				try {
 					CommMessage response = sendMessage(request).recvResponseFor(request);// Den skal tage imod en value? som indeholder confirmation
+					if(response.value().boolValue()){
+						System.out.println("Successfully sent list of election options");
+					} else {
+						System.out.println("Error in bullitinboard when trying to send list of election options");
+					}
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
+					System.out.println("Error communicating with bullitinboard");
 					e.printStackTrace();
 				}
 
@@ -242,7 +282,34 @@ public class ConsoleIO extends JavaService {
 				System.out.println("Load election options");
 			}
 		} else {
-			System.out.println("Election is running");
+			System.out.println("Cannot send list of election options while election is running");
 		}
 	}
+	
+	/**
+	 * Used to update election status
+	 */
+	private void update() {
+		initialize();
+	}
+
+	private Value getPublicKeyValue() {
+		Value result = Value.create();
+		if (elGamalPublicKey != null) {
+			String y = elGamalPublicKey.getY().toString();
+			String p = elGamalPublicKey.getParameters().getP().toString();
+			String g = elGamalPublicKey.getParameters().getG().toString();
+			int l = elGamalPublicKey.getParameters().getL();
+
+			result.getNewChild("y").setValue(y);
+			Value elgamalParametersValue = result.getNewChild("parameters");
+			elgamalParametersValue.getNewChild("p").setValue(p);
+			elgamalParametersValue.getNewChild("g").setValue(g);
+			elgamalParametersValue.getNewChild("l").setValue(l);
+		}
+		return result;
+	}
+	
+	
+	//TODO: should it downlaod the list of election options if the election is running?
 }
