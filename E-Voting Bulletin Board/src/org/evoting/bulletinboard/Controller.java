@@ -1,6 +1,7 @@
 package org.evoting.bulletinboard;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 
 import jolie.runtime.JavaService;
@@ -47,6 +48,19 @@ public class Controller extends JavaService {
 		Model.processVote(userId, encryptedVote);
 		
 		return Boolean.TRUE;
+	}
+	
+	@RequestResponse
+	public Value getElectionStatus() {
+		Value status = Value.create();
+		
+		Date endTime = Model.getElectionEndTime();
+		
+		boolean running = new Date().before(endTime);
+		status.getNewChild("running").setValue(running);
+		status.getNewChild("endTime").setValue(endTime.getTime());
+		
+		return status;
 	}
 
 	@RequestResponse

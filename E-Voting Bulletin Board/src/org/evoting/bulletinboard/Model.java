@@ -1,5 +1,6 @@
 package org.evoting.bulletinboard;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -16,6 +17,7 @@ import org.evoting.database.entities.Vote;
 import org.evoting.database.repositories.ElectionOptionRepository;
 import org.evoting.database.repositories.TimestampRepository;
 import org.evoting.database.repositories.VoteRepository;
+import org.evoting.security.Security;
 
 public class Model {
 	
@@ -173,5 +175,17 @@ public class Model {
 	private static void endDatabaseSession(EntityManager entMgr) {
 		entMgr.getTransaction().commit();
 		entMgr.close();
+	}
+
+	public static Date getElectionEndTime() {
+		EntityManager entMgr = beginDatabaseSession();
+		
+		TimestampRepository tr = new TimestampRepository(entMgr);
+		Timestamp endTime = tr.findTime();
+		String time = new String(Security.decryptRSA(endTime.getTime(), Security.getRSAPrivateKey()));
+		Date date = new Date(Long.parseLong(time));
+		
+		endDatabaseSession(entMgr);
+		return date;
 	}
 }

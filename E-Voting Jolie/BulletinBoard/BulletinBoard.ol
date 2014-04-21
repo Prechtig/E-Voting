@@ -41,4 +41,8 @@ main {
 	[ getAllVotes( )( allVotes ) {
 		getAllVotes@BBJavaController( )( allVotes )
 	} ] { nullProcess }
+
+	[ getElectionStatus( )( status ) {
+		getElectionStatus@BBJavaController( )( status )
+	} ] { nullProcess }
 }

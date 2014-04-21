@@ -34,9 +34,9 @@ public class HibernateTest {
 		ElectionOption c1 = new ElectionOption(1, "Mark Thorhauge");
 		ElectionOption c2 = new ElectionOption(2, "Andreas Precht Poulsen");
 		ElectionOption c3 = new ElectionOption(3, "Gregers Jensen");
-		Date date = new SimpleDateFormat("yyyy-MM-dd kk").parse("2014-06-30 20");
+		Date date = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse("2014-06-30 20:00");
 
-		Timestamp t0 = new Timestamp(0, Security.encryptRSA(date.toString(), Security.getRSAPrivateKey()));
+		Timestamp t0 = new Timestamp(0, Security.encryptRSA(date.getTime() + "", Security.getRSAPrivateKey()));
 
 		EntityManager entMgr = EntityManagerUtil.getEntityManager();
 		entMgr.getTransaction().begin();
