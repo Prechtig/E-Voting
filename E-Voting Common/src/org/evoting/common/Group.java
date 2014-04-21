@@ -88,7 +88,7 @@ public class Group
 	{
 		return value.multiply(generator).mod(modulo);
 	}
-	
+
 	public static Group getInstance()
 	{
 		return instance;

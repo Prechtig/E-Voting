@@ -7,17 +7,24 @@ import java.math.BigInteger;
 import org.bouncycastle.crypto.params.ElGamalParameters;
 import org.bouncycastle.crypto.params.ElGamalPrivateKeyParameters;
 import org.bouncycastle.util.Arrays;
+import org.bouncycastle.util.BigIntegers;
 import org.evoting.common.Group;
 import org.evoting.security.Security;
 import org.junit.Test;
 
 public class GroupTest 
 {
+	private final static BigInteger x = new BigInteger("4506780392188996570736695313796530827587031827892136430736487172170543905782645794528673254441288061446761336834685517003994123226338108710462038955234465");
+	private final static BigInteger y = new BigInteger("4769149317263233133961901176479144281438943771518267454962974918449664272035800816506479235917128178201252535931421419795967498293236707272729785739447608");
+	private final static BigInteger p = new BigInteger("7781871412403125272081994420237498498848517960190636813994593624893166160780445513887821412313009361625936687452586174696909303141691170346568788390764347");
+	private final static BigInteger g = new BigInteger("1112413672743230891881273653171640834687833299890125651932066327486193358080471215100797237775771467149894260123512660136402158406998369481252844452718796");
+	private final static int l = 0;
+	
 	@Test
 	public void testRaiseAndDiscreteLog()
 	{
-		Group.getInstance().setGenerator(new BigInteger("1112413672743230891881273653171640834687833299890125651932066327486193358080471215100797237775771467149894260123512660136402158406998369481252844452718796"));
-		Group.getInstance().setModulo(new BigInteger("7781871412403125272081994420237498498848517960190636813994593624893166160780445513887821412313009361625936687452586174696909303141691170346568788390764347"));
+		Group.getInstance().setGenerator(g);
+		Group.getInstance().setModulo(p);
 		
 		long message = 1336;
 		BigInteger messageAsPower = Group.getInstance().raiseGenerator(message);
@@ -39,8 +46,8 @@ public class GroupTest
 	@Test
 	public void testRaiseAndDiscreteLogFromExpectedRange()
 	{
-		Group.getInstance().setGenerator(new BigInteger("1112413672743230891881273653171640834687833299890125651932066327486193358080471215100797237775771467149894260123512660136402158406998369481252844452718796"));
-		Group.getInstance().setModulo(new BigInteger("7781871412403125272081994420237498498848517960190636813994593624893166160780445513887821412313009361625936687452586174696909303141691170346568788390764347"));
+		Group.getInstance().setGenerator(g);
+		Group.getInstance().setModulo(p);
 		
 		long message = 1336;
 		BigInteger messageAsPower = Group.getInstance().raiseGenerator(message);
@@ -51,12 +58,68 @@ public class GroupTest
 	@Test
 	public void testHomomorphicProperties()
 	{
-		BigInteger x = new BigInteger("4506780392188996570736695313796530827587031827892136430736487172170543905782645794528673254441288061446761336834685517003994123226338108710462038955234465");
-		BigInteger y = new BigInteger("4769149317263233133961901176479144281438943771518267454962974918449664272035800816506479235917128178201252535931421419795967498293236707272729785739447608");
-		BigInteger p = new BigInteger("7781871412403125272081994420237498498848517960190636813994593624893166160780445513887821412313009361625936687452586174696909303141691170346568788390764347");
-		BigInteger g = new BigInteger("1112413672743230891881273653171640834687833299890125651932066327486193358080471215100797237775771467149894260123512660136402158406998369481252844452718796");
-		int l = 0;
+		Group.getInstance().setGenerator(g);
+		Group.getInstance().setModulo(p);
+		Security.setElGamalPublicKey(y, p, g, l);
+		ElGamalParameters elGamalp = new ElGamalParameters(p, g);
+		ElGamalPrivateKeyParameters epkp = new ElGamalPrivateKeyParameters(x, elGamalp);
+		Security.setElGamalPrivateKey(epkp);
 		
+		BigInteger message1 = new BigInteger("900");
+		byte[] messageByte1 = message1.toByteArray();
+		byte[] cipher1 = Security.encryptElGamal(messageByte1, Security.getElgamalPublicKey());
+		
+		BigInteger message2 = new BigInteger("100");
+		byte[] messageByte2 = message2.toByteArray();
+		byte[] cipher2 = Security.encryptElGamal(messageByte2, Security.getElgamalPublicKey());
+		
+		byte[] cipherGamma = Arrays.copyOfRange(cipher1, 0, cipher1.length/2);
+		byte[] cipherPhi = Arrays.copyOfRange(cipher1, cipher1.length/2, cipher1.length);
+		byte[] cipherGamma2 = Arrays.copyOfRange(cipher2, 0, cipher2.length/2);
+		byte[] cipherPhi2 = Arrays.copyOfRange(cipher2, cipher2.length/2, cipher2.length);	
+		
+		BigInteger cipherGammaInt = new BigInteger(cipherGamma);
+		BigInteger cipherPhiInt = new BigInteger(cipherPhi);
+		BigInteger cipherGammaInt2 = new BigInteger(cipherGamma2);
+		BigInteger cipherPhiInt2 = new BigInteger(cipherPhi2);
+		
+		BigInteger cipherGammaProduct = cipherGammaInt.multiply(cipherGammaInt2).mod(Group.getInstance().getModulo());
+		BigInteger cipherPhiProduct = cipherPhiInt.multiply(cipherPhiInt2).mod(Group.getInstance().getModulo());
+		
+		byte[] out1 = cipherGammaProduct.toByteArray();
+		byte[] out2 = cipherPhiProduct.toByteArray();
+		
+        byte[]  output = new byte[128];
+
+        if (out1.length > output.length / 2)
+        {
+            System.arraycopy(out1, 1, output, output.length / 2 - (out1.length - 1), out1.length - 1);
+        }
+        else
+        {
+            System.arraycopy(out1, 0, output, output.length / 2 - out1.length, out1.length);
+        }
+
+        if (out2.length > output.length / 2)
+        {
+            System.arraycopy(out2, 1, output, output.length - (out2.length - 1), out2.length - 1);
+        }
+        else
+        {
+            System.arraycopy(out2, 0, output, output.length - out2.length, out2.length);
+        }
+		
+        
+        byte[] messageByte = Security.decryptElgamal(output, Security.getElgamalPrivateKey());
+        BigInteger result = new BigInteger(messageByte);
+        
+        System.out.println(result);
+        
+	}
+	
+	@Test
+	public void testHomomorphicPropertiesExponential()
+	{
 		Group.getInstance().setGenerator(g);
 		Group.getInstance().setModulo(p);
 		Security.setElGamalPublicKey(y, p, g, l);
@@ -93,18 +156,45 @@ public class GroupTest
 		BigInteger cipherGammaProduct = cipherGammaInt.multiply(cipherGammaInt2).mod(Group.getInstance().getModulo());
 		BigInteger cipherPhiProduct = cipherPhiInt.multiply(cipherPhiInt2).mod(Group.getInstance().getModulo());
 		
-		byte[] cipherGammaProductByte = cipherGammaProduct.toByteArray();
-		byte[] cipherPhiProductByte = cipherGammaProduct.toByteArray();
+		byte[] out1 = cipherGammaProduct.toByteArray();
+		byte[] out2 = cipherPhiProduct.toByteArray();
 		
-		byte[] cipherProduct = concat(cipherGammaProductByte, cipherPhiProductByte);
+        byte[]  output = new byte[128];
+
+        if (out1.length > output.length / 2)
+        {
+            System.arraycopy(out1, 1, output, output.length / 2 - (out1.length - 1), out1.length - 1);
+        }
+        else
+        {
+            System.arraycopy(out1, 0, output, output.length / 2 - out1.length, out1.length);
+        }
+
+        if (out2.length > output.length / 2)
+        {
+            System.arraycopy(out2, 1, output, output.length - (out2.length - 1), out2.length - 1);
+        }
+        else
+        {
+            System.arraycopy(out2, 0, output, output.length - out2.length, out2.length);
+        }
 		
-		byte[] messageProductAsPowerByte = Security.decryptElgamal(cipherProduct, Security.getElgamalPrivateKey());
+		
+		
+		
+		
+		/*
+		
+		byte[] messageProductAsPowerByte = Security.decryptElgamal(output, Security.getElgamalPrivateKey());
 		
 		BigInteger messagesProductAsPower = new BigInteger(messageProductAsPowerByte);
 		
 		long log = Group.getInstance().discreteLogarithm(messagesProductAsPower);
 		
 		assertEquals(message + message2, log);	
+		
+		*/
+		
 		/*
 		System.out.println(cipher.length);
 		System.out.println(cipher2.length);
