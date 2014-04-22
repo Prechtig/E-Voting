@@ -4,11 +4,11 @@ import static org.junit.Assert.assertEquals;
 
 import java.math.BigInteger;
 
-import org.bouncycastle.crypto.params.ElGamalParameters;
 import org.bouncycastle.crypto.params.ElGamalPrivateKeyParameters;
+import org.bouncycastle.crypto.params.ElGamalPublicKeyParameters;
 import org.bouncycastle.util.Arrays;
-import org.bouncycastle.util.BigIntegers;
 import org.evoting.common.Group;
+import org.evoting.security.ElGamal;
 import org.evoting.security.Security;
 import org.junit.Test;
 
@@ -58,39 +58,41 @@ public class GroupTest
 	@Test
 	public void testEncryptionAndDecrypton()
 	{
-		Security.setElGamalPublicKey(y, p, g, l);
-		ElGamalParameters elGamalp = new ElGamalParameters(p, g);
-		ElGamalPrivateKeyParameters epkp = new ElGamalPrivateKeyParameters(x, elGamalp);
-		Security.setElGamalPrivateKey(epkp);
+		ElGamalPrivateKeyParameters ElGamalPrivateKey;
+		ElGamalPublicKeyParameters ElGamalPublicKey;
+		ElGamal.generateKeyPair(true);
+		ElGamalPrivateKey = ElGamal.getPrivateKey();
+		ElGamalPublicKey = ElGamal.getPublicKey();
 		
 		BigInteger message1 = new BigInteger("900");
 		byte[] messageByte1 = message1.toByteArray();
-		byte[] cipher1 = Security.encryptElGamal(messageByte1, Security.getElgamalPublicKey());
+		byte[] cipher1 = Security.encryptElGamal(messageByte1, ElGamalPublicKey);
 		
-        byte[] messageByte = Security.decryptElgamal(cipher1, Security.getElgamalPrivateKey());
+        byte[] messageByte = Security.decryptElgamal(cipher1, ElGamalPrivateKey);
         BigInteger result = new BigInteger(messageByte);
         
         assertEquals(message1, result);
 	}
 	
-	//@Test
-	/*
+	@Test
 	public void testHomomorphicProperties()
 	{
-		Group.getInstance().setGenerator(g);
-		Group.getInstance().setModulo(p);
-		Security.setElGamalPublicKey(y, p, g, l);
-		ElGamalParameters elGamalp = new ElGamalParameters(p, g);
-		ElGamalPrivateKeyParameters epkp = new ElGamalPrivateKeyParameters(x, elGamalp);
-		Security.setElGamalPrivateKey(epkp);
+		ElGamalPrivateKeyParameters ElGamalPrivateKey;
+		ElGamalPublicKeyParameters ElGamalPublicKey;
+		ElGamal.generateKeyPair(true);
+		ElGamalPrivateKey = ElGamal.getPrivateKey();
+		ElGamalPublicKey = ElGamal.getPublicKey();
+		
+		Group.getInstance().setGenerator(ElGamalPublicKey.getParameters().getG());
+		Group.getInstance().setModulo(ElGamalPublicKey.getParameters().getP());
 		
 		BigInteger message1 = new BigInteger("900");
 		byte[] messageByte1 = message1.toByteArray();
-		byte[] cipher1 = Security.encryptElGamal(messageByte1, Security.getElgamalPublicKey());
+		byte[] cipher1 = Security.encryptElGamal(messageByte1, ElGamalPublicKey);
 		
 		BigInteger message2 = new BigInteger("100");
 		byte[] messageByte2 = message2.toByteArray();
-		byte[] cipher2 = Security.encryptElGamal(messageByte2, Security.getElgamalPublicKey());
+		byte[] cipher2 = Security.encryptElGamal(messageByte2, ElGamalPublicKey);
 		
 		byte[] cipherGamma = Arrays.copyOfRange(cipher1, 0, cipher1.length/2);
 		byte[] cipherPhi = Arrays.copyOfRange(cipher1, cipher1.length/2, cipher1.length);
@@ -129,13 +131,13 @@ public class GroupTest
         }
 		
         
-        byte[] messageByte = Security.decryptElgamal(output, Security.getElgamalPrivateKey());
+        byte[] messageByte = Security.decryptElgamal(output, ElGamalPrivateKey);
         BigInteger result = new BigInteger(messageByte);
         
-        System.out.println(result);
+        assertEquals(message1.multiply(message2), result);
         
 	}
-	*/
+	
 	//@Test
 	/*
 	public void testHomomorphicPropertiesExponential()

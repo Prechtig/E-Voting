@@ -11,7 +11,7 @@ public class Converter {
 	 * @return The value converted to an int
 	 */
 	public static int toInt(byte[] value) {
-		ByteBuffer buffer = ByteBuffer.allocate(4);
+		ByteBuffer buffer = ByteBuffer.allocate(128);
 		buffer.order(ByteOrder.LITTLE_ENDIAN);
 		buffer.put(value);
 		buffer.rewind();
