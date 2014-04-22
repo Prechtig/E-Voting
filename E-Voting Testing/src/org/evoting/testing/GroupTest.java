@@ -56,6 +56,25 @@ public class GroupTest
 	}
 	
 	@Test
+	public void testEncryptionAndDecrypton()
+	{
+		Security.setElGamalPublicKey(y, p, g, l);
+		ElGamalParameters elGamalp = new ElGamalParameters(p, g);
+		ElGamalPrivateKeyParameters epkp = new ElGamalPrivateKeyParameters(x, elGamalp);
+		Security.setElGamalPrivateKey(epkp);
+		
+		BigInteger message1 = new BigInteger("900");
+		byte[] messageByte1 = message1.toByteArray();
+		byte[] cipher1 = Security.encryptElGamal(messageByte1, Security.getElgamalPublicKey());
+		
+        byte[] messageByte = Security.decryptElgamal(cipher1, Security.getElgamalPrivateKey());
+        BigInteger result = new BigInteger(messageByte);
+        
+        assertEquals(message1, result);
+	}
+	
+	//@Test
+	/*
 	public void testHomomorphicProperties()
 	{
 		Group.getInstance().setGenerator(g);
@@ -116,8 +135,9 @@ public class GroupTest
         System.out.println(result);
         
 	}
-	
-	@Test
+	*/
+	//@Test
+	/*
 	public void testHomomorphicPropertiesExponential()
 	{
 		Group.getInstance().setGenerator(g);
@@ -218,9 +238,9 @@ public class GroupTest
 		long log = Group.getInstance().discreteLogarithm(messagesProductAsPower);
 		
 		assertEquals(message + message2, log);	
-		*/
+		
 	}
-	
+	*/
 	public static byte[] concat(byte[] first, byte[] second) {
 		  byte[] result = Arrays.copyOf(first, first.length + second.length);
 		  System.arraycopy(second, 0, result, first.length, second.length);
