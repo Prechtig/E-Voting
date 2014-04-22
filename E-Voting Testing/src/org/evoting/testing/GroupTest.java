@@ -138,37 +138,32 @@ public class GroupTest
         
 	}
 	
-	//@Test
-	/*
-	public void testHomomorphicPropertiesExponential()
+	@Test
+	public void testExponentialHomomorphicProperties()
 	{
-		Group.getInstance().setGenerator(g);
-		Group.getInstance().setModulo(p);
-		Security.setElGamalPublicKey(y, p, g, l);
-		ElGamalParameters elGamalp = new ElGamalParameters(p, g);
-		ElGamalPrivateKeyParameters epkp = new ElGamalPrivateKeyParameters(x, elGamalp);
-		Security.setElGamalPrivateKey(epkp);
+		ElGamalPrivateKeyParameters ElGamalPrivateKey;
+		ElGamalPublicKeyParameters ElGamalPublicKey;
+		ElGamal.generateKeyPair(true);
+		ElGamalPrivateKey = ElGamal.getPrivateKey();
+		ElGamalPublicKey = ElGamal.getPublicKey();
 		
-		long message = 1336;
-		byte[] messageAsPowerAsByte = Group.getInstance().raiseGenerator(message).toByteArray();
-		byte[] cipher = Security.encryptElGamal(messageAsPowerAsByte, Security.getElgamalPublicKey());
+		Group.getInstance().setGenerator(ElGamalPublicKey.getParameters().getG());
+		Group.getInstance().setModulo(ElGamalPublicKey.getParameters().getP());
 		
-		long message2 = 8521;
-		byte[] message2AsPowerAsByte = Group.getInstance().raiseGenerator(message2).toByteArray();
-		byte[] cipher2 = Security.encryptElGamal(message2AsPowerAsByte, Security.getElgamalPublicKey());
+		BigInteger message1 = new BigInteger("200");
+		message1 = Group.getInstance().raiseGenerator(message1.longValue());
+		byte[] messageByte1 = message1.toByteArray();
+		byte[] cipher1 = Security.encryptElGamal(messageByte1, ElGamalPublicKey);
 		
-		System.out.println("cipher1 = " + java.util.Arrays.toString(cipher));
-		System.out.println("cipher2 = " + java.util.Arrays.toString(cipher2));
+		BigInteger message2 = new BigInteger("100");
+		message2 = Group.getInstance().raiseGenerator(message2.longValue());
+		byte[] messageByte2 = message2.toByteArray();
+		byte[] cipher2 = Security.encryptElGamal(messageByte2, ElGamalPublicKey);
 		
-		byte[] cipherGamma = Arrays.copyOfRange(cipher, 0, cipher.length/2);
-		byte[] cipherPhi = Arrays.copyOfRange(cipher, cipher.length/2, cipher.length);
+		byte[] cipherGamma = Arrays.copyOfRange(cipher1, 0, cipher1.length/2);
+		byte[] cipherPhi = Arrays.copyOfRange(cipher1, cipher1.length/2, cipher1.length);
 		byte[] cipherGamma2 = Arrays.copyOfRange(cipher2, 0, cipher2.length/2);
 		byte[] cipherPhi2 = Arrays.copyOfRange(cipher2, cipher2.length/2, cipher2.length);	
-		
-		System.out.println("cipherGamma = " + java.util.Arrays.toString(cipherGamma));
-		System.out.println("cipherPhi = " + java.util.Arrays.toString(cipherPhi));
-		System.out.println("cipherGamma2 = " + java.util.Arrays.toString(cipherGamma2));
-		System.out.println("cipherPhi2 = " + java.util.Arrays.toString(cipherPhi2));
 		
 		BigInteger cipherGammaInt = new BigInteger(cipherGamma);
 		BigInteger cipherPhiInt = new BigInteger(cipherPhi);
@@ -201,48 +196,14 @@ public class GroupTest
             System.arraycopy(out2, 0, output, output.length - out2.length, out2.length);
         }
 		
-		
-		
-		
-		
-		/*
-		
-		byte[] messageProductAsPowerByte = Security.decryptElgamal(output, Security.getElgamalPrivateKey());
-		
-		BigInteger messagesProductAsPower = new BigInteger(messageProductAsPowerByte);
-		
-		long log = Group.getInstance().discreteLogarithm(messagesProductAsPower);
-		
-		assertEquals(message + message2, log);	
-		
-		*/
-		
-		/*
-		System.out.println(cipher.length);
-		System.out.println(cipher2.length);
-		
-		BigInteger cipherInt = new BigInteger(cipher);
-		BigInteger cipherInt2 = new BigInteger(cipher2);
-		
-		System.out.println(cipherInt.toString());
-		System.out.println(cipherInt2.toString());
-		
-		BigInteger cipherProduct = cipherInt.multiply(cipherInt2);
-		byte[] cipherProductByte = cipherProduct.toByteArray();
-		
-		System.out.println(cipherProduct.toString());
-		System.out.println(cipherProductByte.length);
-		
-		byte[] messageProductAsPowerByte = Security.decryptElgamal(cipherProductByte, Security.getElgamalPrivateKey());
-		
-		BigInteger messagesProductAsPower = new BigInteger(messageProductAsPowerByte);
-		
-		long log = Group.getInstance().discreteLogarithm(messagesProductAsPower);
-		
-		assertEquals(message + message2, log);	
-		
+        
+        byte[] messageByte = Security.decryptElgamal(output, ElGamalPrivateKey);
+        BigInteger result = new BigInteger(messageByte);
+        
+        assertEquals(message1.multiply(message2), result);
+        
 	}
-	*/
+
 	public static byte[] concat(byte[] first, byte[] second) {
 		  byte[] result = Arrays.copyOf(first, first.length + second.length);
 		  System.arraycopy(second, 0, result, first.length, second.length);
