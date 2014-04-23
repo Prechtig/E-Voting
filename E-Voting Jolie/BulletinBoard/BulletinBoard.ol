@@ -1,4 +1,5 @@
 include "../Common/IBulletinBoard.iol"
+include "../Common/IAuthorityCommunication.iol"
 include "console.iol"
 
 // Enables concurrent execution
@@ -7,13 +8,13 @@ execution {
 }
 
 outputPort BBJavaController {
-    Interfaces: IBulletinBoard
+    Interfaces: IBulletinBoard, IAuthorityCommunication
 }
 
 inputPort BulletinBoardService {
-    Location: "socket://localhost:8000/"
+    Location: "socket://localhost:7000/"
     Protocol: sodep
-    Interfaces: IBulletinBoard
+    Interfaces: IBulletinBoard, IAuthorityCommunication
 }
 
 embedded {
@@ -42,7 +43,19 @@ main {
 		getAllVotes@BBJavaController( )( allVotes )
 	} ] { nullProcess }
 
-	[ getElectionStatus( )( status ) {
-		getElectionStatus@BBJavaController( )( status )
+	[ getElectionStatus( )( confirmation ) {
+		getElectionStatus@BBJavaController( )( confirmation )
+	} ] { nullProcess }
+
+	[ startElection( )( confirmation ) {
+		startElection@BBJavaController( )( confirmation )
+	} ] { nullProcess }
+
+	[ stopElection( )( confirmation ) {
+		stopElection@BBJavaController( )( confirmation )
+	} ] { nullProcess }
+
+	[ sendElectionOptionList( options )( confirmation ) {
+		sendElectionOptionList@BBJavaController( options )( confirmation )
 	} ] { nullProcess }
 }

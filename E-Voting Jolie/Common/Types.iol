@@ -16,9 +16,9 @@ type EncryptedBallotList: void {
 	.signature: raw
 }
 
-type EncryptedElectionOptions: void {
+type SignedElectionOptions: void {
 	.electionId: int
-	.electionOptions: {
+	.electionOptions: void {
 		.id: int
 		.name: string
 		.partyId: int
@@ -44,10 +44,12 @@ type ElectionStatus: void {
 	.endTime: long
 }
 
-type Confirmation: void {
-	.confirmed: bool
+type ElectionStart: void {
+	.endTime: long
+	.validator: Validation
 }
 
-type ElectionStart: void{
-	.endTime: long
+type Validation: void {
+	.message: string
+	.signature: raw
 }

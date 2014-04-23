@@ -172,6 +172,9 @@ public class Model {
 	}
 
 	public static Date getElectionEndTime() {
+		if(Model.election == null) {
+			return new Date(0);
+		}
 		return Model.election.getEndTime();
 	}
 

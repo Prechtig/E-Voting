@@ -1,15 +1,14 @@
 include "console.iol"
-include "IAuthority.iol"
+include "IAuthorityController.iol"
+include "../Common/IAuthorityCommunication.iol"
 
-outputPort Controller {
-    Interfaces: IAuthorityController
-}
-
-embedded {
-    Java: "org.evoting.authority.ConsoleIO" in Controller
+outputPort IPP {
+	Location: "socket://localhost:8000"
+    Protocol: sodep
+    Interfaces: IAuthorityController, IAuthorityCommunication
 }
 
 main
 {
-    getUserInput@Controller( ) ( );
+    getUserInput@IPP( )( )
 }

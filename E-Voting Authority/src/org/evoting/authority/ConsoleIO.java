@@ -31,7 +31,7 @@ public class ConsoleIO extends JavaService {
 	private boolean electionRunning;
 	private Date endTime; // TODO: is this used?
 
-	private String aCommunicationPath = "IAuthorityCommunication";
+	private String aCommunicationPath = "/";
 	private String electionOptionsFile = "ElectionOptions.txt";
 
 	private static ElectionOptions eOptions;
@@ -40,9 +40,13 @@ public class ConsoleIO extends JavaService {
 	 * Used to get the initial information about the election. Sets if the election is running and, if it is, then what time it will end
 	 */
 	public void updateElectionStatus() {
-		CommMessage request = CommMessage.createRequest("getElectionStatus", aCommunicationPath, null);
+		System.out.println("Beginning of updateElectionStatus()");
+		CommMessage request = CommMessage.createRequest("getElectionStatus", aCommunicationPath, Value.create());
+		System.out.println("After CommMessage.createRequest");
 		try {
+			System.out.println("Before sendMessage");
 			CommMessage response = sendMessage(request).recvResponseFor(request);
+			System.out.println("After sendMessage");
 
 			electionRunning = response.value().getFirstChild("running").boolValue();
 			long lTime = response.value().getFirstChild("endTime").longValue();
@@ -181,23 +185,13 @@ public class ConsoleIO extends JavaService {
 	}
 
 	private void userStartElection() {
-		System.out.println("What time should the election stop? (HH:MM)");
-		
-		//Set up the endtime with the initial date
-		StringBuilder sb = new StringBuilder();
-		sb.append(Calendar.MONTH);
-		sb.append(" ");
-		sb.append(Calendar.DAY_OF_MONTH);
-		sb.append(" ");
-		sb.append(Calendar.YEAR);
-		sb.append(" ");
+		System.out.println("What time should the election stop? (yyyy-MM-dd HH:mm)");
 		
 		//Add hour and minute to the end time
-		sb.append(System.console().readLine().toLowerCase());
+		String date = System.console().readLine().toLowerCase();
 		
-		DateFormat df = new SimpleDateFormat("MMM dd yyyy kk:mm");
 		try {
-			Date d = df.parse(sb.toString());
+			Date d = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse(date);
 			startElection(d);
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block

@@ -1,5 +1,7 @@
 include "../Common/Types.iol"
 include "../Common/IBulletinBoard.iol"
+include "../Common/IAuthorityCommunication.iol"
+include "IAuthorityController.iol"
 
 // Enables concurrent execution
 execution { 
@@ -11,17 +13,35 @@ inputPort IP {
 	Interfaces: IAuthorityCommunication
 }
 
-outputPort BulletinBoardService {
-    Location: "socket://localhost:8000"
+inputPort IPP {
+	Location: "socket://localhost:8000"
     Protocol: sodep
-    Interfaces: IBulletinBoard
+    Interfaces: IAuthorityController, IAuthorityCommunication
+}
+
+outputPort BulletinBoardService {
+    Location: "socket://localhost:7000"
+    Protocol: sodep
+    Interfaces: IBulletinBoard, IAuthorityCommunication
+}
+
+outputPort Controller {
+    Interfaces: IAuthorityController
+}
+
+embedded {
+    Java: "org.evoting.authority.ConsoleIO" in Controller
 }
 
 main
 {
-	[ getElectionStatus( )( electionDetails ) // Used to get information regarding the election
+	[ getUserInput( )( ) {
+		getUserInput@Controller( )( )
+	} ] { nullProcess }
+
+	[ getElectionStatus( )( electionDetails ) {// Used to get information regarding the election
 		getElectionStatus@BulletinBoardService( )( electionDetails )
-	] { nullProcess }
+	} ] { nullProcess }
 
     [ startElection( )( confirmation ) { //Start the election
 		startElection@BulletinBoardService( )( confirmation )
@@ -32,10 +52,6 @@ main
 	} ]  { nullProcess }
 
 	[ sendElectionOptionList( electionOptions )( confirmation ) { // Send the list of electionoptions
-		sendElectionOptionList@BulletinBoardService( electionOptions )( confirmation );
+		sendElectionOptionList@BulletinBoardService( electionOptions )( confirmation )
 	} ]  { nullProcess }
-
-	[ sendPublicKey ( elGamalPublicKey )( confirmation ) { // Send authorities public ElGamal key
-		senPublicKey@BulletinBoardService( elGamalPublicKey )( confirmation )
-	} ] { nullProcess }
 }
