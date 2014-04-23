@@ -1,24 +1,30 @@
 type EncryptedBallot: void {
-    .userId: raw
+	.userId: raw
     .passwordHash: raw
-    .timestamp: raw
+    .electionId: raw
     .vote*: raw
+    .signature: raw
 }
 
 type EncryptedBallotList: void {
-	.numberOfElectionOptions: int
 	.votes*: void {
 		.vote*: void {
 			.electionOptionId: int
 			.encryptedVote: raw	
 		}
-		
 	}
+	.signature: raw
 }
 
-type EncryptedElectionOptions: void {
-	.timestamp: raw
-	.electionOptions: raw
+type SignedElectionOptions: void {
+	.electionId: int
+	.electionOptions: void {
+		.id: int
+		.name: string
+		.partyId: int
+	}
+	.endTime: long
+	.signature: raw
 }
 
 type PublicKeys: void {
@@ -38,6 +44,12 @@ type ElectionStatus: void {
 	.endTime: long
 }
 
-type Confirmation: void {
-	.confirmed: bool
+type ElectionStart: void {
+	.endTime: long
+	.validator: Validation
+}
+
+type Validation: void {
+	.message: string
+	.signature: raw
 }

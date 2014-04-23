@@ -27,4 +27,10 @@ public class Converter {
 		bb.order(ByteOrder.LITTLE_ENDIAN);
 		return bb.putInt(value).array();
 	}
+	
+	public static byte[] toByteArray(long value) {
+		ByteBuffer bb = ByteBuffer.allocate(8);
+		bb.order(ByteOrder.LITTLE_ENDIAN);
+		return bb.putLong(value).array();
+	}
 }

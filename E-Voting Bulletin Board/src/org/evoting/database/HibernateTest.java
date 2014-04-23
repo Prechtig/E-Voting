@@ -9,10 +9,10 @@ import javax.persistence.EntityManager;
 import org.bouncycastle.crypto.params.ElGamalPublicKeyParameters;
 import org.evoting.common.Converter;
 import org.evoting.database.entities.ElectionOption;
-import org.evoting.database.entities.Timestamp;
+import org.evoting.database.entities.Election;
 import org.evoting.database.entities.Vote;
 import org.evoting.database.repositories.ElectionOptionRepository;
-import org.evoting.database.repositories.TimestampRepository;
+import org.evoting.database.repositories.ElectionRepository;
 import org.evoting.database.repositories.VoteRepository;
 import org.evoting.security.Security;
 
@@ -30,13 +30,14 @@ public class HibernateTest {
 		
 		Vote v1 = new Vote(0, new byte[][] { Security.encryptElGamal(Converter.toByteArray(1), pubKey), Security.encryptElGamal(Converter.toByteArray(0), pubKey), Security.encryptElGamal(Converter.toByteArray(0), pubKey) });
 		Vote v2 = new Vote(1, new byte[][] { Security.encryptElGamal(Converter.toByteArray(0), pubKey), Security.encryptElGamal(Converter.toByteArray(1), pubKey), Security.encryptElGamal(Converter.toByteArray(0), pubKey) });
-		ElectionOption c0 = new ElectionOption(0, "Mikkel Hvilshøj Funch");
-		ElectionOption c1 = new ElectionOption(1, "Mark Thorhauge");
-		ElectionOption c2 = new ElectionOption(2, "Andreas Precht Poulsen");
-		ElectionOption c3 = new ElectionOption(3, "Gregers Jensen");
-		Date date = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse("2014-06-30 20:00");
+		ElectionOption p0 = new ElectionOption(0, "Vores Parti", 0);
+		ElectionOption c0 = new ElectionOption(1, "Mikkel Hvilshøj Funch", 0);
+		ElectionOption c1 = new ElectionOption(2, "Mark Thorhauge", 0);
+		ElectionOption c2 = new ElectionOption(3, "Andreas Precht Poulsen", 0);
+		ElectionOption c3 = new ElectionOption(4, "Gregers Jensen", 0);
+		Date endDate = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse("2014-06-31 20:00");
 
-		Timestamp t0 = new Timestamp(0, Security.encryptRSA(date.getTime() + "", Security.getRSAPrivateKey()));
+		Election t0 = new Election(0, endDate);
 
 		EntityManager entMgr = EntityManagerUtil.getEntityManager();
 		entMgr.getTransaction().begin();
@@ -50,6 +51,9 @@ public class HibernateTest {
 		}
 
 		ElectionOptionRepository cr = new ElectionOptionRepository(entMgr);
+		if (cr.findById(p0.getId()) == null) {
+			entMgr.persist(p0);
+		}
 		if (cr.findById(c0.getId()) == null) {
 			entMgr.persist(c0);
 		}
@@ -63,7 +67,7 @@ public class HibernateTest {
 			entMgr.persist(c3);
 		}
 		
-		TimestampRepository tr = new TimestampRepository(entMgr);
+		ElectionRepository tr = new ElectionRepository(entMgr);
 		if(!tr.timestampExists()) {
 			entMgr.persist(t0);
 		}

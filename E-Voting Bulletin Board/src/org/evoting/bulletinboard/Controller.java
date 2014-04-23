@@ -13,6 +13,7 @@ import org.evoting.common.Ballot;
 import org.evoting.common.EncryptedBallot;
 import org.evoting.common.EncryptedElectionOptions;
 import org.evoting.common.Importer;
+import org.evoting.common.ValueIdentifiers;
 import org.evoting.database.entities.Vote;
 import org.evoting.security.Security;
 
@@ -22,6 +23,35 @@ public class Controller extends JavaService {
 	}
 	
 	private static boolean electionRunning = false;
+	
+	private void validate(Value validation) {
+		String message = validation.getFirstChild("message").strValue();
+		byte[] signature = validation.getFirstChild("signature").byteArrayValue().getBytes();
+		String hashedMessage = Security.hash(message);
+		if(!hashedMessage.equals(Security.decryptRSA(signature, Security.getRSAPublicKey()))) {//TODO: change to authority public key
+			throw new RuntimeException(); //TODO: throw correct exception
+		}
+	}
+	
+	public Boolean startElection(Value value) {
+		validate(value.getFirstChild("validator"));
+		long endTime = value.getFirstChild(ValueIdentifiers.getEndTime()).longValue();
+		Date endDate = new Date(endTime);
+		Model.createNewElection(endDate);
+		electionRunning = true;
+		return Boolean.TRUE;
+	}
+	
+	public Boolean stopElection(Value value) {
+		validate(value.getFirstChild("validator"));
+		electionRunning = false;
+		return Boolean.TRUE;
+	}
+	
+	public Boolean sendElectionOptionList(Value value) {
+		//TODO: implement
+		return Boolean.TRUE;
+	}
 
 	@RequestResponse
 	/**

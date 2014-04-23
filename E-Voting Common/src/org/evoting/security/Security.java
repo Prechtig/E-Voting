@@ -1,5 +1,7 @@
 package org.evoting.security;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.math.BigInteger;
 import java.security.Key;
 import java.security.KeyFactory;
@@ -12,6 +14,10 @@ import java.security.spec.X509EncodedKeySpec;
 import org.bouncycastle.crypto.params.ElGamalParameters;
 import org.bouncycastle.crypto.params.ElGamalPrivateKeyParameters;
 import org.bouncycastle.crypto.params.ElGamalPublicKeyParameters;
+import org.bouncycastle.util.Arrays;
+import org.evoting.common.Converter;
+import org.evoting.common.Group;
+
 
 public class Security {
 	
@@ -19,6 +25,10 @@ public class Security {
 	private static boolean RASKeysGenerated;
 	//True if ElGamal keys have been generated
 	private static boolean ElGamalKeysGenerated;
+	//Size of ELGamal byte array
+	private static final int sizeOfElGamalCipher = 128;
+	//The group defined by the ElGamal parameters.
+	private static Group group = Group.getInstance();
 	
 	//Main method for testing
 	public static void main(String[] paramArrayOfString) {
@@ -102,6 +112,18 @@ public class Security {
 	public static byte[] decryptElgamal(byte[] m, ElGamalPrivateKeyParameters pK) {
 		return ElGamal.decrypt(m, pK);
 	}
+	
+	/**
+	 * Decrypts a byte array and solves the discrete logarithm.
+	 * @param m The byte array to decrypt
+	 * @param pK The ElGamal private key used to decrypt
+	 * @return The decrypted byte array
+	 */
+	public static long decryptExponentialElgamal(byte[] m, ElGamalPrivateKeyParameters pK) {
+		byte[] decrypted = ElGamal.decrypt(m, pK);
+		BigInteger messageToPower = new BigInteger(decrypted);
+		return group.discreteLogarithm(messageToPower);
+	}
 
 	/**
 	 * Encrypt a string using RSA
@@ -140,7 +162,19 @@ public class Security {
 	 * @return The hashed string
 	 */
 	public static String hash(String m) {
+		return hash(m.getBytes());
+	}
+	
+	public static String hash(byte[] m) {
 		return SHA1.hash(m);
+	}
+	
+	public static String hash(int m) {
+		return hash(Converter.toByteArray(m));
+	}
+	
+	public static String hash(long m) {
+		return hash(Converter.toByteArray(m));
 	}
 
 	/**
@@ -154,22 +188,41 @@ public class Security {
 		String hash = hash(m);
 		return encryptRSA(hash, pK);
 	}
+	
+	public static byte[] sign(int m, Key pK) {
+		String hash = hash(Converter.toByteArray(m));
+		return encryptRSA(hash, pK);
+	}
+	
+	public static byte[] sign(Key pK, byte[]... bytes){
+		byte[] resultBytes = concatenateByteArrays(bytes);
+		String hash = hash(resultBytes);
+		return sign(hash, pK);
+	}
+	
+	public static byte[] sign(long m, Key pK) {
+		String hash = hash(Converter.toByteArray(m));
+		return encryptRSA(hash, pK);
+	}
+	
+	public static byte[] sign(byte[] m, Key pK){
+		String hash = hash(m);
+		return encryptRSA(hash, pK);
+	}
+	
+	public static byte[] concatenateByteArrays(byte[]... bytes){
+		ByteArrayOutputStream outputStream = new ByteArrayOutputStream( );
+		for (byte[] b : bytes) {
+			try {
+				outputStream.write(b);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 
-	
-	
-	//Temporary
-	/*public static byte[] encryptElGamal(int m, ElGamalPublicKeyParameters pK) {
-		return ElGamal.encrypt(m, pK);
-	}*/
-	
-	
-	
-	
-	
-	
-	
-	
-	
+		return outputStream.toByteArray();
+	}
 	
 	public static ElGamalPublicKeyParameters getElgamalPublicKey() {
 		return ElGamal.getPublicKey();
@@ -195,10 +248,14 @@ public class Security {
 		ElGamalParameters elGamalp = new ElGamalParameters(p, g);
 		ElGamalPublicKeyParameters elGamalpkp = new ElGamalPublicKeyParameters(y, elGamalp);
 		ElGamal.setPublicKey(elGamalpkp);
+		group.setGenerator(elGamalp.getG());
+		group.setModulo(elGamalp.getP());
 	}
 
 	public static void setElGamalPrivateKey(ElGamalPrivateKeyParameters privK) {
 		ElGamal.setPrivateKey(privK);
+		group.setGenerator(privK.getParameters().getG());
+		group.setModulo(privK.getParameters().getP());
 	}
 
 	public static void setRSAPublicKey(PublicKey pubK) {
@@ -219,5 +276,46 @@ public class Security {
 
 	public static void setRSAPrivateKey(PrivateKey privK) {
 		RSA.setPrivateKey(privK);
+	}
+
+	
+	public static byte[] multiplyElGamalCiphers(byte[] cipher1, byte[] cipher2)
+	{
+		if(cipher1.length != sizeOfElGamalCipher || cipher2.length != sizeOfElGamalCipher) {
+			throw new IllegalArgumentException();
+		}
+		
+		// Seperates the two parts of the cipher arrays.
+		byte[] cipherGamma1 = Arrays.copyOfRange(cipher1, 0, cipher1.length/2);
+		byte[] cipherPhi1 = Arrays.copyOfRange(cipher1, cipher1.length/2, cipher1.length);
+		byte[] cipherGamma2 = Arrays.copyOfRange(cipher2, 0, cipher2.length/2);
+		byte[] cipherPhi2 = Arrays.copyOfRange(cipher2, cipher2.length/2, cipher2.length);	
+		
+		BigInteger gammaInt1 = new BigInteger(cipherGamma1);
+		BigInteger phiInt1 = new BigInteger(cipherPhi1);
+		BigInteger gammaInt2 = new BigInteger(cipherGamma2);
+		BigInteger phiInt2 = new BigInteger(cipherPhi2);
+		
+
+		
+		BigInteger gammaProduct = gammaInt1.multiply(gammaInt2).mod(group.getModulo());
+		BigInteger phiProduct = phiInt1.multiply(phiInt2).mod(group.getModulo());
+		
+		byte[] gammaProductByte = gammaProduct.toByteArray();
+		byte[] phiProductByte = phiProduct.toByteArray();
+		
+		byte[] result = concat(gammaProductByte, phiProductByte);
+		
+		if(result.length != sizeOfElGamalCipher) {
+			throw new UnsupportedOperationException("The method contains an error. The length of the result, gamma and phi is " + result.length + ", " + gammaProductByte.length  + ", " + phiProductByte.length + "Group module is " + group.getModulo().toByteArray().length);
+		}
+		
+		return result;
+	}
+	
+	private static byte[] concat(byte[] first, byte[] second) {
+		  byte[] result = Arrays.copyOf(first, first.length + second.length);
+		  System.arraycopy(second, 0, result, first.length, second.length);
+		  return result;
 	}
 }

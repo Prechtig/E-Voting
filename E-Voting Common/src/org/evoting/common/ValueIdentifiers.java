@@ -1,13 +1,15 @@
 package org.evoting.common;
 
 public class ValueIdentifiers {
+	private static final String ID = "id";
+	private static final String NAME = "name";
+	private static final String PARTY_ID = "partyId";
 	private static final String USER_ID = "userId";
 	private static final String PASSWORD_HASH = "passwordHash";
-	// Name of the time stamp cipher text in the value object.
-	private static final String TIMESTAMP = "timestamp";
+	private static final String ELECTION_ID = "electionId";
 	private static final String VOTE = "vote";
 	// Name of the electionOptions cipher text in the value object.
-	private static final String CANDIDATES = "electionOptions";
+	private static final String ELECTION_OPTIONS = "electionOptions";
 	private static final String RSA_PUBLIC_KEY = "rsaPublicKey";
 	//Names of the public keys and parameters in the public keys value object.
 	private static final String ELGAMAL_PUBLIC_KEY = "elgamalPublicKey";
@@ -16,21 +18,33 @@ public class ValueIdentifiers {
 	private static final String P = "p";
 	private static final String G = "g";
 	private static final String L = "l";
+	private static final String START_TIME = "startTime";
+	private static final String END_TIME = "endTime";
+	private static final String SIGNATURE = "signature";
 	
+	public static String getId() {
+		return ID;
+	}
+	public static String getName() {
+		return NAME;
+	}
+	public static String getPartyId() {
+		return PARTY_ID;
+	}
 	public static String getUserId() {
 		return USER_ID;
 	}
 	public static String getPasswordHash() {
 		return PASSWORD_HASH;
 	}
-	public static String getTimestamp() {
-		return TIMESTAMP;
+	public static String getElectionId() {
+		return ELECTION_ID;
 	}
 	public static String getVote() {
 		return VOTE;
 	}
 	public static String getElectionOptions() {
-		return CANDIDATES;
+		return ELECTION_OPTIONS;
 	}
 	public static String getRsaPublicKey() {
 		return RSA_PUBLIC_KEY;
@@ -52,5 +66,14 @@ public class ValueIdentifiers {
 	}
 	public static String getL() {
 		return L;
+	}
+	public static String getStartTime() {
+		return START_TIME;
+	}
+	public static String getEndTime() {
+		return END_TIME;
+	}
+	public static String getSignature() {
+		return SIGNATURE;
 	}
 }

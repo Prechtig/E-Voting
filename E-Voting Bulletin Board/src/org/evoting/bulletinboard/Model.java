@@ -11,13 +11,12 @@ import jolie.runtime.Value;
 import org.evoting.bulletinboard.exceptions.InvalidUserInformationException;
 import org.evoting.common.EncryptedElectionOptions;
 import org.evoting.database.EntityManagerUtil;
+import org.evoting.database.entities.Election;
 import org.evoting.database.entities.ElectionOption;
-import org.evoting.database.entities.Timestamp;
 import org.evoting.database.entities.Vote;
 import org.evoting.database.repositories.ElectionOptionRepository;
-import org.evoting.database.repositories.TimestampRepository;
+import org.evoting.database.repositories.ElectionRepository;
 import org.evoting.database.repositories.VoteRepository;
-import org.evoting.security.Security;
 
 public class Model {
 	
@@ -26,6 +25,7 @@ public class Model {
 	private static String y = null, p = null, g = null;
 	private static int l;
 	private static Value publicKeys = null;
+	private static Election election;
 	
 	public static boolean keysGenerated() {
 		return keysGenerated;
@@ -72,10 +72,7 @@ public class Model {
 		ElectionOptionRepository cRepo = new ElectionOptionRepository(entMgr);
 		List<ElectionOption> electionOptionsList = cRepo.findAll();
 		
-		TimestampRepository tRepo = new TimestampRepository(entMgr);
-		Timestamp timestamp = tRepo.findTime();
-		
-		EncryptedElectionOptions electionOptions = new EncryptedElectionOptions(electionOptionsList, timestamp.getTime());
+		EncryptedElectionOptions electionOptions = new EncryptedElectionOptions(electionOptionsList, Model.election.getId(), Model.election.getEndTime());
 		
 		endDatabaseSession(entMgr);
 		return electionOptions;
@@ -102,9 +99,6 @@ public class Model {
 	 */
 	public static Value toValue(List<Vote> allVotes) {
 		Value result = Value.create();
-		if(allVotes.size() > 0) {
-			result.getNewChild("numberOfElectionOptions").setValue(allVotes.get(0).getEncryptedVote().length);
-		}
 		
 		for(Vote v : allVotes) {
 			Value votes = result.getNewChild("votes");
@@ -178,14 +172,23 @@ public class Model {
 	}
 
 	public static Date getElectionEndTime() {
+		if(Model.election == null) {
+			return new Date(0);
+		}
+		return Model.election.getEndTime();
+	}
+
+	public static void createNewElection(Date endDate) {
 		EntityManager entMgr = beginDatabaseSession();
 		
-		TimestampRepository tr = new TimestampRepository(entMgr);
-		Timestamp endTime = tr.findTime();
-		String time = new String(Security.decryptRSA(endTime.getTime(), Security.getRSAPrivateKey()));
-		Date date = new Date(Long.parseLong(time));
+		ElectionRepository er = new ElectionRepository(entMgr);
+		int nextId = er.findNextId();
+		
+		Election election = new Election(nextId, endDate);
+		Model.election = election;
+		
+		entMgr.persist(election);
 		
 		endDatabaseSession(entMgr);
-		return date;
 	}
 }
