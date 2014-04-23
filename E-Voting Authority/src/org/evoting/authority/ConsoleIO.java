@@ -39,7 +39,7 @@ public class ConsoleIO extends JavaService {
 	/**
 	 * Used to get the initial information about the election. Sets if the election is running and, if it is, then what time it will end
 	 */
-	public void initialize() {
+	public void updateElectionStatus() {
 		CommMessage request = CommMessage.createRequest("getElectionStatus", aCommunicationPath, null);
 		try {
 			CommMessage response = sendMessage(request).recvResponseFor(request);
@@ -66,7 +66,7 @@ public class ConsoleIO extends JavaService {
 	public void getUserInput() {
 		System.out.println("Initializing election details");
 		// Initialize the current election status
-		initialize();
+		updateElectionStatus();
 
 		// Program loop
 		while (true) {
@@ -100,7 +100,7 @@ public class ConsoleIO extends JavaService {
 				break;
 			// Update the election status
 			case "update":
-				update();
+				updateElectionStatus(); //TODO: call initialize instead?
 				break;
 			// Terminate program
 			case "exit":
@@ -352,13 +352,6 @@ public class ConsoleIO extends JavaService {
 		}
 	}
 
-	/**
-	 * Used to update election status
-	 */
-	private void update() {
-		initialize();
-	}
-
 	private Value getPublicKeyValue() {
 		Value result = Value.create();
 		if (elGamalPublicKey != null) {
@@ -375,7 +368,4 @@ public class ConsoleIO extends JavaService {
 		}
 		return result;
 	}
-
-	// TODO: should it downlaod the list of election options if the election is
-	// running?
 }

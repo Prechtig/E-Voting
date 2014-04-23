@@ -1,5 +1,7 @@
 package org.evoting.security;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.math.BigInteger;
 import java.security.Key;
 import java.security.KeyFactory;
@@ -8,6 +10,7 @@ import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.X509EncodedKeySpec;
+import java.util.ArrayList;
 
 import org.bouncycastle.crypto.params.ElGamalParameters;
 import org.bouncycastle.crypto.params.ElGamalPrivateKeyParameters;
@@ -173,10 +176,31 @@ public class Security {
 		return encryptRSA(hash, pK);
 	}
 	
+	public static byte[] sign(Key pK, byte[]... bytes){
+		ByteArrayOutputStream outputStream = new ByteArrayOutputStream( );
+		for (byte[] b : bytes) {
+			try {
+				outputStream.write(b);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+
+		byte[] result = outputStream.toByteArray();
+		
+		return sign(result, pK);
+	}
+	
 	/*public static byte[] sign(long m, Key pK) {
 		String hash = hash(Converter.toByteArray(m));
 		return encryptRSA(hash, pK);
 	}*/
+	
+	public static byte[] sign(byte[] m, Key pK){
+		String hash = hash(m);
+		return encryptRSA(hash, pK);
+	}
 	
 	
 	
