@@ -100,7 +100,7 @@ public class ConsoleIO extends JavaService {
 				break;
 			// Update the election status
 			case "update":
-				updateElectionStatus(); //TODO: call initialize instead?
+				updateElectionStatus(); // TODO: call initialize instead?
 				break;
 			// Terminate program
 			case "exit":
@@ -182,8 +182,8 @@ public class ConsoleIO extends JavaService {
 
 	private void userStartElection() {
 		System.out.println("What time should the election stop? (HH:MM)");
-		
-		//Set up the endtime with the initial date
+
+		// Set up the endtime with the initial date
 		StringBuilder sb = new StringBuilder();
 		sb.append(Calendar.MONTH);
 		sb.append(" ");
@@ -191,10 +191,10 @@ public class ConsoleIO extends JavaService {
 		sb.append(" ");
 		sb.append(Calendar.YEAR);
 		sb.append(" ");
-		
-		//Add hour and minute to the end time
+
+		// Add hour and minute to the end time
 		sb.append(System.console().readLine().toLowerCase());
-		
+
 		DateFormat df = new SimpleDateFormat("MMM dd yyyy kk:mm");
 		try {
 			Date d = df.parse(sb.toString());
@@ -210,7 +210,7 @@ public class ConsoleIO extends JavaService {
 			// TODO:Should it send an endtime?
 			Value result = Value.create();
 			result.getNewChild("endTime").setValue(d.getTime());
-			
+			result.getNewChild("endTimeHash").setValue(Security.sign(d.getTime(), RASpublicKey));
 			CommMessage request = CommMessage.createRequest("startElection", aCommunicationPath, result);
 			try {
 				CommMessage response = sendMessage(request).recvResponseFor(request);

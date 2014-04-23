@@ -50,4 +50,5 @@ type Confirmation: void {
 
 type ElectionStart: void{
 	.endTime: long
+	.endTimeHash: string
 }
