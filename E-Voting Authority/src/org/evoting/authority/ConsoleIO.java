@@ -183,6 +183,7 @@ public class ConsoleIO extends JavaService {
 	private void userStartElection() {
 		System.out.println("What time should the election stop? (HH:MM)");
 		
+		//Set up the endtime with the initial date
 		StringBuilder sb = new StringBuilder();
 		sb.append(Calendar.MONTH);
 		sb.append(" ");
@@ -190,6 +191,8 @@ public class ConsoleIO extends JavaService {
 		sb.append(" ");
 		sb.append(Calendar.YEAR);
 		sb.append(" ");
+		
+		//Add hour and minute to the end time
 		sb.append(System.console().readLine().toLowerCase());
 		
 		DateFormat df = new SimpleDateFormat("MMM dd yyyy kk:mm");
