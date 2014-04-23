@@ -1,6 +1,7 @@
 package org.evoting.common;
 
 import java.math.BigInteger;
+import java.util.HashMap;
 
 /**
  * Contains data defining a cyclic group, and methods for generating and finding group elements.
@@ -12,6 +13,7 @@ public class Group
 	private static Group instance = new Group();
 	private BigInteger generator;
 	private BigInteger modulo;
+	private HashMap<BigInteger, Long> cache = new HashMap<BigInteger, Long>();
 	
 	/**
 	 * Raises the group generator to the power of the input provided and applies the modulo operator with the modulo of the group on the result.
@@ -30,6 +32,11 @@ public class Group
 	 */
 	public long discreteLogarithm(BigInteger value)
 	{
+		if(cache.containsKey(value)) {
+			System.out.println("Found value in cache");
+			return cache.get(value);
+		}
+		
 		boolean logFound = false;
 		long power = 0;
 		BigInteger current = BigInteger.valueOf(1);
@@ -81,6 +88,13 @@ public class Group
 			return power;
 		} else {
 			return discreteLogarithm(value);
+		}
+	}
+	
+	public void buildCache(long max)
+	{
+		for(long i = 0; i <= max; i++) {
+			cache.put(raiseGenerator(i), i);
 		}
 	}
 

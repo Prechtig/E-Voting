@@ -27,8 +27,6 @@ public class Model
 	private static byte[] electionOptionsTime;
 	// The number of electionOptions contained in the electionOptions.
 	private static int numberOfElectionOptions = 0;
-	// Group data used for homomorphic encryption.
-	private static Group group = Group.getInstance();
 	
 	/**
 	 * Sets the list of available electionOptions.
@@ -65,11 +63,8 @@ public class Model
 		BigInteger g = new BigInteger(parameters.getFirstChild(ValueIdentifiers.getG()).strValue());
 		int l = Integer.parseInt(parameters.getFirstChild(ValueIdentifiers.getL()).strValue());
 		
-		group.setGenerator(g);
-		group.setModulo(p);
 		Security.setElGamalPublicKey(y, p, g, l);
 		Security.setRSAPublicKey(rsaPublicKeyValue.byteArrayValue().getBytes());
-		
 	}
 	
 	
