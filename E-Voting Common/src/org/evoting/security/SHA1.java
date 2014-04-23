@@ -35,6 +35,10 @@ public class SHA1 {
 	}
 	
 	public static String hash(String m){
+		return hash(m.getBytes());
+	}
+	
+	public static String hash(byte[] m){
 		MessageDigest md = null;
 	    byte[] hashed = null;
 		try {
@@ -43,7 +47,7 @@ public class SHA1 {
 	    catch(NoSuchAlgorithmException e) {
 	        e.printStackTrace();
 	    }
-		hashed = md.digest(m.getBytes());
+		hashed = md.digest(m);
 	    return byteToHex(hashed);
 	}
 }

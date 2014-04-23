@@ -1,5 +1,7 @@
 package org.evoting.security;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.math.BigInteger;
 import java.security.Key;
 import java.security.KeyFactory;
@@ -8,10 +10,10 @@ import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.X509EncodedKeySpec;
-
 import org.bouncycastle.crypto.params.ElGamalParameters;
 import org.bouncycastle.crypto.params.ElGamalPrivateKeyParameters;
 import org.bouncycastle.crypto.params.ElGamalPublicKeyParameters;
+import org.evoting.common.Converter;
 
 public class Security {
 	
@@ -140,8 +142,20 @@ public class Security {
 	 * @return The hashed string
 	 */
 	public static String hash(String m) {
+		return hash(m.getBytes());
+	}
+	
+	public static String hash(byte[] m) {
 		return SHA1.hash(m);
 	}
+	
+	public static String hash(int m) {
+		return hash(Converter.toByteArray(m));
+	}
+	
+	/*public static String hash(long m) {
+		return hash(Converter.toByteArray(m));
+	}*/
 
 	/**
 	 * Method used to sign a string using an RSA key.
@@ -154,21 +168,41 @@ public class Security {
 		String hash = hash(m);
 		return encryptRSA(hash, pK);
 	}
-
 	
+	public static byte[] sign(int m, Key pK) {
+		String hash = hash(Converter.toByteArray(m));
+		return encryptRSA(hash, pK);
+	}
 	
-	//Temporary
-	/*public static byte[] encryptElGamal(int m, ElGamalPublicKeyParameters pK) {
-		return ElGamal.encrypt(m, pK);
+	public static byte[] sign(Key pK, byte[]... bytes){
+		byte[] resultBytes = concatenateByteArrays(bytes);
+		String hash = hash(resultBytes);
+		return sign(hash, pK);
+	}
+	
+	/*public static byte[] sign(long m, Key pK) {
+		String hash = hash(Converter.toByteArray(m));
+		return encryptRSA(hash, pK);
 	}*/
 	
+	public static byte[] sign(byte[] m, Key pK){
+		String hash = hash(m);
+		return encryptRSA(hash, pK);
+	}
 	
-	
-	
-	
-	
-	
-	
+	public static byte[] concatenateByteArrays(byte[]... bytes){
+		ByteArrayOutputStream outputStream = new ByteArrayOutputStream( );
+		for (byte[] b : bytes) {
+			try {
+				outputStream.write(b);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+
+		return outputStream.toByteArray();
+	}
 	
 	
 	public static ElGamalPublicKeyParameters getElgamalPublicKey() {

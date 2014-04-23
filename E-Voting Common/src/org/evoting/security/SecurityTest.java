@@ -92,6 +92,17 @@ public class SecurityTest {
 	}
 	
 	@Test
+	public void testSign(){
+		String m = "Test String";
+		String trueHash = "a5103f9c0b7d5ff69ddc38607c74e53d4ac120f2";
+		byte[] signed = Security.sign(m, RSAPrivateKey);
+		byte[] hash = Security.decryptRSA(signed, RSAPublicKey);
+		
+		String result = new String(hash);
+		assertEquals(trueHash, result);
+	}
+	
+	@Test
 	public void saveElgamalKeyPublic(){
 		Exporter.exportElGamalPublicKeyParameters(ElGamalPublicKey, ElGamalPublicKeyFile);
 		ElGamalPublicKeyParameters savedParams =  Importer.importElGamalPublicKeyParameters(ElGamalPublicKeyFile);

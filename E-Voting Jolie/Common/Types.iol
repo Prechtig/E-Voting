@@ -47,3 +47,7 @@ type ElectionStatus: void {
 type Confirmation: void {
 	.confirmed: bool
 }
+
+type ElectionStart: void{
+	.endTime: long
+}
