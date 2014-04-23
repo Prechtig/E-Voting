@@ -31,7 +31,7 @@ public class EncryptedBallot {
 		this.passwordHash = encryptPasswordHash(passwordHash);
 		this.electionId = electionId;
 		this.vote = encryptVote(vote);
-		this.signature = Security.sign(Security.getRSAPrivateKey(), userId, passwordHash, electionId);
+		this.signature = Security.sign(Security.getRSAPrivateKey(), Converter.toByteArray(userId), this.passwordHash, electionId);
 	}
 	
 	/**
