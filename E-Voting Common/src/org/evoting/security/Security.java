@@ -1,5 +1,7 @@
 package org.evoting.security;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.math.BigInteger;
 import java.security.Key;
 import java.security.KeyFactory;
@@ -13,7 +15,9 @@ import org.bouncycastle.crypto.params.ElGamalParameters;
 import org.bouncycastle.crypto.params.ElGamalPrivateKeyParameters;
 import org.bouncycastle.crypto.params.ElGamalPublicKeyParameters;
 import org.bouncycastle.util.Arrays;
+import org.evoting.common.Converter;
 import org.evoting.common.Group;
+
 
 public class Security {
 	
@@ -158,7 +162,19 @@ public class Security {
 	 * @return The hashed string
 	 */
 	public static String hash(String m) {
+		return hash(m.getBytes());
+	}
+	
+	public static String hash(byte[] m) {
 		return SHA1.hash(m);
+	}
+	
+	public static String hash(int m) {
+		return hash(Converter.toByteArray(m));
+	}
+	
+	public static String hash(long m) {
+		return hash(Converter.toByteArray(m));
 	}
 
 	/**
@@ -171,6 +187,41 @@ public class Security {
 	public static byte[] sign(String m, Key pK) {
 		String hash = hash(m);
 		return encryptRSA(hash, pK);
+	}
+	
+	public static byte[] sign(int m, Key pK) {
+		String hash = hash(Converter.toByteArray(m));
+		return encryptRSA(hash, pK);
+	}
+	
+	public static byte[] sign(Key pK, byte[]... bytes){
+		byte[] resultBytes = concatenateByteArrays(bytes);
+		String hash = hash(resultBytes);
+		return sign(hash, pK);
+	}
+	
+	public static byte[] sign(long m, Key pK) {
+		String hash = hash(Converter.toByteArray(m));
+		return encryptRSA(hash, pK);
+	}
+	
+	public static byte[] sign(byte[] m, Key pK){
+		String hash = hash(m);
+		return encryptRSA(hash, pK);
+	}
+	
+	public static byte[] concatenateByteArrays(byte[]... bytes){
+		ByteArrayOutputStream outputStream = new ByteArrayOutputStream( );
+		for (byte[] b : bytes) {
+			try {
+				outputStream.write(b);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+
+		return outputStream.toByteArray();
 	}
 	
 	public static ElGamalPublicKeyParameters getElgamalPublicKey() {

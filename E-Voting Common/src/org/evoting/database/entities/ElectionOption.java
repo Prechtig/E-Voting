@@ -13,14 +13,17 @@ public class ElectionOption extends BaseEntity {
 	//The name of the electionOption
 	@Column(name = "name", updatable = false, nullable = false)
 	private String name;
+	@Column(name = "partyId", updatable = false, nullable = false)
+	private int partyId;
 	
 	/**
 	 * @param electionOptionId The id of the electionOption
 	 * @param name The name of the electionOption
 	 */
-	public ElectionOption(int electionOptionId, String name) {
+	public ElectionOption(int electionOptionId, String name, int partyId) {
 		super(electionOptionId);
 		this.name = name;
+		this.partyId = partyId;
 	}
 	
 	/**
@@ -36,5 +39,9 @@ public class ElectionOption extends BaseEntity {
 	 */
 	public String getName() {
 		return this.name;
+	}
+	
+	public int getPartyId() {
+		return this.partyId;
 	}
 }

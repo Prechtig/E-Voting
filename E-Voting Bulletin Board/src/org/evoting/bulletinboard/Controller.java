@@ -22,6 +22,12 @@ public class Controller extends JavaService {
 	}
 	
 	private static boolean electionRunning = false;
+	
+	public Boolean startElection(long endTime) {
+		Date endDate = new Date(endTime);
+		Model.createNewElection(endDate);
+		return Boolean.TRUE;
+	}
 
 	@RequestResponse
 	/**

@@ -1,7 +1,6 @@
 package org.evoting.client;
 
 import java.math.BigInteger;
-import java.util.List;
 
 import jolie.runtime.Value;
 
@@ -20,13 +19,15 @@ import org.evoting.security.Security;
  *
  */
 public class Model
-{ 
+{
+	private static ElectionOptions electionOptions;
 	// List of electionOption names. The index is equal to the electionOption id.
-	private static List<String> electionOptionNames;
+	//private static List<String> electionOptionNames;
 	// The time stamp that marks the electionOption list.
-	private static byte[] electionOptionsTime;
+	//private static byte[] electionOptionsTime;
 	// The number of electionOptions contained in the electionOptions.
-	private static int numberOfElectionOptions = 0;
+	// Group data used for homomorphic encryption.
+	private static Group group = Group.getInstance();
 	
 	/**
 	 * Sets the list of available electionOptions.
@@ -34,9 +35,10 @@ public class Model
 	 */
 	public static void setElectionOptions(ElectionOptions electionOptions)
 	{
-		electionOptionNames = electionOptions.getElectionOptions();
-		electionOptionsTime = electionOptions.getTimestamp();
-		numberOfElectionOptions = electionOptionNames.size();
+		Model.electionOptions = electionOptions;
+		//electionOptionNames = electionOptions.getElectionOptions();
+		//electionOptionsTime = electionOptions.getTimestamp();
+		//numberOfElectionOptions = electionOptionNames.size();
 	}
 	
 	/**
@@ -74,7 +76,7 @@ public class Model
 	 */
 	public static int getNumberOfElectionOptions()
 	{
-		return numberOfElectionOptions;
+		return electionOptions.getElectionOptions().size();
 	}
 	
 	
@@ -86,11 +88,11 @@ public class Model
 	 */
 	public static EncryptedBallot getEncryptedBallot(UserInputData userInputData) throws NoElectionOptionsException
 	{
-		if(electionOptionNames == null) {
+		if(Model.electionOptions == null) {
 			throw new NoElectionOptionsException();
 		}
 		int[] votes = getVoteFromElectionOptionId(userInputData.getElectionOptionId());
-		return new EncryptedBallot(userInputData.getUserId(), userInputData.getPassword(), electionOptionsTime, votes);
+		return new EncryptedBallot(userInputData.getUserId(), userInputData.getPassword(), electionOptions.getElectionId(), votes);
 	}
 	
 	/**
@@ -100,7 +102,7 @@ public class Model
 	 */
 	private static int[] getVoteFromElectionOptionId(int electionOptionId)
 	{
-		int[] result = new int[electionOptionNames.size()];
+		int[] result = new int[getNumberOfElectionOptions()];
 		result[electionOptionId] = 1;
 		return result;
 	}
