@@ -141,11 +141,19 @@ public class Security {
 	 * @return The hashed string
 	 */
 	public static String hash(String m) {
-		return SHA1.hash(m);
+		return hash(m.getBytes());
 	}
 	
 	public static String hash(byte[] m) {
 		return SHA1.hash(m);
+	}
+	
+	public static String hash(int m) {
+		return hash(Converter.toByteArray(m));
+	}
+	
+	public static String hash(long m) {
+		return hash(Converter.toByteArray(m));
 	}
 
 	/**
@@ -165,20 +173,10 @@ public class Security {
 		return encryptRSA(hash, pK);
 	}
 	
-	
-
-	
-	
-	//Temporary
-	/*public static byte[] encryptElGamal(int m, ElGamalPublicKeyParameters pK) {
-		return ElGamal.encrypt(m, pK);
-	}*/
-	
-	
-	
-	
-	
-	
+	public static byte[] sign(long m, Key pK) {
+		String hash = hash(Converter.toByteArray(m));
+		return encryptRSA(hash, pK);
+	}
 	
 	
 	
