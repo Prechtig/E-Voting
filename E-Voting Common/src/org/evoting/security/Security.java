@@ -153,9 +153,9 @@ public class Security {
 		return hash(Converter.toByteArray(m));
 	}
 	
-	/*public static String hash(long m) {
+	public static String hash(long m) {
 		return hash(Converter.toByteArray(m));
-	}*/
+	}
 
 	/**
 	 * Method used to sign a string using an RSA key.
@@ -180,10 +180,10 @@ public class Security {
 		return sign(hash, pK);
 	}
 	
-	/*public static byte[] sign(long m, Key pK) {
+	public static byte[] sign(long m, Key pK) {
 		String hash = hash(Converter.toByteArray(m));
 		return encryptRSA(hash, pK);
-	}*/
+	}
 	
 	public static byte[] sign(byte[] m, Key pK){
 		String hash = hash(m);
