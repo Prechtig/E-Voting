@@ -1,7 +1,9 @@
 package org.evoting.authority;
 
 import java.io.IOException;
+import java.math.BigInteger;
 import java.security.PublicKey;
+import java.security.SecureRandom;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -20,7 +22,7 @@ import org.evoting.common.Importer;
 import org.evoting.security.Security;
 
 public class ConsoleIO extends JavaService {
-	private PublicKey RASpublicKey;
+	private PublicKey RSApublicKey;
 
 	private String ElGamalPublicKeyFile = "ElGamalPublicKey";
 	private String ElGamalPrivateKeyFile = "ElGamalPrivateKey";
@@ -35,6 +37,8 @@ public class ConsoleIO extends JavaService {
 	private String electionOptionsFile = "ElectionOptions.txt";
 
 	private static ElectionOptions eOptions;
+	
+	private SecureRandom random = new SecureRandom();
 
 	/**
 	 * Used to get the initial information about the election. Sets if the election is running and, if it is, then what time it will end
@@ -207,16 +211,16 @@ public class ConsoleIO extends JavaService {
 
 	private void startElection(Date d) {
 		if (!electionRunning) {
-			//Create value with endtime and signed endtime
+			// Create value with endtime and signed endtime
 			Value result = Value.create();
 			result.getNewChild("endTime").setValue(d.getTime());
-			result.getNewChild("endTimeHash").setValue(Security.sign(d.getTime(), RASpublicKey));
-			
+			result.getNewChild("endTimeHash").setValue(Security.sign(d.getTime(), RSApublicKey));
+
 			CommMessage request = CommMessage.createRequest("startElection", aCommunicationPath, result);
 			try {
 				CommMessage response = sendMessage(request).recvResponseFor(request);
 
-				if (response.value().getFirstChild("Confirmation").boolValue()) {
+				if (response.value().boolValue()) {
 					System.out.println("Election has started");
 					electionRunning = true;
 					endTime = d;
@@ -277,7 +281,7 @@ public class ConsoleIO extends JavaService {
 			try {
 				CommMessage response = sendMessage(request).recvResponseFor(request);
 
-				if (response.value().getFirstChild("Confirmation").boolValue()) {
+				if (response.value().boolValue()) {
 					electionRunning = false;
 					System.out.println("Election has stopped");
 				} else {
@@ -301,7 +305,7 @@ public class ConsoleIO extends JavaService {
 				try {
 					CommMessage response = sendMessage(request).recvResponseFor(request);
 
-					if (response.value().getFirstChild("Confirmation").boolValue()) {
+					if (response.value().boolValue()) {
 						electionRunning = false;
 						System.out.println("ElGamal public Key successfully sent");
 					} else {
@@ -370,6 +374,19 @@ public class ConsoleIO extends JavaService {
 		return result;
 	}
 	
+	private Value getNewValidator(){
+		String m = nextRandomString();
+		byte[] signed = Security.sign(m, RSApublicKey); //not RSApblickey
+		//TODO: Create value
+		
+		
+		return null;
+	}
+
+	private String nextRandomString() {
+		return new BigInteger(130, random).toString(32);
+	}
+
 	public static void main(String[] args) {
 	}
 }
