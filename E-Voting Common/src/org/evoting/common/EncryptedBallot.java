@@ -26,12 +26,12 @@ public class EncryptedBallot {
 	 * @param vote The vote of the voter
 	 * @throws InvalidVoteException Is thrown if the vote is invalid
 	 */
-	public EncryptedBallot(int userId, String passwordHash, byte[] electionId, int[] vote) throws InvalidVoteException {
-		this.userId = encryptUserId(userId);
+	public EncryptedBallot(int userId, String passwordHash, int electionId, int[] vote) throws InvalidVoteException {
+		this.userId = encryptInteger(userId);
 		this.passwordHash = encryptPasswordHash(passwordHash);
-		this.electionId = electionId;
+		this.electionId = encryptInteger(electionId);
 		this.vote = encryptVote(vote);
-		this.signature = Security.sign(Security.getRSAPrivateKey(), Converter.toByteArray(userId), this.passwordHash, electionId);
+		this.signature = Security.sign(Security.getRSAPrivateKey(), this.userId, this.passwordHash, this.electionId);
 	}
 	
 	/**
@@ -58,6 +58,7 @@ public class EncryptedBallot {
 			vote[i] = v.byteArrayValue().getBytes();
 			i++;
 		}
+		this.signature = Security.sign(Security.getRSAPrivateKey(), this.userId, this.passwordHash, this.electionId);
 	}
 
 	/**
@@ -65,9 +66,9 @@ public class EncryptedBallot {
 	 * @param userId The userId to encrypt
 	 * @return The encrypted userId
 	 */
-	private byte[] encryptUserId(int userId) {
-		byte[] value = Converter.toByteArray(userId);
-		return Security.encryptRSA(value, Security.getRSAPublicKey());
+	private byte[] encryptInteger(int value) {
+		byte[] bytes = Converter.toByteArray(value);
+		return Security.encryptRSA(bytes, Security.getRSAPublicKey());
 	}
 	
 	/**

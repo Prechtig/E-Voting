@@ -1,7 +1,5 @@
 package org.evoting.common;
 
-import java.nio.charset.Charset;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.Iterator;
@@ -14,7 +12,6 @@ import jolie.runtime.ValueVector;
 import org.evoting.common.exceptions.BadValueException;
 import org.evoting.database.entities.ElectionOption;
 import org.evoting.security.Security;
-import org.omg.CORBA.portable.ValueInputStream;
 
 /**
  * This class contains fields and logic for encrypting and decrypting electionOption list data.
@@ -63,7 +60,8 @@ public class EncryptedElectionOptions
 		if(!encryptedElectionOptionsValue.hasChildren(ValueIdentifiers.getElectionId()) ||
 			!encryptedElectionOptionsValue.hasChildren(ValueIdentifiers.getElectionOptions()) ||
 			!encryptedElectionOptionsValue.hasChildren(ValueIdentifiers.getStartTime()) ||
-			!encryptedElectionOptionsValue.hasChildren(ValueIdentifiers.getEndTime())) {
+			!encryptedElectionOptionsValue.hasChildren(ValueIdentifiers.getEndTime()) ||
+			!encryptedElectionOptionsValue.hasChildren(ValueIdentifiers.getSignature())) {
 				throw new BadValueException();
 		}
 		
@@ -86,6 +84,7 @@ public class EncryptedElectionOptions
 		encryptedElectionOptions = encryptElectionOptions(electionOptions);
 		
 		endTime = new Date(encryptedElectionOptionsValue.getFirstChild(ValueIdentifiers.getEndTime()).longValue());
+		signature = encryptedElectionOptionsValue.getFirstChild(ValueIdentifiers.getSignature()).byteArrayValue().getBytes();
 	}
 	
 	/**
@@ -141,7 +140,6 @@ public class EncryptedElectionOptions
 	public String toString()
 	{
 		return "ElectionOption ciphertext: " + encryptedElectionOptions.toString() +
-				"\nElectionId: " + electionId +
-				"\nEncryptedElectionId ciphertext: " + electionId; 
+				"\nElectionId: " + electionId;
 	}
 }
