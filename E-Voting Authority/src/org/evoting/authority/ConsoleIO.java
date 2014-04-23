@@ -2,6 +2,10 @@ package org.evoting.authority;
 
 import java.io.IOException;
 import java.security.PublicKey;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import jolie.net.CommMessage;
 import jolie.runtime.JavaService;
@@ -98,7 +102,7 @@ public class ConsoleIO extends JavaService {
 			CommMessage request = CommMessage.createRequest("", aCommunicationPath, null);
 			try {
 				CommMessage response = sendMessage(request).recvResponseFor(request); // Den skal tage imod en value? som indeholder alle votes eller ingen votes hvis valget ikke er igang
-
+				
 				// TODO: Handle response
 				// Count votes if there are any or write error message to user
 			} catch (IOException e) {
@@ -147,6 +151,19 @@ public class ConsoleIO extends JavaService {
 			break;
 		default:
 			break;
+		}
+	}
+	
+	private void userStartElection(){
+		System.out.println("What time should the election stop? (kk:mm)");
+		String input = System.console().readLine().toLowerCase();
+		
+		DateFormat df = new SimpleDateFormat();
+		try {
+			Date d = df.parse(input);
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 

@@ -12,6 +12,7 @@ import java.security.spec.X509EncodedKeySpec;
 import org.bouncycastle.crypto.params.ElGamalParameters;
 import org.bouncycastle.crypto.params.ElGamalPrivateKeyParameters;
 import org.bouncycastle.crypto.params.ElGamalPublicKeyParameters;
+import org.evoting.common.Converter;
 
 public class Security {
 	
@@ -142,6 +143,10 @@ public class Security {
 	public static String hash(String m) {
 		return SHA1.hash(m);
 	}
+	
+	public static String hash(byte[] m) {
+		return SHA1.hash(m);
+	}
 
 	/**
 	 * Method used to sign a string using an RSA key.
@@ -154,6 +159,13 @@ public class Security {
 		String hash = hash(m);
 		return encryptRSA(hash, pK);
 	}
+	
+	public static byte[] sign(int m, Key pK) {
+		String hash = hash(Converter.toByteArray(m));
+		return encryptRSA(hash, pK);
+	}
+	
+	
 
 	
 	
