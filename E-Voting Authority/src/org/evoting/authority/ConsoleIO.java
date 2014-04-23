@@ -369,4 +369,7 @@ public class ConsoleIO extends JavaService {
 		}
 		return result;
 	}
+	
+	public static void main(String[] args) {
+	}
 }
