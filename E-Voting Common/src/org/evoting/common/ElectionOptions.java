@@ -1,6 +1,9 @@
 package org.evoting.common;
 
+import java.util.Date;
 import java.util.List;
+
+import org.evoting.database.entities.ElectionOption;
 
 /**
  * Contains names of the electionOptions available for voting and a time stamp.
@@ -9,20 +12,26 @@ import java.util.List;
  */
 public class ElectionOptions
 {
-	private List<String> electionOptions;
-	private byte[] timestamp;
+	private List<ElectionOption> electionOptions;
+	private int electionId;
+	private Date endTime;
 	
-	public ElectionOptions(List<String> electionOptions, byte[] timestamp)
+	public ElectionOptions(List<ElectionOption> electionOptions, int electionId, Date endTime)
 	{
 		this.electionOptions = electionOptions;
-		this.timestamp = timestamp;
+		this.electionId = electionId;
+		this.endTime = endTime;
 	}
 	
-	public byte[] getTimestamp() {
-		return timestamp;
+	public int getElectionId() {
+		return electionId;
 	}
 
-	public List<String> getElectionOptions() {
+	public List<ElectionOption> getElectionOptions() {
 		return electionOptions;
+	}
+	
+	public Date getEndTime() {
+		return endTime;
 	}
 }

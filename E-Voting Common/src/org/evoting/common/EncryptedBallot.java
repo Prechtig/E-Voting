@@ -15,8 +15,9 @@ public class EncryptedBallot {
 	// All the fields below are ciphertext.
 	private byte[] userId;
 	private byte[] passwordHash;
-	private byte[] timestamp;
+	private byte[] electionId;
 	private byte[][] vote;
+	private byte[] signature;
 	
 	/**
 	 * @param userId The userId of the voter
@@ -25,11 +26,12 @@ public class EncryptedBallot {
 	 * @param vote The vote of the voter
 	 * @throws InvalidVoteException Is thrown if the vote is invalid
 	 */
-	public EncryptedBallot(int userId, String passwordHash, byte[] timestamp, int[] vote) throws InvalidVoteException {
+	public EncryptedBallot(int userId, String passwordHash, byte[] electionId, int[] vote) throws InvalidVoteException {
 		this.userId = encryptUserId(userId);
 		this.passwordHash = encryptPasswordHash(passwordHash);
-		this.timestamp = timestamp;
+		this.electionId = electionId;
 		this.vote = encryptVote(vote);
+		this.signature = Security.sign(Security.getRSAPrivateKey(), userId, passwordHash, electionId);
 	}
 	
 	/**
@@ -41,13 +43,13 @@ public class EncryptedBallot {
 		// Checks whether the value object has the required fields.
 		if(!encryptedBallot.hasChildren(ValueIdentifiers.getUserId()) ||
 			!encryptedBallot.hasChildren(ValueIdentifiers.getPasswordHash()) ||
-			!encryptedBallot.hasChildren(ValueIdentifiers.getTimestamp()) ||
+			!encryptedBallot.hasChildren(ValueIdentifiers.getElectionId()) ||
 			!encryptedBallot.hasChildren(ValueIdentifiers.getVote())) {
 			throw new BadValueException();
 		}
 		this.userId = encryptedBallot.getFirstChild(ValueIdentifiers.getUserId()).byteArrayValue().getBytes();
 		this.passwordHash = encryptedBallot.getFirstChild(ValueIdentifiers.getPasswordHash()).byteArrayValue().getBytes();
-		this.timestamp = encryptedBallot.getFirstChild(ValueIdentifiers.getTimestamp()).byteArrayValue().getBytes();
+		this.electionId = encryptedBallot.getFirstChild(ValueIdentifiers.getElectionId()).byteArrayValue().getBytes();
 		
 		ValueVector valueVote = encryptedBallot.getChildren(ValueIdentifiers.getVote());
 		vote = new byte[valueVote.size()][];
@@ -138,10 +140,11 @@ public class EncryptedBallot {
 		Value result = Value.create();
 		result.getNewChild(ValueIdentifiers.getUserId()).setValue(new ByteArray(userId));
 		result.getNewChild(ValueIdentifiers.getPasswordHash()).setValue(new ByteArray(passwordHash));
-		result.getNewChild(ValueIdentifiers.getTimestamp()).setValue(new ByteArray(timestamp));
+		result.getNewChild(ValueIdentifiers.getElectionId()).setValue(new ByteArray(electionId));
 		for(int i = 0; i < vote.length; i++) {
 			result.getNewChild(ValueIdentifiers.getVote()).setValue(new ByteArray(vote[i]));
 		}
+		result.getNewChild(ValueIdentifiers.getSignature()).setValue(new ByteArray(signature));
 
 		return result;
 	}

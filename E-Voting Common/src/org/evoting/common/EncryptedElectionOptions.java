@@ -3,14 +3,18 @@ package org.evoting.common;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 import jolie.runtime.ByteArray;
 import jolie.runtime.Value;
+import jolie.runtime.ValueVector;
 
 import org.evoting.common.exceptions.BadValueException;
 import org.evoting.database.entities.ElectionOption;
 import org.evoting.security.Security;
+import org.omg.CORBA.portable.ValueInputStream;
 
 /**
  * This class contains fields and logic for encrypting and decrypting electionOption list data.
@@ -21,47 +25,67 @@ public class EncryptedElectionOptions
 {
 	// Character used for converting a list of strings to a single string. Each string is separated by this string.
 	private static final String SEPERATION_CHARACTER = "@";
+	private int electionId;
+	private List<ElectionOption> electionOptions;
+	private Date endTime;
 	// All the fields below are ciphertext.
-	private byte[] timestamp;
-	private byte[] electionOptions;
+	private byte[] encryptedElectionOptions;
+	private byte[] signature;
 	
 	/**
 	 * Encrypts the names in the electionOption list and constructs an object containing the encrypted names and the encrypted time stamp.
 	 * @param electionOptions The list of electionOptions to be encrypted.
-	 * @param timestamp The time stamp.
+	 * @param signedElectionId The time stamp.
 	 */
-	public EncryptedElectionOptions(List<ElectionOption> electionOptions, byte[] timestamp)
+	public EncryptedElectionOptions(List<ElectionOption> electionOptions, int electionId, Date endTime)
 	{
-		ArrayList<String> electionOptionNames = new ArrayList<String>(electionOptions.size());
-		ElectionOption c;
-		
 		for(int i = 0; i < electionOptions.size(); i++) {
-			c = electionOptions.get(i);
-			if(c.getId() != i) {
+			if(electionOptions.get(i).getId() != i) {
 				//TODO: throw correct exception.
 				throw new RuntimeException();
 			}
-			electionOptionNames.add(c.getName());
 		}
 		
-		this.electionOptions = encryptElectionOptions(electionOptionNames);
-		this.timestamp = timestamp;
+		this.electionId = electionId;
+		this.electionOptions = electionOptions;
+		this.encryptedElectionOptions = encryptElectionOptions(electionOptions);
+		this.endTime = endTime;
+		this.signature = Security.sign(Security.getRSAPrivateKey(), Converter.toByteArray(electionId), Converter.toByteArray(endTime.getTime()), encryptedElectionOptions);
 	}
 	
 	/**
 	 * Interprets a value as an encrypted electionOption list.
 	 * @param value The value object.
 	 */
-	public EncryptedElectionOptions(Value encryptedElectionOptions)
+	public EncryptedElectionOptions(Value encryptedElectionOptionsValue)
 	{
 		// Checks whether the value object has the required fields.
-		if(!encryptedElectionOptions.hasChildren(ValueIdentifiers.getTimestamp()) ||
-			!encryptedElectionOptions.hasChildren(ValueIdentifiers.getElectionOptions())) {
+		if(!encryptedElectionOptionsValue.hasChildren(ValueIdentifiers.getElectionId()) ||
+			!encryptedElectionOptionsValue.hasChildren(ValueIdentifiers.getElectionOptions()) ||
+			!encryptedElectionOptionsValue.hasChildren(ValueIdentifiers.getStartTime()) ||
+			!encryptedElectionOptionsValue.hasChildren(ValueIdentifiers.getEndTime())) {
 				throw new BadValueException();
 		}
 		
-		timestamp = encryptedElectionOptions.getFirstChild(ValueIdentifiers.getTimestamp()).byteArrayValue().getBytes();
-		electionOptions = encryptedElectionOptions.getFirstChild(ValueIdentifiers.getElectionOptions()).byteArrayValue().getBytes();		
+		electionId = encryptedElectionOptionsValue.getFirstChild(ValueIdentifiers.getElectionId()).intValue();
+
+		//Get the election options children
+		ValueVector electionOptionsValueVector = encryptedElectionOptionsValue.getChildren(ValueIdentifiers.getElectionOptions());
+		//Get the iterator to be able to iterate over the children
+		Iterator<Value> electionOptionsIterator = electionOptionsValueVector.iterator();
+		ElectionOption[] options = new ElectionOption[electionOptionsValueVector.size()];
+		while(electionOptionsIterator.hasNext()) {
+			Value current = electionOptionsIterator.next();
+			int id = current.getFirstChild(ValueIdentifiers.getId()).intValue();
+			String name = current.getFirstChild(ValueIdentifiers.getName()).strValue();
+			int partyId = current.getFirstChild(ValueIdentifiers.getPartyId()).intValue();
+			//Create an election option with the found parameters
+			options[id] = new ElectionOption(id, name, partyId);
+		}
+		electionOptions = Arrays.asList(options);
+		encryptedElectionOptions = encryptElectionOptions(electionOptions);
+		
+		endTime = new Date(encryptedElectionOptionsValue.getFirstChild(ValueIdentifiers.getEndTime()).longValue());
 	}
 	
 	/**
@@ -70,11 +94,7 @@ public class EncryptedElectionOptions
 	 */
 	public ElectionOptions getElectionOptions()
 	{
-		byte[] b = Security.decryptRSA(electionOptions, Security.getRSAPublicKey());
-		String s = new String(b, Charset.forName("UTF-8"));
-		String[] names = s.split(SEPERATION_CHARACTER);
-		return new ElectionOptions(Arrays.asList(names), timestamp);
-		
+		return new ElectionOptions(electionOptions, electionId, endTime);
 	}
 	
 	/**
@@ -85,8 +105,15 @@ public class EncryptedElectionOptions
 	{
 		Value result = Value.create();
 		
-		result.getNewChild(ValueIdentifiers.getTimestamp()).setValue(new ByteArray(timestamp));
-		result.getNewChild(ValueIdentifiers.getElectionOptions()).setValue(new ByteArray(electionOptions));
+		result.getNewChild(ValueIdentifiers.getElectionId()).setValue(electionId);
+		for(ElectionOption e : electionOptions) {
+			Value electionOptions = result.getNewChild(ValueIdentifiers.getElectionOptions());
+			electionOptions.getNewChild(ValueIdentifiers.getId()).setValue(e.getId());
+			electionOptions.getNewChild(ValueIdentifiers.getName()).setValue(e.getName());
+			electionOptions.getNewChild(ValueIdentifiers.getPartyId()).setValue(e.getPartyId());
+		}
+		result.getNewChild(ValueIdentifiers.getEndTime()).setValue(endTime);
+		result.getNewChild(ValueIdentifiers.getSignature()).setValue(new ByteArray(signature));
 
 		return result;
 	}
@@ -96,19 +123,25 @@ public class EncryptedElectionOptions
 	 * @param The electionOptions that the list is created with.
 	 * @return The encrypted byte sequence.
 	 */
-	private byte[] encryptElectionOptions(List<String> electionOptions)
+	private byte[] encryptElectionOptions(List<ElectionOption> electionOptions)
 	{
-		StringBuilder sb = new StringBuilder();
-		for(String s : electionOptions) {
-			sb.append(s);
-			sb.append(SEPERATION_CHARACTER);
-		}
-		return Security.sign(sb.toString(), Security.getRSAPrivateKey());
-		//return Security.encryptRSA(sb.toString(), Security.getRSAPrivateKey());
+		return Security.encryptRSA(concatElectionOptions(electionOptions), Security.getRSAPrivateKey());
 	}
 	
+	private String concatElectionOptions(List<ElectionOption> electionOptions) {
+		StringBuilder sb = new StringBuilder();
+		for(ElectionOption e : electionOptions) {
+			sb.append(e.getName());
+			sb.append(SEPERATION_CHARACTER);
+		}
+		return sb.toString();
+	}
+	
+	@Override
 	public String toString()
 	{
-		return "ElectionOption ciphertext: " + electionOptions.toString() + "\nTimestamp ciphertext: " + timestamp.toString(); 
+		return "ElectionOption ciphertext: " + encryptedElectionOptions.toString() +
+				"\nElectionId: " + electionId +
+				"\nEncryptedElectionId ciphertext: " + electionId; 
 	}
 }
