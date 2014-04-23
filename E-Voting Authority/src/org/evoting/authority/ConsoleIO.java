@@ -207,10 +207,11 @@ public class ConsoleIO extends JavaService {
 
 	private void startElection(Date d) {
 		if (!electionRunning) {
-			// TODO:Should it send an endtime?
+			//Create value with endtime and signed endtime
 			Value result = Value.create();
 			result.getNewChild("endTime").setValue(d.getTime());
 			result.getNewChild("endTimeHash").setValue(Security.sign(d.getTime(), RASpublicKey));
+			
 			CommMessage request = CommMessage.createRequest("startElection", aCommunicationPath, result);
 			try {
 				CommMessage response = sendMessage(request).recvResponseFor(request);
