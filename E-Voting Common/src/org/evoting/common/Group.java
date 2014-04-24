@@ -33,7 +33,6 @@ public class Group
 	public long discreteLogarithm(BigInteger value)
 	{
 		if(cache.containsKey(value)) {
-			System.out.println("Found value in cache");
 			return cache.get(value);
 		}
 		

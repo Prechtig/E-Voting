@@ -212,17 +212,17 @@ public class Security {
 	}
 	
 	public static byte[] concatenateByteArrays(byte[]... bytes){
-		ByteArrayOutputStream outputStream = new ByteArrayOutputStream( );
+		ByteArrayOutputStream resultStream = new ByteArrayOutputStream( );
 		for (byte[] b : bytes) {
 			try {
-				outputStream.write(b);
+				resultStream.write(b);
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
 
-		return outputStream.toByteArray();
+		return resultStream.toByteArray();
 	}
 	
 	public static ElGamalPublicKeyParameters getElgamalPublicKey() {
@@ -304,10 +304,10 @@ public class Security {
 		byte[] cipherGamma2 = Arrays.copyOfRange(cipher2, 0, cipher2.length/2);
 		byte[] cipherPhi2 = Arrays.copyOfRange(cipher2, cipher2.length/2, cipher2.length);	
 		
-		BigInteger gammaInt1 = new BigInteger(cipherGamma1);
-		BigInteger phiInt1 = new BigInteger(cipherPhi1);
-		BigInteger gammaInt2 = new BigInteger(cipherGamma2);
-		BigInteger phiInt2 = new BigInteger(cipherPhi2);
+		BigInteger gammaInt1 = new BigInteger(1, cipherGamma1);
+		BigInteger phiInt1 = new BigInteger(1, cipherPhi1);
+		BigInteger gammaInt2 = new BigInteger(1, cipherGamma2);
+		BigInteger phiInt2 = new BigInteger(1, cipherPhi2);
 		
 
 		
@@ -317,11 +317,19 @@ public class Security {
 		byte[] gammaProductByte = gammaProduct.toByteArray();
 		byte[] phiProductByte = phiProduct.toByteArray();
 		
-		byte[] result = concat(gammaProductByte, phiProductByte);
-		
-		if(result.length != sizeOfElGamalCipher) {
-			throw new UnsupportedOperationException("The method contains an error. The length of the result, gamma and phi is " + result.length + ", " + gammaProductByte.length  + ", " + phiProductByte.length + "Group module is " + group.getModulo().toByteArray().length);
-		}
+        byte[]  result = new byte[128];
+
+        if (gammaProductByte.length > result.length / 2) {
+            System.arraycopy(gammaProductByte, 1, result, result.length / 2 - (gammaProductByte.length - 1), gammaProductByte.length - 1);
+        } else {
+            System.arraycopy(gammaProductByte, 0, result, result.length / 2 - gammaProductByte.length, gammaProductByte.length);
+        }
+
+        if (phiProductByte.length > result.length / 2) {
+            System.arraycopy(phiProductByte, 1, result, result.length - (phiProductByte.length - 1), phiProductByte.length - 1);
+        } else {
+            System.arraycopy(phiProductByte, 0, result, result.length - phiProductByte.length, phiProductByte.length);
+        }
 		
 		return result;
 	}
