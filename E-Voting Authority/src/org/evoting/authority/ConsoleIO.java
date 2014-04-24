@@ -2,15 +2,15 @@ package org.evoting.authority;
 
 import java.io.IOException;
 import java.math.BigInteger;
+import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.SecureRandom;
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 
 import jolie.net.CommMessage;
+import jolie.runtime.ByteArray;
 import jolie.runtime.JavaService;
 import jolie.runtime.Value;
 
@@ -22,10 +22,12 @@ import org.evoting.common.Importer;
 import org.evoting.security.Security;
 
 public class ConsoleIO extends JavaService {
-	private PublicKey RSApublicKey;
-
 	private String ElGamalPublicKeyFile = "ElGamalPublicKey";
 	private String ElGamalPrivateKeyFile = "ElGamalPrivateKey";
+	private String authRsaPrivKeyFilepath = "AuthRsaPriv";
+	private String authRsaPubKeyFilepath = "AuthRsaPub";
+	private String bbRsaPrivKeyFilepath = "BbRsaPriv";
+	private String bbRsaPubKeyFilepath = "BbRsaPub";
 
 	private ElGamalPublicKeyParameters elGamalPublicKey;
 	private ElGamalPrivateKeyParameters elGamalPrivateKey;
@@ -37,7 +39,7 @@ public class ConsoleIO extends JavaService {
 	private String electionOptionsFile = "ElectionOptions.txt";
 
 	private static ElectionOptions eOptions;
-	
+
 	private SecureRandom random = new SecureRandom();
 
 	/**
@@ -96,7 +98,8 @@ public class ConsoleIO extends JavaService {
 				break;
 			// Generate keys
 			case "generate":
-				generateElGamalKeys();
+				userCommandGenerate();
+
 				break;
 			// Send electionOptions or key
 			case "send":
@@ -120,6 +123,20 @@ public class ConsoleIO extends JavaService {
 		}
 	}
 
+	private void userCommandGenerate() {
+		System.out.println("Generate ElGamal or RSA?");
+		String input = System.console().readLine().toLowerCase();
+
+		switch (input) {
+		case "rsa":
+			generateRsaKeys();
+			break;
+		case "elgamal":
+			generateElGamalKeys();
+			break;
+		}
+	}
+
 	/**
 	 * Handles when the user want to load key or electionOptions
 	 */
@@ -130,7 +147,7 @@ public class ConsoleIO extends JavaService {
 		switch (input) {
 		case "keys":
 		case "key":
-			loadKeys();
+			userCommandLoadKeys();
 			break;
 		case "electionOptions":
 		case "electionOption":
@@ -139,6 +156,20 @@ public class ConsoleIO extends JavaService {
 			loadElectionOptions();
 			break;
 		default:
+			break;
+		}
+	}
+	
+	private void userCommandLoadKeys(){
+		System.out.println("Load ElGamal or RSA?");
+		String input = System.console().readLine().toLowerCase();
+
+		switch (input) {
+		case "rsa":
+			loadRSAKeys();
+			break;
+		case "elgamal":
+			loadElGamalKeys();
 			break;
 		}
 	}
@@ -151,14 +182,10 @@ public class ConsoleIO extends JavaService {
 		String input = System.console().readLine().toLowerCase();
 
 		switch (input) {
-		case "keys":
-		case "key":
-			sendKey();
-			break;
-		case "electionOptions":
-		case "electionOption":
-		case "electionOption list":
-		case "electionOptionlist":
+		case "electionoptions":
+		case "electionoption":
+		case "electionoption list":
+		case "electionoptionlist":
 			sendElectionoptions();
 			break;
 		default:
@@ -190,10 +217,10 @@ public class ConsoleIO extends JavaService {
 
 	private void userStartElection() {
 		System.out.println("What time should the election stop? (yyyy-MM-dd HH:mm)");
-		
-		//Add hour and minute to the end time
+
+		// Add hour and minute to the end time
 		String date = System.console().readLine().toLowerCase();
-		
+
 		try {
 			Date d = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse(date);
 			startElection(d);
@@ -208,7 +235,8 @@ public class ConsoleIO extends JavaService {
 			// Create value with endtime and signed endtime
 			Value result = Value.create();
 			result.getNewChild("endTime").setValue(d.getTime());
-			result.getNewChild("endTimeHash").setValue(Security.sign(d.getTime(), RSApublicKey));
+			Value validator = getNewValidator();
+			result.getNewChild("validator").assignValue(Value.createDeepCopy(validator));
 
 			CommMessage request = CommMessage.createRequest("startElection", aCommunicationPath, result);
 			try {
@@ -249,12 +277,48 @@ public class ConsoleIO extends JavaService {
 		}
 	}
 
-	private void loadKeys() {
+	private void generateRsaKeys() {
+		if (!electionRunning) {
+			Security.generateRSAKeys();
+			try {
+				Exporter.exportRsaKey(authRsaPrivKeyFilepath, Security.getAuthorityRSAPrivateKey());
+				Exporter.exportRsaKey(authRsaPubKeyFilepath, Security.getAuthorityRSAPublicKey());
+				Exporter.exportRsaKey(bbRsaPrivKeyFilepath, Security.getBulletinBoardRSAPrivateKey());
+				Exporter.exportRsaKey(bbRsaPubKeyFilepath, Security.getBulletinBoardRSAPublicKey());
+			} catch (IOException e) {
+				System.out.println("Something went wrong. Try again");
+				e.printStackTrace();
+			}
+		} else {
+			System.out.println("Cannot generate new RSA keys while election is running");
+		}
+	}
+
+	private void loadElGamalKeys() {
 		if (!electionRunning) {
 			elGamalPublicKey = Importer.importElGamalPublicKeyParameters(ElGamalPublicKeyFile);
 			elGamalPrivateKey = Importer.importElGamalPrivateKeyParameters(ElGamalPrivateKeyFile);
 
 			System.out.println("Loaded ElGamal keys");
+		} else {
+			System.out.println("Cannot load new ElGamal keys while election is running");
+		}
+	}
+	
+	private void loadRSAKeys() {
+		if(!electionRunning){
+			try {
+				PublicKey bbPubKey = Importer.importRsaPublicKey(bbRsaPubKeyFilepath);
+				PublicKey authPubKey = Importer.importRsaPublicKey(authRsaPubKeyFilepath);
+				PrivateKey authPrivKey = Importer.importRsaPrivateKey(authRsaPrivKeyFilepath);
+				Security.setAuthorityRSAPrivateKey(authPrivKey);
+				Security.setAuthorityRSAPublicKey(authPubKey);
+				Security.setBulletinBoardRSAPublicKey(bbPubKey);
+				System.out.println("Loaded RSA keys");
+			} catch(IOException e) {
+				System.out.println("Something went wrong");
+				e.printStackTrace();
+			}
 		} else {
 			System.out.println("Cannot load new ElGamal keys while election is running");
 		}
@@ -289,34 +353,7 @@ public class ConsoleIO extends JavaService {
 			System.out.println("Cannot stop election while it is not running");
 		}
 	}
-
-	private void sendKey() {
-		if (!electionRunning) {
-			if (elGamalPublicKey != null && elGamalPrivateKey != null) {
-				Value key = getPublicKeyValue();
-
-				CommMessage request = CommMessage.createRequest("sendPublicKey", aCommunicationPath, key);
-				try {
-					CommMessage response = sendMessage(request).recvResponseFor(request);
-
-					if (response.value().boolValue()) {
-						electionRunning = false;
-						System.out.println("ElGamal public Key successfully sent");
-					} else {
-						System.out.println("Error in bullitinboard when trying to send ElGamal public key");
-					}
-				} catch (IOException e) {
-					System.out.println("Error communicating with bullitinboard");
-					e.printStackTrace();
-				}
-			} else {
-				System.out.println("No ElGamal keys loaded");
-			}
-		} else {
-			System.out.println("Cannot send ElGamal key while election is running");
-		}
-	}
-
+	
 	private void sendElectionoptions() {
 		if (!electionRunning) {
 			if (eOptions != null) {
@@ -351,36 +388,22 @@ public class ConsoleIO extends JavaService {
 		}
 	}
 
-	private Value getPublicKeyValue() {
-		Value result = Value.create();
-		if (elGamalPublicKey != null) {
-			String y = elGamalPublicKey.getY().toString();
-			String p = elGamalPublicKey.getParameters().getP().toString();
-			String g = elGamalPublicKey.getParameters().getG().toString();
-			int l = elGamalPublicKey.getParameters().getL();
-
-			result.getNewChild("y").setValue(y);
-			Value elgamalParametersValue = result.getNewChild("parameters");
-			elgamalParametersValue.getNewChild("p").setValue(p);
-			elgamalParametersValue.getNewChild("g").setValue(g);
-			elgamalParametersValue.getNewChild("l").setValue(l);
-		}
-		return result;
-	}
-	
-	private Value getNewValidator(){
-		String m = nextRandomString();
-		byte[] signed = Security.sign(m, RSApublicKey); //not RSApblickey
-		//TODO: Create value
-		
-		
-		return null;
+	private Value getNewValidator() {
+		String message = nextRandomString();
+		byte[] signature = Security.sign(message, Security.getAuthorityRSAPrivateKey()); // TODO: not RSApblickey
+		Value val = Value.create();
+		val.getNewChild("message").setValue(message);
+		val.getNewChild("signature").setValue(new ByteArray(signature));
+		return val;
 	}
 
 	private String nextRandomString() {
 		return new BigInteger(130, random).toString(32);
 	}
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws ParseException {
+		ConsoleIO io = new ConsoleIO();
+		Security.generateKeys();
+		io.startElection(new SimpleDateFormat("HH").parse("20"));
 	}
 }

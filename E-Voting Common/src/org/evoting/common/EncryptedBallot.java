@@ -31,7 +31,7 @@ public class EncryptedBallot {
 		this.passwordHash = encryptPasswordHash(passwordHash);
 		this.electionId = encryptInteger(electionId);
 		this.vote = encryptVote(vote);
-		this.signature = Security.sign(Security.getRSAPrivateKey(), this.userId, this.passwordHash, this.electionId);
+		this.signature = Security.sign(Security.getBulletinBoardRSAPublicKey(), this.userId, this.passwordHash, this.electionId);
 	}
 	
 	/**
@@ -58,7 +58,7 @@ public class EncryptedBallot {
 			vote[i] = v.byteArrayValue().getBytes();
 			i++;
 		}
-		this.signature = Security.sign(Security.getRSAPrivateKey(), this.userId, this.passwordHash, this.electionId);
+		this.signature = encryptedBallot.getFirstChild(ValueIdentifiers.getSignature()).byteArrayValue().getBytes();
 	}
 
 	/**
@@ -68,14 +68,14 @@ public class EncryptedBallot {
 	 */
 	private byte[] encryptInteger(int value) {
 		byte[] bytes = Converter.toByteArray(value);
-		return Security.encryptRSA(bytes, Security.getRSAPublicKey());
+		return Security.encryptRSA(bytes, Security.getBulletinBoardRSAPublicKey());
 	}
 	
 	/**
 	 * @return The decrypted userId
 	 */
 	private int decryptUserId() {
-		byte[] value = Security.decryptRSA(userId, Security.getRSAPrivateKey());
+		byte[] value = Security.decryptRSA(userId, Security.getBulletinBoardRSAPrivateKey());
 		return Converter.toInt(value);
 	}
 
@@ -85,14 +85,14 @@ public class EncryptedBallot {
 	 * @return The encrypted passwordHash
 	 */
 	private byte[] encryptPasswordHash(String passwordHash) {
-		return Security.encryptRSA(passwordHash, Security.getRSAPublicKey());
+		return Security.encryptRSA(passwordHash, Security.getBulletinBoardRSAPublicKey());
 	}
 	
 	/**
 	 * @return The decrypted passwordHash
 	 */
 	private String decryptPasswordHash() {
-		byte[] value = Security.decryptRSA(passwordHash, Security.getRSAPrivateKey());
+		byte[] value = Security.decryptRSA(passwordHash, Security.getBulletinBoardRSAPrivateKey());
 		return new String(value);
 	}
 

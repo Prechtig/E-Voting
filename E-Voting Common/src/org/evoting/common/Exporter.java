@@ -5,6 +5,10 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.math.BigInteger;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
+import java.security.Key;
 
 import org.bouncycastle.crypto.params.ElGamalParameters;
 import org.bouncycastle.crypto.params.ElGamalPrivateKeyParameters;
@@ -76,5 +80,9 @@ public class Exporter {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public static void exportRsaKey(String pathname, Key key) throws IOException {
+		Files.write(Paths.get(pathname), key.getEncoded(), StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.WRITE);
 	}
 }

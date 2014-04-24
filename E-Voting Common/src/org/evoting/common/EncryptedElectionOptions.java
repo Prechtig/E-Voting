@@ -20,8 +20,6 @@ import org.evoting.security.Security;
  */
 public class EncryptedElectionOptions
 {
-	// Character used for converting a list of strings to a single string. Each string is separated by this string.
-	private static final String SEPERATION_CHARACTER = "@";
 	private int electionId;
 	private List<ElectionOption> electionOptions;
 	private Date endTime;
@@ -45,9 +43,8 @@ public class EncryptedElectionOptions
 		
 		this.electionId = electionId;
 		this.electionOptions = electionOptions;
-		this.encryptedElectionOptions = encryptElectionOptions(electionOptions);
 		this.endTime = endTime;
-		this.signature = Security.sign(Security.getRSAPrivateKey(), Converter.toByteArray(electionId), Converter.toByteArray(endTime.getTime()), encryptedElectionOptions);
+		this.signature = Security.sign(Security.getBulletinBoardRSAPrivateKey(), Converter.toByteArray(electionId), Converter.toByteArray(endTime.getTime()), encryptedElectionOptions);
 	}
 	
 	/**
@@ -81,7 +78,6 @@ public class EncryptedElectionOptions
 			options[id] = new ElectionOption(id, name, partyId);
 		}
 		electionOptions = Arrays.asList(options);
-		encryptedElectionOptions = encryptElectionOptions(electionOptions);
 		
 		endTime = new Date(encryptedElectionOptionsValue.getFirstChild(ValueIdentifiers.getEndTime()).longValue());
 		signature = encryptedElectionOptionsValue.getFirstChild(ValueIdentifiers.getSignature()).byteArrayValue().getBytes();
@@ -115,25 +111,6 @@ public class EncryptedElectionOptions
 		result.getNewChild(ValueIdentifiers.getSignature()).setValue(new ByteArray(signature));
 
 		return result;
-	}
-	
-	/**
-	 * Encrypts the electionOptions as a string separated by the separation character constant. 
-	 * @param The electionOptions that the list is created with.
-	 * @return The encrypted byte sequence.
-	 */
-	private byte[] encryptElectionOptions(List<ElectionOption> electionOptions)
-	{
-		return Security.encryptRSA(concatElectionOptions(electionOptions), Security.getRSAPrivateKey());
-	}
-	
-	private String concatElectionOptions(List<ElectionOption> electionOptions) {
-		StringBuilder sb = new StringBuilder();
-		for(ElectionOption e : electionOptions) {
-			sb.append(e.getName());
-			sb.append(SEPERATION_CHARACTER);
-		}
-		return sb.toString();
 	}
 	
 	@Override

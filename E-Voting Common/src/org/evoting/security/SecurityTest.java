@@ -25,13 +25,13 @@ public class SecurityTest {
 	
 	@BeforeClass
 	public static void setup(){		
-		ElGamal.generateKeyPair(true);
+		ElGamal.generateKeyPair(false);
 		ElGamalPrivateKey = ElGamal.getPrivateKey();
 		ElGamalPublicKey = ElGamal.getPublicKey();
 		
-		RSA.generateKeyPair(true);
-		RSAPrivateKey = RSA.getPrivateKey();
-		RSAPublicKey = RSA.getPublicKey();
+		RSA.generateAuthKeyPair(false);
+		RSAPrivateKey = RSA.getAuthorityPrivateKey();
+		RSAPublicKey = RSA.getAuthorityPublicKey();
 		
 	}
 

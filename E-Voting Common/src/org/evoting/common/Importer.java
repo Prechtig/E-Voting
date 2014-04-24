@@ -7,6 +7,13 @@ import java.io.IOException;
 import java.math.BigInteger;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.security.KeyFactory;
+import java.security.NoSuchAlgorithmException;
+import java.security.PrivateKey;
+import java.security.PublicKey;
+import java.security.spec.InvalidKeySpecException;
+import java.security.spec.PKCS8EncodedKeySpec;
+import java.security.spec.X509EncodedKeySpec;
 
 import org.bouncycastle.crypto.params.ElGamalParameters;
 import org.bouncycastle.crypto.params.ElGamalPrivateKeyParameters;
@@ -121,7 +128,30 @@ public class Importer {
 		return null;
 	}
 	
-	public static byte[] importRsaPublicKey(String pathname) throws IOException {
-		return Files.readAllBytes(Paths.get(pathname));
+	public static PublicKey importRsaPublicKey(String pathname) throws IOException {
+		try {
+			return KeyFactory.getInstance("RSA").generatePublic(new X509EncodedKeySpec(Files.readAllBytes(Paths.get(pathname))));
+		} catch (InvalidKeySpecException e) {
+			System.out.println("Invalid key file");
+			e.printStackTrace();
+		} catch (NoSuchAlgorithmException e) {
+			//Should not happen.
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	public static PrivateKey importRsaPrivateKey(String pathname) throws IOException {
+		try {
+			//return KeyFactory.getInstance("RSA").generatePrivate(new X509EncodedKeySpec(Files.readAllBytes(Paths.get(pathname))));
+			return KeyFactory.getInstance("RSA").generatePrivate(new PKCS8EncodedKeySpec(Files.readAllBytes(Paths.get(pathname))));
+		} catch (InvalidKeySpecException e) {
+			System.out.println("Invalid key file");
+			e.printStackTrace();
+		} catch (NoSuchAlgorithmException e) {
+			//Should not happen.
+			e.printStackTrace();
+		}
+		return null;
 	}
 }

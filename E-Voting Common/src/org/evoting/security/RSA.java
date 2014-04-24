@@ -10,11 +10,11 @@ import java.security.PublicKey;
 import javax.crypto.Cipher;
 
 public class RSA {
-	private static PublicKey pubK;
-	private static PrivateKey privK;
-
-	public static void generateKeyPair(boolean overwirte) {
-		if ((pubK == null && privK == null) || overwirte == true) {
+	private static PublicKey authPubKey, bbPubKey;
+	private static PrivateKey authPrivKey, bbPrivKey;
+	
+	public static void generateAuthKeyPair(boolean overwrite) {
+		if ((authPubKey == null && authPrivKey == null) || overwrite == true) {
 			try {
 				KeyPairGenerator keyGen;
 				keyGen = KeyPairGenerator.getInstance("RSA");
@@ -24,8 +24,8 @@ public class RSA {
 
 				KeyPair keys = keyGen.generateKeyPair();
 
-				pubK = keys.getPublic();
-				privK = keys.getPrivate();
+				authPubKey = keys.getPublic();
+				authPrivKey = keys.getPrivate();
 			} catch (NoSuchAlgorithmException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -33,12 +33,60 @@ public class RSA {
 		}
 	}
 	
-	public static PublicKey getPublicKey() {
-		return pubK;
+	public static void generateBbKeyPair(boolean overwrite) {
+		if ((bbPubKey == null && bbPrivKey == null) || overwrite == true) {
+			try {
+				KeyPairGenerator keyGen;
+				keyGen = KeyPairGenerator.getInstance("RSA");
+
+				keyGen.initialize(1024);
+				// Provider p = keyGen.getProvider(); TODO: What is this for
+
+				KeyPair keys = keyGen.generateKeyPair();
+
+				bbPubKey = keys.getPublic();
+				bbPrivKey = keys.getPrivate();
+			} catch (NoSuchAlgorithmException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 	}
 
-	public static PrivateKey getPrivateKey() {
-		return privK;
+	private static void generateKeyPair(PublicKey pubKey, PrivateKey privKey, boolean overwrite) {
+		if ((pubKey == null && privKey == null) || overwrite == true) {
+			try {
+				KeyPairGenerator keyGen;
+				keyGen = KeyPairGenerator.getInstance("RSA");
+
+				keyGen.initialize(1024);
+				// Provider p = keyGen.getProvider(); TODO: What is this for
+
+				KeyPair keys = keyGen.generateKeyPair();
+
+				pubKey = keys.getPublic();
+				privKey = keys.getPrivate();
+			} catch (NoSuchAlgorithmException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	public static PublicKey getAuthorityPublicKey() {
+		return authPubKey;
+	}
+
+	public static PrivateKey getAuthorityPrivateKey() {
+		return authPrivKey;
+	}
+	
+	public static PublicKey getBulletinBoardPublicKey() {
+		return bbPubKey;
+	}
+	
+	public static PrivateKey getBulletinBoardPrivateKey() {
+		return bbPrivKey;
 	}
 
 	public static byte[] encrypt(String m, Key pK) {
@@ -83,13 +131,21 @@ public class RSA {
 		return result;
 	}
 
-	public static void setPublicKey(PublicKey pubK2) {
+	public static void setAuthorityPublicKey(PublicKey pubK) {
 		// TODO Auto-generated method stub
-		pubK = pubK2;
+		authPubKey = pubK;
 	}
 
-	public static void setPrivateKey(PrivateKey privK2) {
+	public static void setAuthorityPrivateKey(PrivateKey privK) {
 		// TODO Auto-generated method stub
-		privK = privK2;
+		authPrivKey = privK;
+	}
+	
+	public static void setBulletinBoardPublicKey(PublicKey pubK) {
+		bbPubKey = pubK;
+	}
+	
+	public static void setBulletinBoardPrivateKey(PrivateKey privK) {
+		bbPrivKey = privK;
 	}
 }
