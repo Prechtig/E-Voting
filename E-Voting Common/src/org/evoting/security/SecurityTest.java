@@ -43,7 +43,6 @@ public class SecurityTest {
 		byte[] decrypted = Security.decryptElgamal(encrypted, ElGamalPrivateKey);
 
 		String result = new String(decrypted);
-
 		if (!m.equals(result)) {
 			fail("ElGamal encryption and decryption failed");
 		}
