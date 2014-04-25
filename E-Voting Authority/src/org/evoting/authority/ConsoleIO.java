@@ -451,7 +451,7 @@ public class ConsoleIO extends JavaService {
 	private Value getNewValidator() {
 		//Get random string
 		String message = nextRandomString();
-		if (Security.RSAKeysGenerated()) {
+		if (Security.RSAKeysSat()) {
 			//Sign the random message
 			byte[] signature = Security.sign(message, Security.getAuthorityRSAPrivateKey());
 			//Create new value and set children

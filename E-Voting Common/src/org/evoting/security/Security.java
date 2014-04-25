@@ -22,9 +22,9 @@ import org.evoting.common.Group;
 public class Security {
 	
 	//True if RSA keys have been generated
-	private static boolean RSAKeysGenerated;
+	//private static boolean RSAKeysSat;
 	//True if ElGamal keys have been generated
-	private static boolean ElGamalKeysGenerated;
+	//private static boolean ElGamalKeysSat;
 	//Size of ELGamal byte array
 	public static final int SIZE_OF_ELGAMAL_CIPHER = 128;
 	//The group defined by the ElGamal parameters.
@@ -48,7 +48,6 @@ public class Security {
 	 */
 	public static void generateElGamalKeys(){
 		ElGamal.generateKeyPair(true);
-		ElGamalKeysGenerated = true;
 	}
 	
 	/**
@@ -57,31 +56,30 @@ public class Security {
 	public static void generateRSAKeys(){
 		RSA.generateAuthKeyPair(true);
 		RSA.generateBbKeyPair(true);
-		RSAKeysGenerated = true;
 	}
 	
 	/**
-	 * Check if RSA keys have been generated
-	 * @return if RSA keys have been generated
+	 * Check if RSA keys have been sat
+	 * @return if RSA keys have been sat
 	 */
-	public static boolean RSAKeysGenerated() { //TODO: Change name to RSAKeySat
-		return RSAKeysGenerated;
+	public static boolean RSAKeysSat() {
+		return (RSA.getAuthorityPrivateKey() != null && RSA.getAuthorityPublicKey() != null && RSA.getBulletinBoardPrivateKey() != null && RSA.getBulletinBoardPublicKey() != null);
 	}
 	
 	/**
-	 * Check if ElGamal keys have been generated
-	 * @return if ElGamal keys have been generated
+	 * Check if ElGamal keys have been sat
+	 * @return if ElGamal keys have been sat
 	 */
-	public static boolean ElGamalKeysGenerated() { //TODO: Change name to ElGamalKeysSat
-		return ElGamalKeysGenerated;
+	public static boolean ElGamalKeysSat() {
+		return (ElGamal.getPrivateKey() != null && ElGamal.getPublicKey() != null);
 	}
 	
 	/**
-	 * Check if both RSA and ElGamal key sets have been generated
-	 * @return if both key sets have been generated
+	 * Check if both RSA and ElGamal key sets have been sat
+	 * @return if both key sets have been sat
 	 */
-	public static boolean keysGenerated() {
-		return RSAKeysGenerated && ElGamalKeysGenerated;
+	public static boolean keysSat() {
+		return RSAKeysSat() && ElGamalKeysSat();
 	}
 	
 	/**
