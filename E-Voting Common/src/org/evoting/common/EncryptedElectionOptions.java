@@ -89,7 +89,7 @@ public class EncryptedElectionOptions
 	 */
 	public ElectionOptions getElectionOptions()
 	{
-		return new ElectionOptions(electionOptions, electionId, endTime);
+		return new ElectionOptions(electionOptions, electionId);
 	}
 	
 	/**

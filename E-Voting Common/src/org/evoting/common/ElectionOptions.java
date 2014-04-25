@@ -1,6 +1,5 @@
 package org.evoting.common;
 
-import java.util.Date;
 import java.util.List;
 
 import org.evoting.database.entities.ElectionOption;
@@ -14,13 +13,11 @@ public class ElectionOptions
 {
 	private List<ElectionOption> electionOptions;
 	private int electionId;
-	private Date endTime;
 	
-	public ElectionOptions(List<ElectionOption> electionOptions, int electionId, Date endTime)
+	public ElectionOptions(List<ElectionOption> electionOptions, int electionId)
 	{
 		this.electionOptions = electionOptions;
 		this.electionId = electionId;
-		this.endTime = endTime;
 	}
 	
 	public int getElectionId() {
@@ -29,9 +26,5 @@ public class ElectionOptions
 
 	public List<ElectionOption> getElectionOptions() {
 		return electionOptions;
-	}
-	
-	public Date getEndTime() {
-		return endTime;
 	}
 }
