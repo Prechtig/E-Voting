@@ -8,7 +8,6 @@ import java.security.SecureRandom;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Map;
 
 import jolie.net.CommMessage;
 import jolie.runtime.ByteArray;
@@ -409,7 +408,7 @@ public class ConsoleIO extends JavaService {
 
 	public static void main(String[] args) throws ParseException {
 		ConsoleIO io = new ConsoleIO();
-		Security.generateKeys();
+		io.loadRSAKeys();
 		io.startElection(new SimpleDateFormat("HH").parse("20"));
 	}
 }
