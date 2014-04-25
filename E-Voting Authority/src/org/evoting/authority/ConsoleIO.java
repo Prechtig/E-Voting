@@ -423,7 +423,7 @@ public class ConsoleIO extends JavaService {
 
 	public static void main(String[] args) throws ParseException {
 		ConsoleIO io = new ConsoleIO();
-		Security.generateKeys();
+		io.loadRSAKeys();
 		io.startElection(new SimpleDateFormat("HH").parse("20"));
 	}
 }
