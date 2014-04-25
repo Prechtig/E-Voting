@@ -14,20 +14,14 @@ import org.evoting.security.Security;
 
 
 /**
- * Contains data about the electionOptions and logic supporting ballot creation.
+ * Contains data about the election options and logic supporting ballot creation.
  * @author Mark
  *
  */
 public class Model
 {
+	// The list of candidate and parties available for voting.
 	private static ElectionOptions electionOptions;
-	// List of electionOption names. The index is equal to the electionOption id.
-	//private static List<String> electionOptionNames;
-	// The time stamp that marks the electionOption list.
-	//private static byte[] electionOptionsTime;
-	// The number of electionOptions contained in the electionOptions.
-	// Group data used for homomorphic encryption.
-	private static Group group = Group.getInstance();
 	
 	/**
 	 * Sets the list of available electionOptions.
@@ -36,9 +30,6 @@ public class Model
 	public static void setElectionOptions(ElectionOptions electionOptions)
 	{
 		Model.electionOptions = electionOptions;
-		//electionOptionNames = electionOptions.getElectionOptions();
-		//electionOptionsTime = electionOptions.getTimestamp();
-		//numberOfElectionOptions = electionOptionNames.size();
 	}
 	
 	/**

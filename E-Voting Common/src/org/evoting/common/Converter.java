@@ -33,4 +33,9 @@ public class Converter {
 		bb.order(ByteOrder.LITTLE_ENDIAN);
 		return bb.putLong(value).array();
 	}
+	
+	public static byte[] convert(AllVotes allVotes)
+	{
+		throw new UnsupportedOperationException();
+	}
 }

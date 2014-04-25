@@ -21,7 +21,11 @@ public class ValueIdentifiers {
 	private static final String START_TIME = "startTime";
 	private static final String END_TIME = "endTime";
 	private static final String SIGNATURE = "signature";
+	private static final String VOTES = "votes";
 	
+	public static String getVotes() {
+		return VOTES;
+	}
 	public static String getId() {
 		return ID;
 	}

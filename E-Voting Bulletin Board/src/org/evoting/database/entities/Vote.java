@@ -4,6 +4,8 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
+import org.evoting.database.entities.BaseEntity;
+
 /**
  * Class used to represent a vote
  */

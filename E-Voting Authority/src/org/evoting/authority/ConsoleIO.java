@@ -197,21 +197,16 @@ public class ConsoleIO extends JavaService {
 	 * Retrieves all votes from bulletinboard and calculates the result
 	 */
 	private void countVotes() {
-		if (electionRunning) {
-			CommMessage request = CommMessage.createRequest("", aCommunicationPath, null);
-			try {
-				CommMessage response = sendMessage(request).recvResponseFor(request); // Den skal tage imod en value? som indeholder
-																						// alle votes eller ingen votes hvis valget
-																						// ikke er igang
+		CommMessage request = CommMessage.createRequest("", aCommunicationPath, null);
+		try {
+			CommMessage response = sendMessage(request).recvResponseFor(request);
+			Value listOfVotesValue = response.value();
+			
 
-				// TODO: Handle response
-				// Count votes if there are any or write error message to user
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		} else {
-			System.out.println("Election is not running");
+
+		} catch (IOException e) {
+			//TODO something
+			e.printStackTrace();
 		}
 	}
 

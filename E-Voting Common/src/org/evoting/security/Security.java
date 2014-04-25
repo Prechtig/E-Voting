@@ -206,9 +206,20 @@ public class Security {
 		return encryptRSA(hash, pK);
 	}
 	
-	public static byte[] sign(byte[] m, Key pK){
+	public static byte[] sign(byte[] m, Key pK) {
 		String hash = hash(m);
 		return encryptRSA(hash, pK);
+	}
+	
+	public static boolean authenticate(byte[] receivedData, byte[] signature, PublicKey pk) {
+		String signatureHash = SHA1.byteToHex(decryptRSA(signature, pk));
+		String receivedDataHash = SHA1.hash(receivedData);
+		
+		if(signatureHash.equals(receivedDataHash)) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 	
 	public static byte[] concatenateByteArrays(byte[]... bytes){
@@ -308,8 +319,6 @@ public class Security {
 		BigInteger phiInt1 = new BigInteger(1, cipherPhi1);
 		BigInteger gammaInt2 = new BigInteger(1, cipherGamma2);
 		BigInteger phiInt2 = new BigInteger(1, cipherPhi2);
-		
-
 		
 		BigInteger gammaProduct = gammaInt1.multiply(gammaInt2).mod(group.getModulo());
 		BigInteger phiProduct = phiInt1.multiply(phiInt2).mod(group.getModulo());

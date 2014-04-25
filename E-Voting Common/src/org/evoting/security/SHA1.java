@@ -25,7 +25,7 @@ public class SHA1 {
 	    }
 	}
 	
-	private static String byteToHex(byte[] b) {
+	public static String byteToHex(byte[] b) {
 	  String result = "";
 	  for (int i=0; i < b.length; i++) {
 	    result +=
