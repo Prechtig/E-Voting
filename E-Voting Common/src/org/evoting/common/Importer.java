@@ -96,9 +96,11 @@ public class Importer {
 		return new ElGamalPrivateKeyParameters(x, new ElGamalParameters(g, p));
 	}
 	
+	
 	public static ElectionOptions importElectionOptions(String fileName){
 		//TODO:implement
-		ElectionOptions eOptions = null;
+		return null;
+		/*ElectionOptions eOptions = null;
 		
 		try {
 			File file = new File(fileName);
@@ -126,6 +128,7 @@ public class Importer {
 		
 		
 		return null;
+		*/
 	}
 	
 	public static PublicKey importRsaPublicKey(String pathname) throws IOException {

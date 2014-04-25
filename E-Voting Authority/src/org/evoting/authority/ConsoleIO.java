@@ -99,9 +99,8 @@ public class ConsoleIO extends JavaService {
 			// Generate keys
 			case "generate":
 				userCommandGenerate();
-
 				break;
-			// Send electionOptions or key
+			// Send electionOptions
 			case "send":
 				userCommandSend();
 				break;
@@ -111,7 +110,7 @@ public class ConsoleIO extends JavaService {
 				break;
 			// Update the election status
 			case "update":
-				updateElectionStatus(); // TODO: call initialize instead?
+				updateElectionStatus();
 				break;
 			// Terminate program
 			case "exit":
@@ -124,7 +123,7 @@ public class ConsoleIO extends JavaService {
 	}
 
 	private void userCommandGenerate() {
-		System.out.println("Generate ElGamal or RSA?");
+		System.out.println("Generate ElGamal, RSA or both?");
 		String input = System.console().readLine().toLowerCase();
 
 		switch (input) {
@@ -134,6 +133,9 @@ public class ConsoleIO extends JavaService {
 		case "elgamal":
 			generateElGamalKeys();
 			break;
+		case "both":
+			generateRsaKeys();
+			generateElGamalKeys();
 		}
 	}
 
@@ -178,7 +180,7 @@ public class ConsoleIO extends JavaService {
 	 * Handles when the user want to send the public key or electionOptions list to the bulletin board
 	 */
 	private void userCommandSend() {
-		System.out.println("Send key or electionOption list?");
+		System.out.println("Send electionOption list?");
 		String input = System.console().readLine().toLowerCase();
 
 		switch (input) {
