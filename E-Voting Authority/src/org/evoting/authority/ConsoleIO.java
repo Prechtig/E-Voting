@@ -13,6 +13,7 @@ import jolie.net.CommMessage;
 import jolie.runtime.ByteArray;
 import jolie.runtime.JavaService;
 import jolie.runtime.Value;
+import jolie.runtime.ValueVector;
 
 import org.bouncycastle.crypto.params.ElGamalPrivateKeyParameters;
 import org.bouncycastle.crypto.params.ElGamalPublicKeyParameters;
@@ -29,9 +30,6 @@ public class ConsoleIO extends JavaService {
 	private String bbRsaPrivKeyFilepath = "BbRsaPriv";
 	private String bbRsaPubKeyFilepath = "BbRsaPub";
 
-	private ElGamalPublicKeyParameters elGamalPublicKey;
-	private ElGamalPrivateKeyParameters elGamalPrivateKey;
-
 	private boolean electionRunning;
 	private Date endTime; // TODO: is this used?
 
@@ -41,34 +39,6 @@ public class ConsoleIO extends JavaService {
 	private static ElectionOptions eOptions;
 
 	private SecureRandom random = new SecureRandom();
-
-	/**
-	 * Used to get the initial information about the election. Sets if the election is running and, if it is, then what time it will end
-	 */
-	public void updateElectionStatus() {
-		System.out.println("Beginning of updateElectionStatus()");
-		CommMessage request = CommMessage.createRequest("getElectionStatus", aCommunicationPath, Value.create());
-		System.out.println("After CommMessage.createRequest");
-		try {
-			System.out.println("Before sendMessage");
-			CommMessage response = sendMessage(request).recvResponseFor(request);
-			System.out.println("After sendMessage");
-
-			electionRunning = response.value().getFirstChild("running").boolValue();
-			long lTime = response.value().getFirstChild("endTime").longValue();
-			endTime = new Date(lTime);
-
-			// endTime is -1 if some error happend in bullitinboard
-			if (lTime > -1) {
-				System.out.println("Election running: " + electionRunning);
-			} else {
-				System.out.println("Error in bullitinboard when trying to update election details");
-			}
-		} catch (IOException e) {
-			System.out.println("Error communicating with bullitinboard");
-			e.printStackTrace();
-		}
-	}
 
 	/**
 	 * Main method. Used to get users input
@@ -99,9 +69,8 @@ public class ConsoleIO extends JavaService {
 			// Generate keys
 			case "generate":
 				userCommandGenerate();
-
 				break;
-			// Send electionOptions or key
+			// Send electionOptions
 			case "send":
 				userCommandSend();
 				break;
@@ -111,7 +80,7 @@ public class ConsoleIO extends JavaService {
 				break;
 			// Update the election status
 			case "update":
-				updateElectionStatus(); // TODO: call initialize instead?
+				updateElectionStatus();
 				break;
 			// Terminate program
 			case "exit":
@@ -123,32 +92,47 @@ public class ConsoleIO extends JavaService {
 		}
 	}
 
+	/**
+	 * Handles when user has entered the "generate" command. Allows to generate and export new ElGamal, RSA or both key pairs
+	 */
 	private void userCommandGenerate() {
-		System.out.println("Generate ElGamal or RSA?");
+		System.out.println("Generate ElGamal, RSA or both?");
 		String input = System.console().readLine().toLowerCase();
 
 		switch (input) {
+		// Generate RSA keypair
 		case "rsa":
 			generateRsaKeys();
 			break;
+		// Generate ElGamal keypair
 		case "elgamal":
 			generateElGamalKeys();
+			break;
+		// Generate both RSA and ElGamal key pair
+		case "both":
+			generateRsaKeys();
+			generateElGamalKeys();
+			break;
+		default:
+			System.out.println("Command not found");
 			break;
 		}
 	}
 
 	/**
-	 * Handles when the user want to load key or electionOptions
+	 * Handles when the user has entered the "load" command. Allows the user to load ElGamal or RSA key pairs or electionOptions
 	 */
 	private void userCommandLoad() {
 		System.out.println("Load keys or electionOption list?");
 		String input = System.console().readLine().toLowerCase();
 
 		switch (input) {
+		// Load keys
 		case "keys":
 		case "key":
 			userCommandLoadKeys();
 			break;
+		// Load election options
 		case "electionOptions":
 		case "electionOption":
 		case "electionOption list":
@@ -156,18 +140,24 @@ public class ConsoleIO extends JavaService {
 			loadElectionOptions();
 			break;
 		default:
+			System.out.println("Command not found");
 			break;
 		}
 	}
-	
-	private void userCommandLoadKeys(){
+
+	/**
+	 * Handles when the user has chosen to load keys. Allows the user to load ElGamal or RSA key pairs
+	 */
+	private void userCommandLoadKeys() {
 		System.out.println("Load ElGamal or RSA?");
 		String input = System.console().readLine().toLowerCase();
 
 		switch (input) {
+		// Load RSA key pairs
 		case "rsa":
 			loadRSAKeys();
 			break;
+		// Load ElGamal key pair
 		case "elgamal":
 			loadElGamalKeys();
 			break;
@@ -175,13 +165,14 @@ public class ConsoleIO extends JavaService {
 	}
 
 	/**
-	 * Handles when the user want to send the public key or electionOptions list to the bulletin board
+	 * Handles when the user want to send the electionOptions list to the bulletin board
 	 */
 	private void userCommandSend() {
-		System.out.println("Send key or electionOption list?");
+		System.out.println("Send electionOption list?");
 		String input = System.console().readLine().toLowerCase();
 
 		switch (input) {
+		//Send election options
 		case "electionoptions":
 		case "electionoption":
 		case "electionoption list":
@@ -189,7 +180,36 @@ public class ConsoleIO extends JavaService {
 			sendElectionoptions();
 			break;
 		default:
+			System.out.println("Command not found");
 			break;
+		}
+	}
+
+	/**
+	 * Used to get the initial information about the election. Sets if the election is running and, if it is, then what time it will end
+	 */
+	public void updateElectionStatus() {
+		System.out.println("Beginning of updateElectionStatus()");
+		CommMessage request = CommMessage.createRequest("getElectionStatus", aCommunicationPath, Value.create());
+		System.out.println("After CommMessage.createRequest");
+		try {
+			System.out.println("Before sendMessage");
+			CommMessage response = sendMessage(request).recvResponseFor(request);
+			System.out.println("After sendMessage");
+
+			electionRunning = response.value().getFirstChild("running").boolValue();
+			long lTime = response.value().getFirstChild("endTime").longValue();
+			endTime = new Date(lTime);
+
+			// endTime is -1 if some error happened in bullitinboard
+			if (lTime > -1) {
+				System.out.println("Election running: " + electionRunning);
+			} else {
+				System.out.println("Error in bullitinboard when trying to update election details");
+			}
+		} catch (IOException e) {
+			System.out.println("Error communicating with bullitinboard");
+			e.printStackTrace();
 		}
 	}
 
@@ -211,13 +231,13 @@ public class ConsoleIO extends JavaService {
 	}
 
 	private void userStartElection() {
-		System.out.println("What time should the election stop? (yyyy-MM-dd HH:mm)");
+		// System.out.println("What time should the election stop? (yyyy-MM-dd HH:mm)");
 
-		// Add hour and minute to the end time
-		String date = System.console().readLine().toLowerCase();
+		// String date = System.console().readLine().toLowerCase();
 
 		try {
-			Date d = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse(date);
+			// Date d = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse(date); //TODO:uncommented because of testing
+			Date d = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse("2014-04-30 20:00");
 			startElection(d);
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
@@ -231,7 +251,8 @@ public class ConsoleIO extends JavaService {
 			Value result = Value.create();
 			result.getNewChild("endTime").setValue(d.getTime());
 			Value validator = getNewValidator();
-			result.getNewChild("validator").assignValue(Value.createDeepCopy(validator));
+			ValueVector children = result.getChildren("validator");
+			children.set(0, validator);
 
 			CommMessage request = CommMessage.createRequest("startElection", aCommunicationPath, result);
 			try {
@@ -254,17 +275,13 @@ public class ConsoleIO extends JavaService {
 	}
 
 	/**
-	 * Generates a new set of ElGamal keys and saves them to files, only if election is not running
+	 * Generates and exports a new set of ElGamal keys and saves them to files, only if election is not running
 	 */
 	private void generateElGamalKeys() {
 		if (!electionRunning) {
-			Security.generateElGamalKeys();
-			elGamalPublicKey = Security.getElgamalPublicKey();
-			elGamalPrivateKey = Security.getElgamalPrivateKey();
-
 			// Export keys
-			Exporter.exportElGamalPrivateKeyParameters(elGamalPrivateKey, ElGamalPrivateKeyFile);
-			Exporter.exportElGamalPublicKeyParameters(elGamalPublicKey, ElGamalPublicKeyFile);
+			Exporter.exportElGamalPrivateKeyParameters(Security.getElgamalPrivateKey(), ElGamalPrivateKeyFile);
+			Exporter.exportElGamalPublicKeyParameters(Security.getElgamalPublicKey(), ElGamalPublicKeyFile);
 
 			System.out.println("Generated and exported new ElGamal keys");
 		} else {
@@ -291,17 +308,20 @@ public class ConsoleIO extends JavaService {
 
 	private void loadElGamalKeys() {
 		if (!electionRunning) {
-			elGamalPublicKey = Importer.importElGamalPublicKeyParameters(ElGamalPublicKeyFile);
-			elGamalPrivateKey = Importer.importElGamalPrivateKeyParameters(ElGamalPrivateKeyFile);
+			ElGamalPublicKeyParameters elGamalPublicKey = Importer.importElGamalPublicKeyParameters(ElGamalPublicKeyFile);
+			ElGamalPrivateKeyParameters elGamalPrivateKey = Importer.importElGamalPrivateKeyParameters(ElGamalPrivateKeyFile);
+
+			Security.setElGamalPrivateKey(elGamalPrivateKey);
+			Security.setElGamalPublicKey(elGamalPublicKey);
 
 			System.out.println("Loaded ElGamal keys");
 		} else {
 			System.out.println("Cannot load new ElGamal keys while election is running");
 		}
 	}
-	
+
 	private void loadRSAKeys() {
-		if(!electionRunning){
+		if (!electionRunning) {
 			try {
 				PublicKey bbPubKey = Importer.importRsaPublicKey(bbRsaPubKeyFilepath);
 				PublicKey authPubKey = Importer.importRsaPublicKey(authRsaPubKeyFilepath);
@@ -310,7 +330,7 @@ public class ConsoleIO extends JavaService {
 				Security.setAuthorityRSAPublicKey(authPubKey);
 				Security.setBulletinBoardRSAPublicKey(bbPubKey);
 				System.out.println("Loaded RSA keys");
-			} catch(IOException e) {
+			} catch (IOException e) {
 				System.out.println("Something went wrong");
 				e.printStackTrace();
 			}
@@ -348,7 +368,7 @@ public class ConsoleIO extends JavaService {
 			System.out.println("Cannot stop election while it is not running");
 		}
 	}
-	
+
 	private void sendElectionoptions() {
 		if (!electionRunning) {
 			if (eOptions != null) {
@@ -398,7 +418,7 @@ public class ConsoleIO extends JavaService {
 
 	public static void main(String[] args) throws ParseException {
 		ConsoleIO io = new ConsoleIO();
-		Security.generateKeys();
+		io.loadRSAKeys();
 		io.startElection(new SimpleDateFormat("HH").parse("20"));
 	}
 }

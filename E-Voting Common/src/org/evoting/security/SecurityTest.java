@@ -1,6 +1,6 @@
 package org.evoting.security;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import java.security.PrivateKey;
 import java.security.PublicKey;
@@ -32,7 +32,6 @@ public class SecurityTest {
 		RSA.generateAuthKeyPair(false);
 		RSAPrivateKey = RSA.getAuthorityPrivateKey();
 		RSAPublicKey = RSA.getAuthorityPublicKey();
-		
 	}
 
 	@Test
@@ -43,10 +42,8 @@ public class SecurityTest {
 		byte[] decrypted = Security.decryptElgamal(encrypted, ElGamalPrivateKey);
 
 		String result = new String(decrypted);
-
-		if (!m.equals(result)) {
-			fail("ElGamal encryption and decryption failed");
-		}
+		
+		assertEquals(m, result);
 	}
 	
 	
@@ -61,9 +58,7 @@ public class SecurityTest {
 
 		int i = Converter.toInt(decrypted);
 		
-		if (m != i) {
-			fail("ElGamal encryption and decryption failed");
-		}
+		assertEquals(m, i);
 	}
 	
 	@Test
@@ -74,10 +69,8 @@ public class SecurityTest {
 		byte[] decrypted = Security.decryptRSA(encrypted, RSAPublicKey);
 
 		String result = new String(decrypted);
-
-		if (!m.equals(result)) {
-			fail("RSA encryption and decryption failed");
-		}
+		
+		assertEquals(m, result);
 	}
 
 	@Test
@@ -86,9 +79,8 @@ public class SecurityTest {
 		String trueHash = "a5103f9c0b7d5ff69ddc38607c74e53d4ac120f2";
 
 		String hash = Security.hash(m);
-		if (!hash.equals(trueHash)) {
-			fail("SHA1 hashing failed");
-		}
+		
+		assertEquals(hash, trueHash);
 	}
 	
 	@Test
@@ -106,18 +98,13 @@ public class SecurityTest {
 	public void saveElgamalKeyPublic(){
 		Exporter.exportElGamalPublicKeyParameters(ElGamalPublicKey, ElGamalPublicKeyFile);
 		ElGamalPublicKeyParameters savedParams =  Importer.importElGamalPublicKeyParameters(ElGamalPublicKeyFile);
-		assert(savedParams.equals(ElGamalPublicKey));
+		assert(savedParams.equals(ElGamalPublicKey)); //TODO: why not assertequals
 	}
 	
 	@Test
 	public void saveElgamalKeyPrivate(){
 		Exporter.exportElGamalPrivateKeyParameters(ElGamalPrivateKey, ElGamalPrivateKeyFile);
 		ElGamalPrivateKeyParameters savedParams = Importer.importElGamalPrivateKeyParameters(ElGamalPrivateKeyFile);
-		assert(savedParams.equals(ElGamalPrivateKey));
-	}
-	
-	@Test
-	public void testIntegerElGamal(){
-		
+		assert(savedParams.equals(ElGamalPrivateKey)); //TODO: why not assertequals
 	}
 }
