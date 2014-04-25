@@ -33,6 +33,7 @@ public class Controller extends JavaService {
 		}
 	}
 	
+	@RequestResponse
 	public Boolean startElection(Value value) {
 		validate(value.getFirstChild("validator"));
 		long endTime = value.getFirstChild(ValueIdentifiers.getEndTime()).longValue();
@@ -42,12 +43,14 @@ public class Controller extends JavaService {
 		return Boolean.TRUE;
 	}
 	
+	@RequestResponse
 	public Boolean stopElection(Value value) {
 		validate(value.getFirstChild("validator"));
 		electionRunning = false;
 		return Boolean.TRUE;
 	}
 	
+	@RequestResponse
 	public Boolean sendElectionOptionList(Value value) {
 		//TODO: implement
 		return Boolean.TRUE;

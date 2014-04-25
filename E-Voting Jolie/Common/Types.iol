@@ -1,9 +1,9 @@
 type EncryptedBallot: void {
 	.userId: raw
-    .passwordHash: raw
-    .electionId: raw
-    .vote*: raw
-    .signature: raw
+	.passwordHash: raw
+	.electionId: raw
+	.vote*: raw
+	.signature: raw
 }
 
 type EncryptedBallotList: void {
@@ -63,10 +63,10 @@ type LoginResponse: void {
 	.sid: string
 }
 
-type VoteRequest: void {
+type EncryptedBallot: void {
 	.sid: string
-	.userId: int
-    .electionId: raw
-    .vote*: raw
-    .signature: raw
+	.userId: raw
+	.electionId: raw
+	.vote*: raw
+	.signature: raw
 }
