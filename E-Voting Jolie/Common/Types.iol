@@ -53,3 +53,20 @@ type Validation: void {
 	.message: string
 	.signature: raw
 }
+
+type LoginRequest: void {
+	.userId: int
+	.passwordHash: string
+}
+
+type LoginResponse: void {
+	.sid: string
+}
+
+type VoteRequest: void {
+	.sid: string
+	.userId: int
+    .electionId: raw
+    .vote*: raw
+    .signature: raw
+}

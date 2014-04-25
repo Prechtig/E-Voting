@@ -33,6 +33,14 @@ main {
 		getElectionOptions@BBJavaController( )( electionOptions )
 	} ] { nullProcess }
 
+	[ login( userInformation )( confirmation ) {
+		login@BBJavaController( userInformation )( confirmation )
+	};
+	processVote( encryptedBallot )( registered ) {
+		processVote@BBJavaController( encryptedBallot )( registered );
+		println@Console( "Registered vote: " + registered )()
+	} ]
+
 	[ processVote( encryptedBallot )( registered ) {
 		//Process the vote in the embedded Java service
 		processVote@BBJavaController( encryptedBallot )( registered );
