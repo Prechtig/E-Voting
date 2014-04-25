@@ -252,9 +252,13 @@ public class Security {
 	public static void setElGamalPublicKey(BigInteger y, BigInteger p, BigInteger g, int l) {
 		ElGamalParameters elGamalp = new ElGamalParameters(p, g);
 		ElGamalPublicKeyParameters elGamalpkp = new ElGamalPublicKeyParameters(y, elGamalp);
-		ElGamal.setPublicKey(elGamalpkp);
-		group.setGenerator(elGamalp.getG());
-		group.setModulo(elGamalp.getP());
+		setElGamalPublicKey(elGamalpkp);
+	}
+	
+	public static void setElGamalPublicKey(ElGamalPublicKeyParameters elGamalPublicKey) {
+		ElGamal.setPublicKey(elGamalPublicKey);
+		group.setGenerator(elGamalPublicKey.getParameters().getG());
+		group.setModulo(elGamalPublicKey.getParameters().getP());
 	}
 
 	public static void setElGamalPrivateKey(ElGamalPrivateKeyParameters privK) {
