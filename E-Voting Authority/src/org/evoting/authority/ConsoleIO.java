@@ -226,7 +226,8 @@ public class ConsoleIO extends JavaService {
 		String date = System.console().readLine().toLowerCase();
 
 		try {
-			Date d = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse(date);
+			//Date d = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse(date); //TODO:uncommented because of testing
+			Date d = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse("2014-04-30 20:00");
 			startElection(d);
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
