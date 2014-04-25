@@ -232,19 +232,15 @@ public class GroupTest
 			
 			BigInteger message1 = Group.getInstance().raiseGenerator(message1base.longValue());
 			byte[] messageByte1 = message1.toByteArray();
-			
-			message1 = new BigInteger(1, messageByte1);
-			
-			System.out.println(messageByte1.length);
+			messageByte1 = removeSignByte(messageByte1);
+			System.out.println(byteArrayToString(messageByte1));
 			byte[] cipher1 = Security.encryptElGamal(messageByte1, ElGamalPublicKey);
 			
 			
 			BigInteger message2 = Group.getInstance().raiseGenerator(message2base.longValue());
 			byte[] messageByte2 = message2.toByteArray();
-			
-			message2 = new BigInteger(1, messageByte1);
-			
-			System.out.println(messageByte2.length);
+			messageByte2 = removeSignByte(messageByte2);
+			System.out.println(messageByte2.length);	
 			byte[] cipher2 = Security.encryptElGamal(messageByte2, ElGamalPublicKey);
 			
 			byte[] product = Security.multiplyElGamalCiphers(cipher1, cipher2);
@@ -252,12 +248,63 @@ public class GroupTest
 	        byte[] messageByte = Security.decryptElgamal(product, ElGamalPrivateKey);
 	        BigInteger result = new BigInteger(messageByte);
 	        
-	        //assertEquals(message1.multiply(message2).mod(Group.getInstance().getModulo()), result);
-	        
 	        assertEquals(message1base.add(message2base).longValue(), Group.getInstance().discreteLogarithm(result));
 		}
 	}
+	
+	@Test
+	public void testCipherLength() {
+		ElGamalPrivateKeyParameters ElGamalPrivateKey;
+		ElGamalPublicKeyParameters ElGamalPublicKey;
+		ElGamal.generateKeyPair(true);
+		ElGamalPrivateKey = ElGamal.getPrivateKey();
+		ElGamalPublicKey = ElGamal.getPublicKey();
+		
+		String byteArrayS1 = "-119 57 -78 -108 -18 -14 10 84 -98 -70 48 13 84 -101 -86 -108 -90 -123 -92 126 95 -44 40 -31 -17 -87 69 -85 29 -84 23 54 17 46 15 -106 -106 -108 90 -106 -115 -43 -79 -33 -64 -79 28 -110 8 15 -69 119 -69 31 -35 65 40 -92 -122 -87 110 -76 -48 108";
+		byte[] byteArray1 = stringToByteArray(byteArrayS1);
+		System.out.println("Length of the byte array converted " + byteArray1.length);
+		System.out.println(byteArrayToString(byteArray1));
+		
+		String byteArrayS2 = "111 -14 64 -36 52 -86 88 -118 44 -19 31 91 -38 125 115 -128 -5 -55 -9 -15 -20 -108 -60 73 92 17 -128 42 -53 46 6 -39 71 -111 65 -99 -88 -93 -112 0 113 -28 43 -92 -43 119 -65 55 45 100 42 121 -23 90 -10 89 -73 84 -26 -80 3 12 94 -111";
+		byte[] byteArray2 = stringToByteArray(byteArrayS2);
+		System.out.println("Length of the byte array converted " + byteArray2.length);
+		System.out.println(byteArrayToString(byteArray2));
+		
+		byte[] cipher1 = Security.encryptElGamal(byteArray2, ElGamalPublicKey);
+		System.out.println("Ciphered");
+		byte[] cipher2 = Security.encryptElGamal(byteArray1, ElGamalPublicKey);
+		System.out.println("Ciphered");
+	}
+	
+	public byte[] removeSignByte(byte[] array)
+	{
+		if(array.length > Security.SIZE_OF_ELGAMAL_CIPHER / 2) {
+			byte[] result = new byte[array.length-1];
+			System.arraycopy(array, 1, result, 0, result.length);
+			return result;
+		} else {
+			return array;
+		}
+	}
 
+	public String byteArrayToString(byte[] array) {
+		String result = "";
+		for (int i = 0; i < array.length; i++) {
+			result = result + Byte.toString(array[i]) + " ";
+		}
+		return result;
+	}
+	
+	public byte[] stringToByteArray(String s) {
+		s = s.trim();
+		String[] split = s.split(" ");
+		byte[] result = new byte[split.length];
+		for (int i = 0; i < split.length; i++) {
+			result[i] = Byte.parseByte(split[i]);
+		}
+		return result;
+	}
+	
 	public static byte[] concat(byte[] first, byte[] second) {
 		  byte[] result = Arrays.copyOf(first, first.length + second.length);
 		  System.arraycopy(second, 0, result, first.length, second.length);

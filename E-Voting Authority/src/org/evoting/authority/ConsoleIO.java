@@ -8,11 +8,13 @@ import java.security.SecureRandom;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Map;
 
 import jolie.net.CommMessage;
 import jolie.runtime.ByteArray;
 import jolie.runtime.JavaService;
 import jolie.runtime.Value;
+import jolie.runtime.ValueVector;
 
 import org.bouncycastle.crypto.params.ElGamalPrivateKeyParameters;
 import org.bouncycastle.crypto.params.ElGamalPublicKeyParameters;
@@ -238,7 +240,8 @@ public class ConsoleIO extends JavaService {
 			Value result = Value.create();
 			result.getNewChild("endTime").setValue(d.getTime());
 			Value validator = getNewValidator();
-			result.getNewChild("validator").assignValue(Value.createDeepCopy(validator));
+			ValueVector children = result.getChildren("validator");
+			children.set(0, validator);
 
 			CommMessage request = CommMessage.createRequest("startElection", aCommunicationPath, result);
 			try {
