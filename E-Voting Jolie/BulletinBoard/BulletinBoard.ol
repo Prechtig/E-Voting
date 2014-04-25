@@ -21,6 +21,10 @@ embedded {
     Java: "org.evoting.bulletinboard.Controller" in BBJavaController
 }
 
+cset {
+	sid: VoteRequest.sid
+}
+
 main {
 	[ getPublicKeys( )( publicKeys ) {
 		println@Console("Someone is requesting the public keys")(  );
@@ -32,6 +36,16 @@ main {
 		//Get the election options from the embedded Java service
 		getElectionOptions@BBJavaController( )( electionOptions )
 	} ] { nullProcess }
+
+	[ login( userInformation )( loginResponse ) {
+		login@BBJavaController( userInformation )( confirmation );
+		loginResponse.sid = csets.sid = new
+	}
+	processVote( encryptedBallot )( registered ) {
+		encryptedBallot.userId = userInformation.userId;
+		processVote@BBJavaController( encryptedBallot )( registered );
+		println@Console( "Registered vote: " + registered )()
+	} ]
 
 	[ processVote( encryptedBallot )( registered ) {
 		//Process the vote in the embedded Java service

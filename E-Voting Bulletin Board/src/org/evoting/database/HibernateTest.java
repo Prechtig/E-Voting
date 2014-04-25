@@ -19,10 +19,10 @@ import org.evoting.security.Security;
 public class HibernateTest {
 	public static void main(String[] args) throws ParseException {
 		//Generate the keys used to encrypt/decrypt
-		if(!Security.RSAKeysGenerated()) {
+		if(!Security.RSAKeysSat()) {
 			Security.generateRSAKeys();
 		}
-		if(!Security.ElGamalKeysGenerated()) {
+		if(!Security.ElGamalKeysSat()) {
 			Security.generateElGamalKeys();
 		}
 		

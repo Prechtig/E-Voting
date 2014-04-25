@@ -7,6 +7,7 @@ import java.security.PublicKey;
 import java.security.SecureRandom;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
 import jolie.net.CommMessage;
@@ -19,10 +20,10 @@ import org.bouncycastle.crypto.params.ElGamalPrivateKeyParameters;
 import org.bouncycastle.crypto.params.ElGamalPublicKeyParameters;
 import org.evoting.common.AllVotesAuthority;
 import org.evoting.common.Converter;
-import org.evoting.common.ElectionOptions;
 import org.evoting.common.Exporter;
 import org.evoting.common.Importer;
 import org.evoting.common.exceptions.CorruptDataException;
+import org.evoting.database.entities.ElectionOption;
 import org.evoting.security.Security;
 
 public class ConsoleIO extends JavaService {
@@ -34,12 +35,11 @@ public class ConsoleIO extends JavaService {
 	private String bbRsaPubKeyFilepath = "BbRsaPub";
 
 	private boolean electionRunning;
-	private Date endTime; // TODO: is this used?
 
 	private String aCommunicationPath = "/";
 	private String electionOptionsFile = "ElectionOptions.txt";
 
-	private static ElectionOptions eOptions;
+	private static ArrayList<ElectionOption> eOptions;
 
 	private SecureRandom random = new SecureRandom();
 
@@ -175,7 +175,7 @@ public class ConsoleIO extends JavaService {
 		String input = System.console().readLine().toLowerCase();
 
 		switch (input) {
-		//Send election options
+		// Send election options
 		case "electionoptions":
 		case "electionoption":
 		case "electionoption list":
@@ -192,19 +192,17 @@ public class ConsoleIO extends JavaService {
 	 * Used to get the initial information about the election. Sets if the election is running and, if it is, then what time it will end
 	 */
 	public void updateElectionStatus() {
-		System.out.println("Beginning of updateElectionStatus()");
+		// Create request to jolie
 		CommMessage request = CommMessage.createRequest("getElectionStatus", aCommunicationPath, Value.create());
-		System.out.println("After CommMessage.createRequest");
 		try {
-			System.out.println("Before sendMessage");
+			// Send jolie request
 			CommMessage response = sendMessage(request).recvResponseFor(request);
-			System.out.println("After sendMessage");
 
+			// Set information
 			electionRunning = response.value().getFirstChild("running").boolValue();
 			long lTime = response.value().getFirstChild("endTime").longValue();
-			endTime = new Date(lTime);
 
-			// endTime is -1 if some error happened in bullitinboard
+			// if endTime is -1 if some error happened in bullitinboard
 			if (lTime > -1) {
 				System.out.println("Election running: " + electionRunning);
 			} else {
@@ -239,6 +237,9 @@ public class ConsoleIO extends JavaService {
 		}
 	}
 
+	/**
+	 * Handles when user has entered the "start" command. It start the election and asks the user to enter an end time and date for it
+	 */
 	private void userStartElection() {
 		// System.out.println("What time should the election stop? (yyyy-MM-dd HH:mm)");
 
@@ -249,11 +250,17 @@ public class ConsoleIO extends JavaService {
 			Date d = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse("2014-04-30 20:00");
 			startElection(d);
 		} catch (ParseException e) {
-			// TODO Auto-generated catch block
+			System.out.println("Could not parse the entered date and time");
 			e.printStackTrace();
 		}
 	}
 
+	/**
+	 * Used to start the election.
+	 * 
+	 * @param d
+	 *            The time where the election should end
+	 */
 	private void startElection(Date d) {
 		if (!electionRunning) {
 			// Create value with endtime and signed endtime
@@ -270,7 +277,6 @@ public class ConsoleIO extends JavaService {
 				if (response.value().boolValue()) {
 					System.out.println("Election has started");
 					electionRunning = true;
-					endTime = d;
 				} else {
 					System.out.println("Error in bullitinboard when trying to start election");
 				}
@@ -284,7 +290,7 @@ public class ConsoleIO extends JavaService {
 	}
 
 	/**
-	 * Generates and exports a new set of ElGamal keys and saves them to files, only if election is not running
+	 * Generates and exports a new set of ElGamal keys and exports them, only if election is not running
 	 */
 	private void generateElGamalKeys() {
 		if (!electionRunning) {
@@ -298,10 +304,15 @@ public class ConsoleIO extends JavaService {
 		}
 	}
 
+	/**
+	 * Generates and exports two new set of RAS keys. Only if the election is not running
+	 */
 	private void generateRsaKeys() {
 		if (!electionRunning) {
+			// Generate RSA keys
 			Security.generateRSAKeys();
 			try {
+				// Export the keys
 				Exporter.exportRsaKey(authRsaPrivKeyFilepath, Security.getAuthorityRSAPrivateKey());
 				Exporter.exportRsaKey(authRsaPubKeyFilepath, Security.getAuthorityRSAPublicKey());
 				Exporter.exportRsaKey(bbRsaPrivKeyFilepath, Security.getBulletinBoardRSAPrivateKey());
@@ -315,11 +326,15 @@ public class ConsoleIO extends JavaService {
 		}
 	}
 
+	/**
+	 * Load ElGamal key pair into the system. Only if election is not running
+	 */
 	private void loadElGamalKeys() {
 		if (!electionRunning) {
+			// Import the keys
 			ElGamalPublicKeyParameters elGamalPublicKey = Importer.importElGamalPublicKeyParameters(ElGamalPublicKeyFile);
 			ElGamalPrivateKeyParameters elGamalPrivateKey = Importer.importElGamalPrivateKeyParameters(ElGamalPrivateKeyFile);
-
+			// Set the keys
 			Security.setElGamalPrivateKey(elGamalPrivateKey);
 			Security.setElGamalPublicKey(elGamalPublicKey);
 
@@ -329,12 +344,17 @@ public class ConsoleIO extends JavaService {
 		}
 	}
 
+	/**
+	 * Load RSA key pairs into the system. Only if election is not running
+	 */
 	private void loadRSAKeys() {
 		if (!electionRunning) {
 			try {
+				// Import the keys
 				PublicKey bbPubKey = Importer.importRsaPublicKey(bbRsaPubKeyFilepath);
 				PublicKey authPubKey = Importer.importRsaPublicKey(authRsaPubKeyFilepath);
 				PrivateKey authPrivKey = Importer.importRsaPrivateKey(authRsaPrivKeyFilepath);
+				// Set the keys
 				Security.setAuthorityRSAPrivateKey(authPrivKey);
 				Security.setAuthorityRSAPublicKey(authPubKey);
 				Security.setBulletinBoardRSAPublicKey(bbPubKey);
@@ -348,8 +368,12 @@ public class ConsoleIO extends JavaService {
 		}
 	}
 
+	/**
+	 * Loads the election options into the system. Only when election is not running
+	 */
 	private void loadElectionOptions() {
 		if (!electionRunning) {
+			// Load the election options
 			eOptions = Importer.importElectionOptions(electionOptionsFile);
 			System.out.println("Imported list of election options");
 		} else {
@@ -357,12 +381,18 @@ public class ConsoleIO extends JavaService {
 		}
 	}
 
+	/**
+	 * Stops the elcetion. Only when election is running
+	 */
 	private void stopElection() {
 		if (electionRunning) {
+			// Create request to stop election
 			CommMessage request = CommMessage.createRequest("stopElection", aCommunicationPath, null);
 			try {
+				// Send request
 				CommMessage response = sendMessage(request).recvResponseFor(request);
 
+				// Check response to see if it was successful
 				if (response.value().boolValue()) {
 					electionRunning = false;
 					System.out.println("Election has stopped");
@@ -378,6 +408,9 @@ public class ConsoleIO extends JavaService {
 		}
 	}
 
+	/**
+	 * Sends the electionOptions list to the bulletinboard. Only when election is not running
+	 */
 	private void sendElectionoptions() {
 		if (!electionRunning) {
 			if (eOptions != null) {
@@ -412,15 +445,33 @@ public class ConsoleIO extends JavaService {
 		}
 	}
 
+	/**
+	 * Creates a value containing a string and the string signed using the private key of the authority
+	 * 
+	 * @return A Value containing the informaiton for a validator as defined in Types.ol
+	 */
 	private Value getNewValidator() {
+		// Get random string
 		String message = nextRandomString();
-		byte[] signature = Security.sign(message, Security.getAuthorityRSAPrivateKey()); // TODO: not RSApblickey
-		Value val = Value.create();
-		val.getNewChild("message").setValue(message);
-		val.getNewChild("signature").setValue(new ByteArray(signature));
-		return val;
+		if (Security.RSAKeysSat()) {
+			// Sign the random message
+			byte[] signature = Security.sign(message, Security.getAuthorityRSAPrivateKey());
+			// Create new value and set children
+			Value val = Value.create();
+			val.getNewChild("message").setValue(message);
+			val.getNewChild("signature").setValue(new ByteArray(signature));
+			return val;
+		} else {
+			System.out.println("Cannot create validator without RSA keys");
+		}
+		return null;
 	}
 
+	/**
+	 * Generates a random string
+	 * 
+	 * @return A random string
+	 */
 	private String nextRandomString() {
 		return new BigInteger(130, random).toString(32);
 	}
