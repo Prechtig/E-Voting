@@ -7,6 +7,7 @@ import java.security.PublicKey;
 import java.security.SecureRandom;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
 import jolie.net.CommMessage;
@@ -20,6 +21,7 @@ import org.bouncycastle.crypto.params.ElGamalPublicKeyParameters;
 import org.evoting.common.ElectionOptions;
 import org.evoting.common.Exporter;
 import org.evoting.common.Importer;
+import org.evoting.database.entities.ElectionOption;
 import org.evoting.security.Security;
 
 public class ConsoleIO extends JavaService {
@@ -35,7 +37,7 @@ public class ConsoleIO extends JavaService {
 	private String aCommunicationPath = "/";
 	private String electionOptionsFile = "ElectionOptions.txt";
 
-	private static ElectionOptions eOptions;
+	private static ArrayList<ElectionOption> eOptions;
 
 	private SecureRandom random = new SecureRandom();
 
