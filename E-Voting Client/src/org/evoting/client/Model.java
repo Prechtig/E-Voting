@@ -66,7 +66,7 @@ public class Model
 		int l = Integer.parseInt(parameters.getFirstChild(ValueIdentifiers.getL()).strValue());
 		
 		Security.setElGamalPublicKey(y, p, g, l);
-		Security.setRSAPublicKey(rsaPublicKeyValue.byteArrayValue().getBytes());
+		Security.setBulletinBoardRSAPublicKey(rsaPublicKeyValue.byteArrayValue().getBytes());
 	}
 	
 	

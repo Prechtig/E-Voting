@@ -22,7 +22,7 @@ import org.evoting.common.Group;
 public class Security {
 	
 	//True if RSA keys have been generated
-	private static boolean RASKeysGenerated;
+	private static boolean RSAKeysGenerated;
 	//True if ElGamal keys have been generated
 	private static boolean ElGamalKeysGenerated;
 	//Size of ELGamal byte array
@@ -39,10 +39,8 @@ public class Security {
 	 * Generates both RSA and ElGamal key sets
 	 */
 	public static void generateKeys() {
-		ElGamal.generateKeyPair(true);
-		RSA.generateKeyPair(true);
-		RASKeysGenerated = true;
-		ElGamalKeysGenerated = true;
+		generateElGamalKeys();
+		generateRSAKeys();
 	}
 	
 	/**
@@ -50,13 +48,16 @@ public class Security {
 	 */
 	public static void generateElGamalKeys(){
 		ElGamal.generateKeyPair(true);
+		ElGamalKeysGenerated = true;
 	}
 	
 	/**
 	 * Generate RSA key set and will overwrite previous key set if there is any
 	 */
 	public static void generateRSAKeys(){
-		RSA.generateKeyPair(true);
+		RSA.generateAuthKeyPair(true);
+		RSA.generateBbKeyPair(true);
+		RSAKeysGenerated = true;
 	}
 	
 	/**
@@ -64,7 +65,7 @@ public class Security {
 	 * @return if RSA keys have been generated
 	 */
 	public static boolean RSAKeysGenerated() {
-		return RASKeysGenerated;
+		return RSAKeysGenerated;
 	}
 	
 	/**
@@ -80,7 +81,7 @@ public class Security {
 	 * @return if both key sets have been generated
 	 */
 	public static boolean keysGenerated() {
-		return RASKeysGenerated && ElGamalKeysGenerated;
+		return RSAKeysGenerated && ElGamalKeysGenerated;
 	}
 	
 	/**
@@ -232,16 +233,20 @@ public class Security {
 		return ElGamal.getPrivateKey();
 	}
 
-	public static PublicKey getRSAPublicKey() {
-		return RSA.getPublicKey();
+	public static PublicKey getAuthorityRSAPublicKey() {
+		return RSA.getAuthorityPublicKey();
 	}
 	
-	public static byte[] getRSAPublicKeyBytes() {
-		return getRSAPublicKey().getEncoded();
+	public static PrivateKey getAuthorityRSAPrivateKey() {
+		return RSA.getAuthorityPrivateKey();
 	}
-
-	public static PrivateKey getRSAPrivateKey() {
-		return RSA.getPrivateKey();
+	
+	public static PublicKey getBulletinBoardRSAPublicKey() {
+		return RSA.getBulletinBoardPublicKey();
+	}
+	
+	public static PrivateKey getBulletinBoardRSAPrivateKey() {
+		return RSA.getBulletinBoardPrivateKey();
 	}
 
 	public static void setElGamalPublicKey(BigInteger y, BigInteger p, BigInteger g, int l) {
@@ -258,15 +263,15 @@ public class Security {
 		group.setModulo(privK.getParameters().getP());
 	}
 
-	public static void setRSAPublicKey(PublicKey pubK) {
-		RSA.setPublicKey(pubK);
+	public static void setAuthorityRSAPublicKey(PublicKey pubK) {
+		RSA.setAuthorityPublicKey(pubK);
 	}
 	
-	public static void setRSAPublicKey(byte[] pubK) {
+	public static void setBulletinBoardRSAPublicKey(byte[] pubK) {
 		//TODO: Do proper exception handling
 		try {
 			PublicKey publicKey =  KeyFactory.getInstance("RSA").generatePublic(new X509EncodedKeySpec(pubK));
-			setRSAPublicKey(publicKey);
+			setBulletinBoardRSAPublicKey(publicKey);
 		} catch (InvalidKeySpecException e) {
 			e.printStackTrace();
 		} catch (NoSuchAlgorithmException e) {
@@ -274,8 +279,16 @@ public class Security {
 		}
 	}
 
-	public static void setRSAPrivateKey(PrivateKey privK) {
-		RSA.setPrivateKey(privK);
+	public static void setAuthorityRSAPrivateKey(PrivateKey privK) {
+		RSA.setAuthorityPrivateKey(privK);
+	}
+	
+	public static void setBulletinBoardRSAPublicKey(PublicKey pubK) {
+		RSA.setBulletinBoardPublicKey(pubK);
+	}
+	
+	public static void setBulletinBoardRSAPrivateKey(PrivateKey privK) {
+		RSA.setBulletinBoardPrivateKey(privK);
 	}
 
 	

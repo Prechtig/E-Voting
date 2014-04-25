@@ -28,7 +28,7 @@ public class Controller extends JavaService {
 		String message = validation.getFirstChild("message").strValue();
 		byte[] signature = validation.getFirstChild("signature").byteArrayValue().getBytes();
 		String hashedMessage = Security.hash(message);
-		if(!hashedMessage.equals(Security.decryptRSA(signature, Security.getRSAPublicKey()))) {//TODO: change to authority public key
+		if(!hashedMessage.equals(Security.decryptRSA(signature, Security.getAuthorityRSAPublicKey()))) {//TODO: change to authority public key
 			throw new RuntimeException(); //TODO: throw correct exception
 		}
 	}
