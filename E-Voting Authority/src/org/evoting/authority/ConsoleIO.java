@@ -31,7 +31,6 @@ public class ConsoleIO extends JavaService {
 	private String bbRsaPubKeyFilepath = "BbRsaPub";
 
 	private boolean electionRunning;
-	private Date endTime; // TODO: is this used?
 
 	private String aCommunicationPath = "/";
 	private String electionOptionsFile = "ElectionOptions.txt";
@@ -198,7 +197,6 @@ public class ConsoleIO extends JavaService {
 			// Set information
 			electionRunning = response.value().getFirstChild("running").boolValue();
 			long lTime = response.value().getFirstChild("endTime").longValue();
-			endTime = new Date(lTime);
 
 			// if endTime is -1 if some error happened in bullitinboard
 			if (lTime > -1) {
@@ -274,7 +272,6 @@ public class ConsoleIO extends JavaService {
 				if (response.value().boolValue()) {
 					System.out.println("Election has started");
 					electionRunning = true;
-					endTime = d;
 				} else {
 					System.out.println("Error in bullitinboard when trying to start election");
 				}
@@ -449,17 +446,17 @@ public class ConsoleIO extends JavaService {
 	 * @return A Value containing the informaiton for a validator as defined in Types.ol
 	 */
 	private Value getNewValidator() {
-		//Get random string
+		// Get random string
 		String message = nextRandomString();
 		if (Security.RSAKeysSat()) {
-			//Sign the random message
+			// Sign the random message
 			byte[] signature = Security.sign(message, Security.getAuthorityRSAPrivateKey());
-			//Create new value and set children
+			// Create new value and set children
 			Value val = Value.create();
 			val.getNewChild("message").setValue(message);
 			val.getNewChild("signature").setValue(new ByteArray(signature));
 			return val;
-		} else{
+		} else {
 			System.out.println("Cannot create validator without RSA keys");
 		}
 		return null;
