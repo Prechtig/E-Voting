@@ -17,9 +17,12 @@ import jolie.runtime.ValueVector;
 
 import org.bouncycastle.crypto.params.ElGamalPrivateKeyParameters;
 import org.bouncycastle.crypto.params.ElGamalPublicKeyParameters;
+import org.evoting.common.AllVotesAuthority;
+import org.evoting.common.Converter;
 import org.evoting.common.ElectionOptions;
 import org.evoting.common.Exporter;
 import org.evoting.common.Importer;
+import org.evoting.common.exceptions.CorruptDataException;
 import org.evoting.security.Security;
 
 public class ConsoleIO extends JavaService {
@@ -221,8 +224,14 @@ public class ConsoleIO extends JavaService {
 		try {
 			CommMessage response = sendMessage(request).recvResponseFor(request);
 			Value listOfVotesValue = response.value();
+			AllVotesAuthority allVotes = new AllVotesAuthority(listOfVotesValue);
 			
-
+			boolean isNotEdited = Security.authenticate(Converter.convert(allVotes), allVotes.getSignature(), Security.getBulletinBoardRSAPublicKey());
+			if(!isNotEdited) {
+				throw new CorruptDataException();
+			}
+			
+			
 
 		} catch (IOException e) {
 			//TODO something

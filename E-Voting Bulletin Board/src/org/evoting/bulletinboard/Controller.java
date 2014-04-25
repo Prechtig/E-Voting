@@ -9,12 +9,13 @@ import jolie.runtime.Value;
 import jolie.runtime.embedding.RequestResponse;
 
 import org.evoting.bulletinboard.exceptions.ElectionNotStartedException;
+import org.evoting.common.AllVotesAuthority;
 import org.evoting.common.Ballot;
 import org.evoting.common.EncryptedBallot;
 import org.evoting.common.EncryptedElectionOptions;
 import org.evoting.common.Importer;
 import org.evoting.common.ValueIdentifiers;
-import org.evoting.database.entities.Vote;
+import org.evoting.common.Vote;
 import org.evoting.security.Security;
 
 public class Controller extends JavaService {
@@ -131,8 +132,8 @@ public class Controller extends JavaService {
 			throw new ElectionNotStartedException();
 		}
 		
-		List<Vote> allVotes = Model.getAllVotes();
-		return Model.toValue(allVotes);
+		AllVotesAuthority allVotesAuthority = Model.getAllVotesAuthority();
+		return allVotesAuthority.toValue();
 	}
 	
 	@RequestResponse
@@ -167,7 +168,6 @@ public class Controller extends JavaService {
 	}
 	
 	public static void main(String[] args) {
-		Model.getAllVotes();
-		Model.getAllVotes();
+
 	}
 }

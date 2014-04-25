@@ -1,4 +1,4 @@
-package org.evoting.database.entities;
+package org.evoting.common;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;

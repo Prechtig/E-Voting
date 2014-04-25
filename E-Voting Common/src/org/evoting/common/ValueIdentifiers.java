@@ -4,6 +4,9 @@ public class ValueIdentifiers {
 	private static final String ID = "id";
 	private static final String NAME = "name";
 	private static final String PARTY_ID = "partyId";
+	public static String getElectionOptionId() {
+		return ELECTION_OPTION_ID;
+	}
 	private static final String USER_ID = "userId";
 	private static final String PASSWORD_HASH = "passwordHash";
 	private static final String ELECTION_ID = "electionId";
@@ -22,6 +25,7 @@ public class ValueIdentifiers {
 	private static final String END_TIME = "endTime";
 	private static final String SIGNATURE = "signature";
 	private static final String VOTES = "votes";
+	private static final String ELECTION_OPTION_ID = "electionOptionId";
 	
 	public static String getVotes() {
 		return VOTES;

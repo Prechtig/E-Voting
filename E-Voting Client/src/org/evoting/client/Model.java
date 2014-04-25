@@ -7,7 +7,6 @@ import jolie.runtime.Value;
 import org.evoting.client.exceptions.NoElectionOptionsException;
 import org.evoting.common.ElectionOptions;
 import org.evoting.common.EncryptedBallot;
-import org.evoting.common.Group;
 import org.evoting.common.ValueIdentifiers;
 import org.evoting.common.exceptions.BadValueException;
 import org.evoting.security.Security;

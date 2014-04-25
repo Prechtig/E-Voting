@@ -215,11 +215,7 @@ public class Security {
 		String signatureHash = SHA1.byteToHex(decryptRSA(signature, pk));
 		String receivedDataHash = SHA1.hash(receivedData);
 		
-		if(signatureHash.equals(receivedDataHash)) {
-			return true;
-		} else {
-			return false;
-		}
+		return signatureHash.equals(receivedDataHash);
 	}
 	
 	public static byte[] concatenateByteArrays(byte[]... bytes){

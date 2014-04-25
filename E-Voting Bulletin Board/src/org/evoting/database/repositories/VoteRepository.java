@@ -4,7 +4,7 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 
-import org.evoting.database.entities.Vote;
+import org.evoting.common.Vote;
 
 /**
  * Used to find votes in the persistent storage 
