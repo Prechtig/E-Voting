@@ -64,7 +64,7 @@ public class Security {
 	 * Check if RSA keys have been generated
 	 * @return if RSA keys have been generated
 	 */
-	public static boolean RSAKeysGenerated() {
+	public static boolean RSAKeysGenerated() { //TODO: Change name to RSAKeySat
 		return RSAKeysGenerated;
 	}
 	
@@ -72,7 +72,7 @@ public class Security {
 	 * Check if ElGamal keys have been generated
 	 * @return if ElGamal keys have been generated
 	 */
-	public static boolean ElGamalKeysGenerated() {
+	public static boolean ElGamalKeysGenerated() { //TODO: Change name to ElGamalKeysSat
 		return ElGamalKeysGenerated;
 	}
 	
