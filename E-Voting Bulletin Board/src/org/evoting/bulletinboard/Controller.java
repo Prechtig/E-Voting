@@ -28,7 +28,7 @@ public class Controller extends JavaService {
 		String message = validation.getFirstChild("message").strValue();
 		byte[] signature = validation.getFirstChild("signature").byteArrayValue().getBytes();
 		String hashedMessage = Security.hash(message);
-		if(!hashedMessage.equals(Security.decryptRSA(signature, Security.getAuthorityRSAPublicKey()))) {//TODO: change to authority public key
+		if(!hashedMessage.equals(Security.decryptRSA(signature, Security.getAuthorityRSAPublicKey()))) {
 			throw new RuntimeException(); //TODO: throw correct exception
 		}
 	}
@@ -76,6 +76,15 @@ public class Controller extends JavaService {
 		Model.validateUser(userId, passwordHash);
 		
 		Model.processVote(userId, encryptedVote);
+		
+		return Boolean.TRUE;
+	}
+	
+	@RequestResponse
+	public Boolean login(Value userInformation) {
+		int userId = userInformation.getFirstChild(ValueIdentifiers.getUserId()).intValue();
+		String passwordHash = userInformation.getFirstChild(ValueIdentifiers.getPasswordHash()).strValue();
+		Model.validateUser(userId, passwordHash);
 		
 		return Boolean.TRUE;
 	}
