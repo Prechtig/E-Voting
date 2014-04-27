@@ -20,14 +20,13 @@ public class RSA {
 				keyGen = KeyPairGenerator.getInstance("RSA");
 
 				keyGen.initialize(1024);
-				// Provider p = keyGen.getProvider(); TODO: What is this for
 
 				KeyPair keys = keyGen.generateKeyPair();
 
 				authPubKey = keys.getPublic();
 				authPrivKey = keys.getPrivate();
 			} catch (NoSuchAlgorithmException e) {
-				// TODO Auto-generated catch block
+				// Should not happen
 				e.printStackTrace();
 			}
 		}
@@ -40,19 +39,19 @@ public class RSA {
 				keyGen = KeyPairGenerator.getInstance("RSA");
 
 				keyGen.initialize(1024);
-				// Provider p = keyGen.getProvider(); TODO: What is this for
 
 				KeyPair keys = keyGen.generateKeyPair();
 
 				bbPubKey = keys.getPublic();
 				bbPrivKey = keys.getPrivate();
 			} catch (NoSuchAlgorithmException e) {
-				// TODO Auto-generated catch block
+				// Should not happen
 				e.printStackTrace();
 			}
 		}
 	}
 
+	/*//TODO:Remove?
 	private static void generateKeyPair(PublicKey pubKey, PrivateKey privKey, boolean overwrite) {
 		if ((pubKey == null && privKey == null) || overwrite == true) {
 			try {
@@ -60,18 +59,17 @@ public class RSA {
 				keyGen = KeyPairGenerator.getInstance("RSA");
 
 				keyGen.initialize(1024);
-				// Provider p = keyGen.getProvider(); TODO: What is this for
 
 				KeyPair keys = keyGen.generateKeyPair();
 
 				pubKey = keys.getPublic();
 				privKey = keys.getPrivate();
 			} catch (NoSuchAlgorithmException e) {
-				// TODO Auto-generated catch block
+				// Should not happen
 				e.printStackTrace();
 			}
 		}
-	}
+	}*/
 	
 	public static PublicKey getAuthorityPublicKey() {
 		return authPubKey;
@@ -132,12 +130,10 @@ public class RSA {
 	}
 
 	public static void setAuthorityPublicKey(PublicKey pubK) {
-		// TODO Auto-generated method stub
 		authPubKey = pubK;
 	}
 
 	public static void setAuthorityPrivateKey(PrivateKey privK) {
-		// TODO Auto-generated method stub
 		authPrivKey = privK;
 	}
 	

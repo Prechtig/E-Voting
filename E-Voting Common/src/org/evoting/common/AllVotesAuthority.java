@@ -52,6 +52,9 @@ public class AllVotesAuthority {
 	private AnonymousVote constructVote(ValueVector voteVector) 
 	{
 		byte[][] encryptedVote = new byte[voteVector.size()][];
+		
+		//TODO: What is this "i" for?
+		@SuppressWarnings("unused")
 		int i = 0;
 		for(Value v : voteVector) {
 			encryptedVote[v.getFirstChild(ValueIdentifiers.getElectionOptionId()).intValue()] = v.byteArrayValue().getBytes();

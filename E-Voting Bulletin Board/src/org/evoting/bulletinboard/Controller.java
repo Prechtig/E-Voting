@@ -2,8 +2,6 @@ package org.evoting.bulletinboard;
 
 import java.io.IOException;
 import java.util.Date;
-import java.util.List;
-
 import jolie.runtime.JavaService;
 import jolie.runtime.Value;
 import jolie.runtime.embedding.RequestResponse;
@@ -15,7 +13,6 @@ import org.evoting.common.EncryptedBallot;
 import org.evoting.common.EncryptedElectionOptions;
 import org.evoting.common.Importer;
 import org.evoting.common.ValueIdentifiers;
-import org.evoting.common.Vote;
 import org.evoting.security.Security;
 
 public class Controller extends JavaService {

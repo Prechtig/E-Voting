@@ -1,6 +1,5 @@
 package org.evoting.common;
 
-import java.awt.List;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -126,7 +125,7 @@ public class Importer {
 			return electionOptions;
 			}
 		} catch (IOException e) {
-			//TODO:fix message
+			System.out.println("Error working with election options file");
 			e.printStackTrace();
 		}
 		

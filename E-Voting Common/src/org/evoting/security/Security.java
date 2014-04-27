@@ -10,7 +10,6 @@ import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.X509EncodedKeySpec;
-import java.util.List;
 
 import org.bouncycastle.crypto.params.ElGamalParameters;
 import org.bouncycastle.crypto.params.ElGamalPrivateKeyParameters;
@@ -223,7 +222,7 @@ public class Security {
 			try {
 				resultStream.write(b);
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
+				// Should not happen
 				e.printStackTrace();
 			}
 		}
@@ -277,13 +276,14 @@ public class Security {
 	}
 	
 	public static void setBulletinBoardRSAPublicKey(byte[] pubK) {
-		//TODO: Do proper exception handling
 		try {
-			PublicKey publicKey =  KeyFactory.getInstance("RSA").generatePublic(new X509EncodedKeySpec(pubK));
+			PublicKey publicKey = KeyFactory.getInstance("RSA").generatePublic(new X509EncodedKeySpec(pubK));
 			setBulletinBoardRSAPublicKey(publicKey);
 		} catch (InvalidKeySpecException e) {
+			System.out.println("Corrupted bytes for public key");
 			e.printStackTrace();
 		} catch (NoSuchAlgorithmException e) {
+			// Should not happen
 			e.printStackTrace();
 		}
 	}
@@ -341,9 +341,11 @@ public class Security {
 		return result;
 	}
 	
+	/*//TODO: Remove?
 	private static byte[] concat(byte[] first, byte[] second) {
 		  byte[] result = Arrays.copyOf(first, first.length + second.length);
 		  System.arraycopy(second, 0, result, first.length, second.length);
 		  return result;
 	}
+	*/
 }
