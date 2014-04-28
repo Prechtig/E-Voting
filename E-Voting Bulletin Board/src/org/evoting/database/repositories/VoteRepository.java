@@ -31,4 +31,9 @@ public class VoteRepository extends EntityRepository<Vote> {
 		String query = "SELECT v FROM Vote v";
 		return super.findByQuery(query);
 	}
+	
+	public List<Vote> findAllValid() {
+		String query = "SELECT v FROM Vote v WHERE v.timestamp = (SELECT MAX(vv.timestamp) FROM Vote vv WHERE vv.id = v.id)";
+		return super.findByQuery(query);
+	}
 }
