@@ -48,19 +48,10 @@ public class Model {
 	 */
 	public static void processVote(int userId, byte[][] encryptedVote) {
 		EntityManager entMgr = beginDatabaseSession();
-
-		VoteRepository vr = new VoteRepository(entMgr);
-		//See if the user has already voted
-		Vote vote = vr.findById(userId);
 		
-		if(vote == null) {
-			//Persist the vote if the user hasn't voted yet
-			vote = new Vote(userId, encryptedVote);
-			entMgr.persist(vote);
-		} else {
-			//Update the vote if the user has voted before
-			vote.setEncryptedVote(encryptedVote);
-		}
+		Vote vote = new Vote(userId, encryptedVote, System.currentTimeMillis());
+		entMgr.persist(vote);
+		
 		endDatabaseSession(entMgr);
 	}
 	

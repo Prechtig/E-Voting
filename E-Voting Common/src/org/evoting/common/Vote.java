@@ -16,13 +16,17 @@ public class Vote extends BaseEntity {
 	@Column(name = "encryptedVote", columnDefinition = "blob", nullable = false)
 	private byte[][] encryptedVote;
 	
+	@Column(name = "timestamp", nullable = false)
+	private long timestamp;
+	
 	/**
 	 * @param userId The id of the user
 	 * @param encryptedVote The encrypted vote for the user
 	 */
-	public Vote(int userId, byte[][] encryptedVote) {
+	public Vote(int userId, byte[][] encryptedVote, long timestamp) {
 		super(userId);
 		this.encryptedVote = encryptedVote;
+		this.timestamp = timestamp;
 	}
 	
 	/**
@@ -38,12 +42,5 @@ public class Vote extends BaseEntity {
 	 */
 	public byte[][] getEncryptedVote() {
 		return this.encryptedVote;
-	}
-	
-	/**
-	 * @param ciphertext The new encrypted vote
-	 */
-	public void setEncryptedVote(byte[][] encryptedVote) {
-		this.encryptedVote = encryptedVote;
 	}
 }

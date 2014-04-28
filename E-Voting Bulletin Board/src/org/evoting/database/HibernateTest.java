@@ -28,8 +28,8 @@ public class HibernateTest {
 		
 		ElGamalPublicKeyParameters pubKey = Security.getElgamalPublicKey();
 		
-		Vote v1 = new Vote(0, new byte[][] { Security.encryptElGamal(Converter.toByteArray(1), pubKey), Security.encryptElGamal(Converter.toByteArray(0), pubKey), Security.encryptElGamal(Converter.toByteArray(0), pubKey) });
-		Vote v2 = new Vote(1, new byte[][] { Security.encryptElGamal(Converter.toByteArray(0), pubKey), Security.encryptElGamal(Converter.toByteArray(1), pubKey), Security.encryptElGamal(Converter.toByteArray(0), pubKey) });
+		Vote v1 = new Vote(0, new byte[][] { Security.encryptElGamal(Converter.toByteArray(1), pubKey), Security.encryptElGamal(Converter.toByteArray(0), pubKey), Security.encryptElGamal(Converter.toByteArray(0), pubKey) }, System.currentTimeMillis());
+		Vote v2 = new Vote(1, new byte[][] { Security.encryptElGamal(Converter.toByteArray(0), pubKey), Security.encryptElGamal(Converter.toByteArray(1), pubKey), Security.encryptElGamal(Converter.toByteArray(0), pubKey) }, System.currentTimeMillis());
 		ElectionOption p0 = new ElectionOption(0, "Vores Parti", 0);
 		ElectionOption c0 = new ElectionOption(1, "Mikkel Hvilshøj Funch", 0);
 		ElectionOption c1 = new ElectionOption(2, "Mark Thorhauge", 0);
