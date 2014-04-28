@@ -1,6 +1,6 @@
 type EncryptedBallot: void {
+	.sid: string
 	.userId: raw
-	.passwordHash: raw
 	.electionId: raw
 	.vote*: raw
 	.signature: raw
@@ -61,12 +61,4 @@ type LoginRequest: void {
 
 type LoginResponse: void {
 	.sid: string
-}
-
-type EncryptedBallot: void {
-	.sid: string
-	.userId: raw
-	.electionId: raw
-	.vote*: raw
-	.signature: raw
 }

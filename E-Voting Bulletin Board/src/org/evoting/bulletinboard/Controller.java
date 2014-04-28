@@ -65,16 +65,11 @@ public class Controller extends JavaService {
 		if(!electionRunning) {
 			throw new ElectionNotStartedException();
 		}
-		
+		//TODO: Is this implementation correct?
 		Ballot ballot = new EncryptedBallot(valueEncryptedBallot).getBallot();
 		
-		//Extract needed information from the ballot
 		int userId = ballot.getUserId();
-		String passwordHash = ballot.getPasswordHash();
 		byte[][] encryptedVote = ballot.getVote();
-		
-		//Check the userId+passwordHash is a legal combination
-		Model.validateUser(userId, passwordHash);
 		
 		Model.processVote(userId, encryptedVote);
 		

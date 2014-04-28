@@ -26,6 +26,7 @@ public class ValueIdentifiers {
 	private static final String SIGNATURE = "signature";
 	private static final String VOTES = "votes";
 	private static final String ELECTION_OPTION_ID = "electionOptionId";
+	private static final String SID = "sid";
 	
 	public static String getVotes() {
 		return VOTES;
@@ -83,5 +84,8 @@ public class ValueIdentifiers {
 	}
 	public static String getSignature() {
 		return SIGNATURE;
+	}
+	public static String getSid() {
+		return SID;
 	}
 }
