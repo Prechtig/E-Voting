@@ -1,6 +1,7 @@
 package org.evoting.database.entities;
 
 import javax.persistence.Column;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 
@@ -9,7 +10,7 @@ import javax.persistence.MappedSuperclass;
  */
 @MappedSuperclass
 abstract public class BaseEntity {
-	@Id
+	@Id @GeneratedValue
 	@Column(name = "id", updatable = false, nullable = false)
 	private int id;
 	

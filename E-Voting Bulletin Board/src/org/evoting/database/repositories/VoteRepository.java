@@ -18,13 +18,18 @@ public class VoteRepository extends EntityRepository<Vote> {
 		super(Vote.class, entMgr);
 	}
 	
+	public Vote findById(int id) {
+		String query = "SELECT v FROM Vote v WHERE v.id = ?1";
+		return super.findSingleByQuery(query, id);
+	}
+	
 	/**
 	 * @param userId The id of the user to find the vote for
 	 * @return The vote for the user with the given userId, otherwise null
 	 */
-	public Vote findById(int userId) {
-		String query = "SELECT v FROM Vote v WHERE v.id = ?1";
-		return super.findSingleByQuery(query, userId);
+	public List<Vote> findByUserId(String userId) {
+		String query = "SELECT v FROM Vote v WHERE v.userId = ?1";
+		return super.findByQuery(query, userId);
 	}
 	
 	public List<Vote> findAll() {
@@ -33,7 +38,7 @@ public class VoteRepository extends EntityRepository<Vote> {
 	}
 	
 	public List<Vote> findAllValid() {
-		String query = "SELECT v FROM Vote v WHERE v.timestamp = (SELECT MAX(vv.timestamp) FROM Vote vv WHERE vv.id = v.id)";
+		String query = "SELECT v FROM Vote v WHERE v.timestamp = (SELECT MAX(vv.timestamp) FROM Vote vv WHERE vv.userId = v.userId)";
 		return super.findByQuery(query);
 	}
 }

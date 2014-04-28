@@ -10,6 +10,9 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "Votes")
 public class Vote extends BaseEntity {
+	@Column(name = "userId", nullable = false)
+	private String userId;
+	
 	// The encrypted vote
 	@Column(name = "encryptedVote", columnDefinition = "blob", nullable = false)
 	private byte[][] encryptedVote;
@@ -21,8 +24,9 @@ public class Vote extends BaseEntity {
 	 * @param userId The id of the user
 	 * @param encryptedVote The encrypted vote for the user
 	 */
-	public Vote(int userId, byte[][] encryptedVote, long timestamp) {
-		super(userId);
+	public Vote(String userId, byte[][] encryptedVote, long timestamp) {
+		super();
+		this.userId = userId;
 		this.encryptedVote = encryptedVote;
 		this.timestamp = timestamp;
 	}
@@ -40,5 +44,9 @@ public class Vote extends BaseEntity {
 	 */
 	public byte[][] getEncryptedVote() {
 		return this.encryptedVote;
+	}
+	
+	public long getTimestamp() {
+		return timestamp;
 	}
 }

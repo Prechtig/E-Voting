@@ -26,10 +26,10 @@ public class EncryptedBallot {
 	 * @param vote The vote of the voter
 	 * @throws InvalidVoteException Is thrown if the vote is invalid
 	 */
-	public EncryptedBallot(int userId, String sid, int electionId, int[] vote) throws InvalidVoteException {
-		this.userId = encryptInteger(userId);
+	public EncryptedBallot(String userId, String sid, int electionId, int[] vote) throws InvalidVoteException {
+		this.userId = encrypt(userId);
 		this.sid = sid;
-		this.electionId = encryptInteger(electionId);
+		this.electionId = encrypt(electionId);
 		this.vote = encryptVote(vote);
 		//TODO: generate signature
 		//this.signature = Security.sign(Security.getBulletinBoardRSAPublicKey(), this.userId, this.passwordHash, this.electionId);
@@ -61,13 +61,17 @@ public class EncryptedBallot {
 		}
 		this.signature = encryptedBallot.getFirstChild(ValueIdentifiers.getSignature()).byteArrayValue().getBytes();
 	}
+	
+	private byte[] encrypt(String value) {
+		return Security.encryptRSA(value, Security.getBulletinBoardRSAPublicKey());
+	}
 
 	/**
 	 * Encrypts the userId.
 	 * @param userId The userId to encrypt
 	 * @return The encrypted userId
 	 */
-	private byte[] encryptInteger(int value) {
+	private byte[] encrypt(int value) {
 		byte[] bytes = Converter.toByteArray(value);
 		return Security.encryptRSA(bytes, Security.getBulletinBoardRSAPublicKey());
 	}
@@ -75,6 +79,10 @@ public class EncryptedBallot {
 	private int decryptInteger(byte[] value) {
 		byte[] decryptedValue = Security.decryptRSA(value, Security.getBulletinBoardRSAPrivateKey());
 		return Converter.toInt(decryptedValue);
+	}
+	
+	private String decryptString(byte[] value) {
+		return new String(Security.decryptRSA(value, Security.getBulletinBoardRSAPrivateKey()));
 	}
 	
 	/**
@@ -135,7 +143,7 @@ public class EncryptedBallot {
 	 * @return The decrypted version of the decryptedBallot
 	 */
 	public Ballot getBallot() {
-		return new Ballot(sid, decryptInteger(userId), decryptInteger(electionId), vote, signature);
+		return new Ballot(sid, decryptString(userId), decryptInteger(electionId), vote, signature);
 	}
 
 }

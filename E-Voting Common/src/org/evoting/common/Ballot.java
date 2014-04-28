@@ -5,13 +5,13 @@ public class Ballot
 {
 	private final String sid;
 	// The id that identifies the voter among other voters.
-	private final int userId;
+	private final String userId;
 	private final int electionId;
 	// Contains the encrypted vote
 	private final byte[][] vote;
 	private final byte[] signature;
 	
-	public Ballot(String sid, int userId, int electionId, byte[][] vote, byte[] signature)
+	public Ballot(String sid, String userId, int electionId, byte[][] vote, byte[] signature)
 	{
 		this.sid = sid;
 		this.userId = userId;
@@ -24,7 +24,7 @@ public class Ballot
 		return sid;
 	}
 
-	public int getUserId() {
+	public String getUserId() {
 		return userId;
 	}
 	
