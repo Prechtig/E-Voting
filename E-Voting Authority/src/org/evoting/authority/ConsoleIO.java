@@ -58,11 +58,11 @@ public class ConsoleIO extends JavaService {
 
 			switch (input) {
 			// Sart election
-			case "start":
+			case "start"://TODO: Jolie needs
 				userStartElection();
 				break;
 			// Stop election
-			case "stop":
+			case "stop"://TODO: 
 				stopElection();
 				break;
 			// Load electionOptions or keys

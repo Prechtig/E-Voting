@@ -20,115 +20,160 @@ import java.util.ArrayList;
 import org.bouncycastle.crypto.params.ElGamalParameters;
 import org.bouncycastle.crypto.params.ElGamalPrivateKeyParameters;
 import org.bouncycastle.crypto.params.ElGamalPublicKeyParameters;
+import org.evoting.common.exceptions.CorruptDataException;
 import org.evoting.database.entities.ElectionOption;
 
 public class Importer {
+	
+	/**
+	 * Loads ElGamal public key parameters from file
+	 * <p>
+	 * File structure:
+	 * <br>
+	 * y: BIGINTEGER <br>
+	 * g: BIGINTEGER <br>
+	 * p: BIGINTEGER <br>
+	 * 
+	 * @param fileName Path to the file containing the ElGamal public key
+	 * @return The corresponding ElGamal public key parameters
+	 */
 	public static ElGamalPublicKeyParameters importElGamalPublicKeyParameters(String fileName) {
-		BigInteger y = null;
-		BigInteger g = null;
-		BigInteger p = null;
+		//Retreives the 3 values for the parameters
+		BigInteger[] result = loadElGamalKeyFile(fileName, KeyType.PUBLIC);
 
-		try {
-			File file = new File(fileName);
+		//Sets the values
+		BigInteger y = result[0];
+		BigInteger g = result[1];
+		BigInteger p = result[2];
 
-			if (file.exists()) {
-				FileReader fr = new FileReader(file);
-				BufferedReader br = new BufferedReader(fr);
-				String line;
-				while ((line = br.readLine()) != null) {
-					switch (line.charAt(0)) {
-					case 'y':
-						y = new BigInteger(line.substring(2));
-						break;
-					case 'g':
-						g = new BigInteger(line.substring(2));
-						break;
-					case 'p':
-						p = new BigInteger(line.substring(2));
-						break;
-					default:
-						throw new IOException("Corrupted file");
-					}
-				}
-				br.close();
-			}
-
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
+		//Create and return value
 		return new ElGamalPublicKeyParameters(y, new ElGamalParameters(g, p));
 	}
 
+	/**
+	 * Loads ElGamal public key parameters from file
+	 * <p>
+	 * File structure:
+	 * <br>
+	 * x: BIGINTEGER <br>
+	 * g: BIGINTEGER <br>
+	 * p: BIGINTEGER <br>
+	 * 
+	 * @param fileName Path to the file containing the ElGamal private key
+	 * @return The corresponding ElGamal private key parameters
+	 */
 	public static ElGamalPrivateKeyParameters importElGamalPrivateKeyParameters(String fileName) {
-		// load file
-		// get
-		BigInteger x = null;
-		BigInteger g = null;
-		BigInteger p = null;
+		//Retreives the 3 values for the parameters
+		BigInteger[] result = loadElGamalKeyFile(fileName, KeyType.PRIVATE);
 
+		//Sets the values
+		BigInteger x = result[0];
+		BigInteger g = result[1];
+		BigInteger p = result[2];
+
+		//Create and return value
+		return new ElGamalPrivateKeyParameters(x, new ElGamalParameters(g, p));
+	}
+
+	/**
+	 * 
+	 * @param fileName
+	 * @param type
+	 * @return
+	 */
+	private static BigInteger[] loadElGamalKeyFile(String fileName, KeyType type) {
+		BigInteger[] result = new BigInteger[3];
 		try {
 			File file = new File(fileName);
 
 			if (file.exists()) {
 				FileReader fr = new FileReader(file);
 				BufferedReader br = new BufferedReader(fr);
+				int i = 0;
 				String line;
 				while ((line = br.readLine()) != null) {
-					switch (line.charAt(0)) {
-					case 'x':
-						x = new BigInteger(line.substring(2));
+					switch (type) {
+					case PUBLIC:
+						result[i] = ElGamalKeySwitch(line, type);
 						break;
-					case 'g':
-						g = new BigInteger(line.substring(2));
+					case PRIVATE:
+						result[i] = ElGamalKeySwitch(line, type);
 						break;
-					case 'p':
-						p = new BigInteger(line.substring(2));
-						break;
-					default:
-						throw new IOException("Corrupted file");
 					}
+					i++;
 				}
 				br.close();
 			}
 
+		} catch (CorruptDataException e) {
+			System.out.println("ElGamal key file is corrupted");
+			e.printStackTrace();
 		} catch (IOException e) {
+			System.out.println("Could not work with ElGamal key file");
 			e.printStackTrace();
 		}
 
-		return new ElGamalPrivateKeyParameters(x, new ElGamalParameters(g, p));
+		return result;
 	}
 
-	public static ArrayList<ElectionOption> importElectionOptions(String fileName){		
+	private static BigInteger ElGamalKeySwitch(String line, KeyType type) throws CorruptDataException {
+		if (type != null && type == KeyType.PUBLIC) {
+			switch (line.charAt(0)) {
+			case 'y':
+				return new BigInteger(line.substring(2));
+			case 'g':
+				return new BigInteger(line.substring(2));
+			case 'p':
+				return new BigInteger(line.substring(2));
+			default:
+				throw new CorruptDataException("Corrupted file");
+			}
+		} else if (type != null && type == KeyType.PRIVATE) {
+			switch (line.charAt(0)) {
+			case 'x':
+				return new BigInteger(line.substring(2));
+			case 'g':
+				return new BigInteger(line.substring(2));
+			case 'p':
+				return new BigInteger(line.substring(2));
+			default:
+				throw new CorruptDataException("Corrupted file");
+			}
+		}
+		//Should not happen
+		return null;
+	}
+	
+	public static ArrayList<ElectionOption> importElectionOptions(String fileName) {
 		try {
 			File file = new File(fileName);
 
 			if (file.exists()) {
 				FileReader fr = new FileReader(file);
 				BufferedReader br = new BufferedReader(fr);
-				
+
 				String delimiter = br.readLine();
 				ArrayList<ElectionOption> electionOptions = new ArrayList<ElectionOption>();
-				
+
 				String line;
 				while ((line = br.readLine()) != null) {
 					String[] parts = line.split(delimiter);
 					int electionOptionId = Integer.parseInt(parts[0]);
 					String name = parts[1];
 					int partyId = Integer.parseInt(parts[2]);
-					
+
 					ElectionOption e = new ElectionOption(electionOptionId, name, partyId);
 					electionOptions.add(e);
 				}
 				br.close();
-				
-			return electionOptions;
+
+				return electionOptions;
 			}
 		} catch (IOException e) {
 			System.out.println("Error working with election options file");
 			e.printStackTrace();
 		}
-		
+
 		return null;
 	}
 
