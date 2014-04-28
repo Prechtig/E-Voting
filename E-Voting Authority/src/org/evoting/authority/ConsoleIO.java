@@ -7,8 +7,8 @@ import java.security.PublicKey;
 import java.security.SecureRandom;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import jolie.net.CommMessage;
 import jolie.runtime.ByteArray;
@@ -19,6 +19,7 @@ import jolie.runtime.ValueVector;
 import org.bouncycastle.crypto.params.ElGamalPrivateKeyParameters;
 import org.bouncycastle.crypto.params.ElGamalPublicKeyParameters;
 import org.evoting.common.AllVotesAuthority;
+import org.evoting.common.AnonymousVote;
 import org.evoting.common.Converter;
 import org.evoting.common.Exporter;
 import org.evoting.common.Importer;
@@ -39,7 +40,7 @@ public class ConsoleIO extends JavaService {
 	private String aCommunicationPath = "/";
 	private String electionOptionsFile = "ElectionOptions.txt";
 
-	private static ArrayList<ElectionOption> eOptions;
+	private static List<ElectionOption> eOptions;
 
 	private SecureRandom random = new SecureRandom();
 
@@ -215,26 +216,90 @@ public class ConsoleIO extends JavaService {
 	}
 
 	/**
-	 * Retrieves all votes from bulletinboard and calculates the result
+	 * Retrieves all votes from bulletinboard and calculates the result.
+	 * @return The result of the election.
 	 */
-	private void countVotes() {
+	private long[] countVotes() {
 		CommMessage request = CommMessage.createRequest("", aCommunicationPath, null);
 		try {
 			CommMessage response = sendMessage(request).recvResponseFor(request);
 			Value listOfVotesValue = response.value();
 			AllVotesAuthority allVotes = new AllVotesAuthority(listOfVotesValue);
 			
-			boolean isNotEdited = Security.authenticate(Converter.convert(allVotes), allVotes.getSignature(), Security.getBulletinBoardRSAPublicKey());
-			if(!isNotEdited) {
+			boolean isCorruptEdited = Security.authenticate(Converter.convert(allVotes), allVotes.getSignature(), Security.getBulletinBoardRSAPublicKey());
+			if(!isCorruptEdited) {
 				throw new CorruptDataException();
 			}
 			
+			byte[][] voteProducts = new byte[eOptions.size()][];
+			boolean firstIteration = true;
+			for(AnonymousVote v : allVotes.getListOfVotes()) {
+				if(firstIteration) {
+					for(int i = 0; i < voteProducts.length; i++) {
+						voteProducts[i] = v.getEncryptedVote()[i];
+					}
+				} else {
+					for (int i = 0; i < voteProducts.length; i++) {
+						voteProducts[i] = Security.multiplyElGamalCiphers(voteProducts[i], v.getEncryptedVote()[i]);
+					}
+				}
+			}
 			
-
+			long[] result = new long[eOptions.size()];
+			for (int i = 0; i < result.length; i++) {
+				result[i] = Security.decryptExponentialElgamal(voteProducts[i], Security.getElgamalPrivateKey());
+			}
+			
+			return result;
 		} catch (IOException e) {
 			//TODO something
 			e.printStackTrace();
 		}
+		
+		return null;
+	}
+	
+	private String electionResultToString(long[] result, List<ElectionOption> electionOptions) {
+		String[] electionOptionsOrdered = new String[electionOptions.size()];
+		for(ElectionOption e : electionOptions) {
+			if(e.getPartyId() != -1) {
+				electionOptionsOrdered[e.getId()] = e.getName() + " from " + getPartyName(e.getPartyId(), electionOptions);
+			} else {
+				electionOptionsOrdered[e.getId()] = e.getName();
+			}
+		}
+		
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0; i < electionOptionsOrdered.length; i++) {
+			sb.append(electionOptionsOrdered[i]);
+			sb.append(" with ");
+			sb.append(result[i]);
+			sb.append(" votes.\n");
+		}
+		
+		return sb.toString();
+	}
+	
+	private long[] addCandidateVotesToParties(long[] electionResult, List<ElectionOption> electionOptions) {
+		long[] result = new long[electionOptions.size()];
+		
+		for(ElectionOption e : electionOptions) {
+			if(e.getId() != e.getPartyId() && e.getPartyId() != -1) {
+				result[e.getPartyId()] = result[e.getPartyId()] + electionResult[e.getId()];
+			}
+		}
+		
+		return result;
+	}
+	
+	private String getPartyName(int partyId, List<ElectionOption> electionOptions) {
+		for(ElectionOption e : electionOptions) {
+			if(e.getId() == partyId) {
+				return e.getName();
+			}
+		}
+		
+		return "No party";
 	}
 
 	/**
