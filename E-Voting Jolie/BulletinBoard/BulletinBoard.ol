@@ -21,9 +21,9 @@ embedded {
     Java: "org.evoting.bulletinboard.Controller" in BBJavaController
 }
 
-cset {
-	sid: VoteRequest.sid
-}
+//cset {
+//	sid: VoteRequest.sid
+//}
 
 main {
 	[ getPublicKeys( )( publicKeys ) {
@@ -41,11 +41,12 @@ main {
 		login@BBJavaController( userInformation )( confirmation );
 		loginResponse.sid = csets.sid = new
 	}
-	processVote( encryptedBallot )( registered ) {
-		encryptedBallot.userId = userInformation.userId;
-		processVote@BBJavaController( encryptedBallot )( registered );
-		println@Console( "Registered vote: " + registered )()
-	} ]
+	//processVote( encryptedBallot )( registered ) {
+	//	encryptedBallot.userId = userInformation.userId;
+	//	processVote@BBJavaController( encryptedBallot )( registered );
+	//	println@Console( "Registered vote: " + registered )()
+	//}
+	] { nullProcess }
 
 	[ processVote( encryptedBallot )( registered ) {
 		//Process the vote in the embedded Java service
