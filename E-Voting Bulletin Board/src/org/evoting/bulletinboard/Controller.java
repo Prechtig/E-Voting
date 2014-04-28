@@ -68,7 +68,7 @@ public class Controller extends JavaService {
 		//TODO: Is this implementation correct?
 		Ballot ballot = new EncryptedBallot(valueEncryptedBallot).getBallot();
 		
-		int userId = ballot.getUserId();
+		String userId = ballot.getUserId();
 		byte[][] encryptedVote = ballot.getVote();
 		
 		Model.processVote(userId, encryptedVote);

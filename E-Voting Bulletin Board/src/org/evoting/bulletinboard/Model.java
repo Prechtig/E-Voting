@@ -46,7 +46,7 @@ public class Model {
 	 * @param userId The id of the user
 	 * @param encryptedVote The encrypted ballot of the user
 	 */
-	public static void processVote(int userId, byte[][] encryptedVote) {
+	public static void processVote(String userId, byte[][] encryptedVote) {
 		EntityManager entMgr = beginDatabaseSession();
 		
 		Vote vote = new Vote(userId, encryptedVote, System.currentTimeMillis());
