@@ -18,6 +18,7 @@ import jolie.runtime.ValueVector;
 
 import org.bouncycastle.crypto.params.ElGamalPrivateKeyParameters;
 import org.bouncycastle.crypto.params.ElGamalPublicKeyParameters;
+import org.evoting.authority.commands.Command;
 import org.evoting.common.AllVotesAuthority;
 import org.evoting.common.AnonymousVote;
 import org.evoting.common.Converter;
@@ -35,11 +36,11 @@ public class ConsoleIO extends JavaService {
 	private String bbRsaPrivKeyFilepath = "BbRsaPriv";
 	private String bbRsaPubKeyFilepath = "BbRsaPub";
 
-	private boolean electionRunning;
-
 	private String aCommunicationPath = "/";
 	private String electionOptionsFile = "ElectionOptions.txt";
 
+	private boolean electionRunning;
+	
 	private static List<ElectionOption> eOptions;
 
 	private SecureRandom random = new SecureRandom();
@@ -48,51 +49,44 @@ public class ConsoleIO extends JavaService {
 	 * Main method. Used to get users input
 	 */
 	public void getUserInput() {
-		System.out.println("Initializing election details");
-		// Initialize the current election status
-		updateElectionStatus();
+		System.out.println("Enter commmand: ");
+		String input = System.console().readLine().toLowerCase();
 
-		// Program loop
-		while (true) {
-			System.out.println("Enter commmand: ");
-			String input = System.console().readLine().toLowerCase();
-
-			switch (input) {
-			// Sart election
-			case "start":
-				userStartElection();
-				break;
-			// Stop election
-			case "stop":
-				stopElection();
-				break;
-			// Load electionOptions or keys
-			case "load":
-				userCommandLoad();
-				break;
-			// Generate keys
-			case "generate":
-				userCommandGenerate();
-				break;
-			// Send electionOptions
-			case "send":
-				userCommandSend();
-				break;
-			// Count votes
-			case "count":
-				countVotes();
-				break;
-			// Update the election status
-			case "update":
-				updateElectionStatus();
-				break;
-			// Terminate program
-			case "exit":
-				return;
-			default:
-				System.out.println("Command not found");
-				break;
-			}
+		switch (input) {
+		// Sart election
+		case "start":
+			userStartElection();
+			break;
+		// Stop election
+		case "stop":
+			stopElection();
+			break;
+		// Load electionOptions or keys
+		case "load":
+			userCommandLoad();
+			break;
+		// Generate keys
+		case "generate":
+			userCommandGenerate();
+			break;
+		// Send electionOptions
+		case "send":
+			userCommandSend();
+			break;
+		// Count votes
+		case "count":
+			countVotes();
+			break;
+		// Update the election status
+		case "update":
+			updateElectionStatus();
+			break;
+		// Terminate program
+		case "exit":
+			return;
+		default:
+			System.out.println("Command not found");
+			break;
 		}
 	}
 
@@ -531,15 +525,11 @@ public class ConsoleIO extends JavaService {
 		}
 		return null;
 	}
-
-	/**
-	 * Generates a random string
-	 * 
-	 * @return A random string
-	 */
+	
 	private String nextRandomString() {
 		return new BigInteger(130, random).toString(32);
 	}
+	
 
 	public static void main(String[] args) throws ParseException {
 		ConsoleIO io = new ConsoleIO();
