@@ -8,6 +8,7 @@ import jolie.runtime.Value;
 import jolie.runtime.ValueVector;
 
 import org.evoting.common.exceptions.BadValueException;
+import org.evoting.database.entities.Vote;
 
 
 public class AllVotesAuthority {

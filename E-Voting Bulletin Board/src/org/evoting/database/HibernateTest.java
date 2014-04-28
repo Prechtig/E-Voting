@@ -8,9 +8,9 @@ import javax.persistence.EntityManager;
 
 import org.bouncycastle.crypto.params.ElGamalPublicKeyParameters;
 import org.evoting.common.Converter;
-import org.evoting.common.Vote;
 import org.evoting.database.entities.ElectionOption;
 import org.evoting.database.entities.Election;
+import org.evoting.database.entities.Vote;
 import org.evoting.database.repositories.ElectionOptionRepository;
 import org.evoting.database.repositories.ElectionRepository;
 import org.evoting.database.repositories.VoteRepository;
