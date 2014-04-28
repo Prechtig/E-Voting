@@ -15,7 +15,8 @@ public class ConsoleIO
 		Console console = System.console();
 		System.out.println("Number of canditates is: " + numberOfElectionOptions);
 		String input = "";
-		int userId, electionOptionId;
+		int electionOptionId;
+		String userId;
 		String password;
 		UserInputData userData = new UserInputData();
 		
@@ -27,7 +28,7 @@ public class ConsoleIO
 			}
 		}
 		
-		userId = Integer.parseInt(input);
+		userId = input;
 		input = "";
 		
 		while(!isValidPassword(input)) {

@@ -9,7 +9,7 @@
 
 		<!-- This is where we tell JPA/Hibernate about our @Entity objects -->
 		<class>org.evoting.database.entities.ElectionOption</class>
-		<class>org.evoting.database.entities.Timestamp</class>
+		<class>org.evoting.database.entities.Election</class>
 		<class>org.evoting.database.entities.Vote</class>
 
 		<properties>
@@ -17,7 +17,7 @@
 			<property name="javax.persistence.jdbc.url" value="jdbc:mysql://mysql.itu.dk:3306/evoting" />
 			<property name="javax.persistence.jdbc.user" value="evoting_admin" />
 			<property name="javax.persistence.jdbc.password" value="password" />
-			<property name="hibernate.dialect" value="org.hibernate.dialect.MySQLDialect" />
+			<property name="hibernate.dialect" value="org.hibernate.dialect.MySQL5InnoDBDialect" />
 			
 			<!-- Update the database schema on startup: "update"; "validate" to only check -->
 			<property name="hibernate.hbm2ddl.auto" value="update" />

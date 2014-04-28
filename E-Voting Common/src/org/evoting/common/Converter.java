@@ -37,6 +37,7 @@ public class Converter {
 		return bb.putLong(value).array();
 	}
 	
+	/* TODO: Does not compile
 	public static byte[] convert(AllVotesAuthority allVotesAuthority)
 	{
 		ArrayList<byte[]> byteList = new ArrayList<byte[]>();
@@ -51,4 +52,5 @@ public class Converter {
 		byte[] result = Security.concatenateByteArrays(byteList.toArray(bytes));
 		return result;
 	}
+	*/
 }

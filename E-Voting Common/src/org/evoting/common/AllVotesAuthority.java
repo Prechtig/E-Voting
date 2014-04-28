@@ -8,10 +8,11 @@ import jolie.runtime.Value;
 import jolie.runtime.ValueVector;
 
 import org.evoting.common.exceptions.BadValueException;
+import org.evoting.database.entities.Vote;
 
 
 public class AllVotesAuthority {
-	private ArrayList<AnonymousVote> listOfVotes;
+	private List<AnonymousVote> listOfVotes;
 	private byte[] signature;
 	
 	public AllVotesAuthority(List<Vote> voteList)
@@ -41,7 +42,7 @@ public class AllVotesAuthority {
 		signature = value.getFirstChild(ValueIdentifiers.getSignature()).byteArrayValue().getBytes();
 	}
 	
-	public ArrayList<AnonymousVote> getListOfVotes() {
+	public List<AnonymousVote> getListOfVotes() {
 		return listOfVotes;
 	}
 
