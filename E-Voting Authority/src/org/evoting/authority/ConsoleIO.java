@@ -81,7 +81,7 @@ public class ConsoleIO extends JavaService {
 				break;
 			// Count votes
 			case "count":
-				//countVotes();
+				countVotes();
 				break;
 			// Update the election status
 			case "update":
@@ -220,7 +220,6 @@ public class ConsoleIO extends JavaService {
 	 * Retrieves all votes from bulletinboard and calculates the result.
 	 * @return The result of the election.
 	 */
-	/*//TODO: does not compile ALSO UNCOMMENTED THE CALL ON LINE 84
 	 private long[] countVotes() {
 	 
 		CommMessage request = CommMessage.createRequest("", aCommunicationPath, null);
@@ -261,7 +260,7 @@ public class ConsoleIO extends JavaService {
 		
 		return null;
 	}
-	*/
+	
 	
 	private String electionResultToString(long[] result, List<ElectionOption> electionOptions) {
 		String[] electionOptionsOrdered = new String[electionOptions.size()];
