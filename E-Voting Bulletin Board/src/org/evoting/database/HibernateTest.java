@@ -35,9 +35,10 @@ public class HibernateTest {
 		ElectionOption c1 = new ElectionOption(2, "Mark Thorhauge", 0);
 		ElectionOption c2 = new ElectionOption(3, "Andreas Precht Poulsen", 0);
 		ElectionOption c3 = new ElectionOption(4, "Gregers Jensen", 0);
+		Date startDate = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse("2014-06-30 08:00");
 		Date endDate = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse("2014-06-31 20:00");
 
-		Election t0 = new Election(0, endDate);
+		Election t0 = new Election(0, startDate, endDate);
 
 		EntityManager entMgr = EntityManagerUtil.getEntityManager();
 		entMgr.getTransaction().begin();

@@ -56,6 +56,10 @@ main {
 		getAllVotes@BBJavaController( )( allVotes )
 	} ] { nullProcess }
 
+	[ getAllVotesAuthority( validator )( allVotes ) {
+		getAllVotesAuthority( validator )( allVotes )
+	} ] { nullProcess }
+
 	[ getElectionStatus( )( confirmation ) {
 		getElectionStatus@BBJavaController( )( confirmation )
 	} ] { nullProcess }

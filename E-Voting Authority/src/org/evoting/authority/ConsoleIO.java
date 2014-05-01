@@ -19,7 +19,7 @@ import jolie.runtime.ValueVector;
 import org.bouncycastle.crypto.params.ElGamalPrivateKeyParameters;
 import org.bouncycastle.crypto.params.ElGamalPublicKeyParameters;
 //import org.evoting.authority.commands.Command; //TODO: Does not exist
-import org.evoting.common.AllVotesAuthority;
+import org.evoting.common.AnonymousVoteList;
 import org.evoting.common.AnonymousVote;
 import org.evoting.common.Converter;
 import org.evoting.common.Exporter;
@@ -226,7 +226,7 @@ public class ConsoleIO extends JavaService {
 		try {
 			CommMessage response = sendMessage(request).recvResponseFor(request);
 			Value listOfVotesValue = response.value();
-			AllVotesAuthority allVotes = new AllVotesAuthority(listOfVotesValue);
+			AnonymousVoteList allVotes = new AnonymousVoteList(listOfVotesValue);
 			
 			boolean isCorruptEdited = Security.authenticate(Converter.convert(allVotes), allVotes.getSignature(), Security.getBulletinBoardRSAPublicKey());
 			if(!isCorruptEdited) {

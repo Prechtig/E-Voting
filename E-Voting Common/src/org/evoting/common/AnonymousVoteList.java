@@ -11,11 +11,11 @@ import org.evoting.common.exceptions.BadValueException;
 import org.evoting.database.entities.Vote;
 
 
-public class AllVotesAuthority {
+public class AnonymousVoteList {
 	private List<AnonymousVote> listOfVotes;
 	private byte[] signature;
 	
-	public AllVotesAuthority(List<Vote> voteList)
+	public AnonymousVoteList(List<Vote> voteList)
 	{
 		listOfVotes = new ArrayList<AnonymousVote>();
 		for(Vote v : voteList) {
@@ -23,7 +23,7 @@ public class AllVotesAuthority {
 		}
 	}
 	
-	public AllVotesAuthority(Value value) throws BadValueException
+	public AnonymousVoteList(Value value) throws BadValueException
 	{
 		if(!value.hasChildren(ValueIdentifiers.getVotes()) ||
 		   !value.hasChildren(ValueIdentifiers.getSignature())) {
@@ -54,9 +54,6 @@ public class AllVotesAuthority {
 	{
 		byte[][] encryptedVote = new byte[voteVector.size()][];
 		
-		//TODO: What is this "i" for?
-		@SuppressWarnings("unused")
-		int i = 0;
 		for(Value v : voteVector) {
 			encryptedVote[v.getFirstChild(ValueIdentifiers.getElectionOptionId()).intValue()] = v.byteArrayValue().getBytes();
 		}
