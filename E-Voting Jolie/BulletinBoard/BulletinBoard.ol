@@ -21,9 +21,9 @@ embedded {
     Java: "org.evoting.bulletinboard.Controller" in BBJavaController
 }
 
-//cset {
-//	sid: VoteRequest.sid
-//}
+cset {
+	sid: EncryptedBallot.sid
+}
 
 main {
 	[ getPublicKeys( )( publicKeys ) {
@@ -38,8 +38,10 @@ main {
 	} ] { nullProcess }
 
 	[ login( userInformation )( loginResponse ) {
-		login@BBJavaController( userInformation )( confirmation );
-		loginResponse.sid = csets.sid = new
+		login@BBJavaController( userInformation )( successful );
+		if(successful) {
+			loginResponse.sid = csets.sid = new	
+		}
 	} ] { processVote( encryptedBallot )( registered ) {
 		encryptedBallot.userId = userInformation.userId;
 		processVote@BBJavaController( encryptedBallot )( registered );
