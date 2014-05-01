@@ -18,8 +18,6 @@ import jolie.runtime.ValueVector;
 
 import org.bouncycastle.crypto.params.ElGamalPrivateKeyParameters;
 import org.bouncycastle.crypto.params.ElGamalPublicKeyParameters;
-//import org.evoting.authority.commands.Command; //TODO: Does not exist
-import org.evoting.common.AnonymousVoteList;
 import org.evoting.common.AnonymousVote;
 import org.evoting.common.Converter;
 import org.evoting.common.Exporter;
@@ -27,6 +25,7 @@ import org.evoting.common.Importer;
 import org.evoting.common.exceptions.CorruptDataException;
 import org.evoting.database.entities.ElectionOption;
 import org.evoting.security.Security;
+//import org.evoting.authority.commands.Command; //TODO: Does not exist
 
 public class ConsoleIO extends JavaService {
 	private String ElGamalPublicKeyFile = "ElGamalPublicKey";

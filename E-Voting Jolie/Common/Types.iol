@@ -39,22 +39,6 @@ type PublicKeys: void {
 	.rsaPublicKey: raw
 }
 
-type ElectionStatus: void {
-	.running: bool
-	.endTime: long
-}
-
-type ElectionStart: void {
-	.startTime: long
-	.endTime: long
-	.validator: Validation
-}
-
-type Validation: void {
-	.message: string
-	.signature: raw
-}
-
 type LoginRequest: void {
 	.userId: int
 	.passwordHash: string
@@ -64,11 +48,30 @@ type LoginResponse: void {
 	.sid: string
 }
 
-type AuthElectionOptions: void {
+
+
+
+type Validation: void {
+	.message: string
+	.signature: raw
+}
+
+type ElectionStatus: void {
+	.running: bool
+	.endTime: long
+}
+
+type ElectionOptionsList: void {
 	.electionOptions: void {
 		.id: int
 		.name: string
 		.partyId: int
 	}
+	.validator: Validation
+}
+
+type ElectionStart: void {
+	.startTime: long
+	.endTime: long
 	.validator: Validation
 }

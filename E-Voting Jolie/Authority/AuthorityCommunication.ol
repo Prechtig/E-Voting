@@ -48,7 +48,7 @@ main
 		startElection@BulletinBoardService( ElectionStart )( confirmation )
 	} ] { nullProcess }
 
-	[ sendElectionOptionList( AuthElectionOptions )( confirmation ) { // Send the list of electionoptions
-		sendElectionOptionList@BulletinBoardService( AuthElectionOptions )( confirmation )
+	[ sendElectionOptionList( ElectionOptionsList )( confirmation ) { // Send the list of electionoptions
+		sendElectionOptionList@BulletinBoardService( ElectionOptionsList )( confirmation )
 	} ]  { nullProcess }
 }
