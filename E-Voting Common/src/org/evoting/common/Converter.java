@@ -3,6 +3,7 @@ package org.evoting.common;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.evoting.security.Security;
 
@@ -40,7 +41,7 @@ public class Converter {
 	public static byte[] convert(AllVotesAuthority allVotesAuthority)
 	{
 		ArrayList<byte[]> byteList = new ArrayList<byte[]>();
-		ArrayList<AnonymousVote> votes = allVotesAuthority.getListOfVotes();
+		List<AnonymousVote> votes = allVotesAuthority.getListOfVotes();
 		for(AnonymousVote v : votes) {
 			for(int i = 0; i < v.getEncryptedVote().length; i++) {
 				byteList.add(v.getEncryptedVote()[i]);
@@ -51,4 +52,5 @@ public class Converter {
 		byte[] result = Security.concatenateByteArrays(byteList.toArray(bytes));
 		return result;
 	}
+	
 }

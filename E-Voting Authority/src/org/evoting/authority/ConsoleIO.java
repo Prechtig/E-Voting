@@ -18,7 +18,7 @@ import jolie.runtime.ValueVector;
 
 import org.bouncycastle.crypto.params.ElGamalPrivateKeyParameters;
 import org.bouncycastle.crypto.params.ElGamalPublicKeyParameters;
-import org.evoting.authority.commands.Command;
+//import org.evoting.authority.commands.Command; //TODO: Does not exist
 import org.evoting.common.AllVotesAuthority;
 import org.evoting.common.AnonymousVote;
 import org.evoting.common.Converter;
@@ -49,44 +49,51 @@ public class ConsoleIO extends JavaService {
 	 * Main method. Used to get users input
 	 */
 	public void getUserInput() {
-		System.out.println("Enter commmand: ");
-		String input = System.console().readLine().toLowerCase();
+		System.out.println("Initializing election details");
+		// Initialize the current election status
+		updateElectionStatus();
 
-		switch (input) {
-		// Sart election
-		case "start":
-			userStartElection();
-			break;
-		// Stop election
-		case "stop":
-			stopElection();
-			break;
-		// Load electionOptions or keys
-		case "load":
-			userCommandLoad();
-			break;
-		// Generate keys
-		case "generate":
-			userCommandGenerate();
-			break;
-		// Send electionOptions
-		case "send":
-			userCommandSend();
-			break;
-		// Count votes
-		case "count":
-			countVotes();
-			break;
-		// Update the election status
-		case "update":
-			updateElectionStatus();
-			break;
-		// Terminate program
-		case "exit":
-			return;
-		default:
-			System.out.println("Command not found");
-			break;
+		// Program loop
+		while (true) {
+			System.out.println("Enter commmand: ");
+			String input = System.console().readLine().toLowerCase();
+
+			switch (input) {
+			// Sart election
+			case "start"://TODO: Jolie needs
+				userStartElection();
+				break;
+			// Stop election
+			case "stop"://TODO: 
+				stopElection();
+				break;
+			// Load electionOptions or keys
+			case "load":
+				userCommandLoad();
+				break;
+			// Generate keys
+			case "generate":
+				userCommandGenerate();
+				break;
+			// Send electionOptions
+			case "send":
+				userCommandSend();
+				break;
+			// Count votes
+			case "count":
+				countVotes();
+				break;
+			// Update the election status
+			case "update":
+				updateElectionStatus();
+				break;
+			// Terminate program
+			case "exit":
+				return;
+			default:
+				System.out.println("Command not found");
+				break;
+			}
 		}
 	}
 
@@ -213,7 +220,8 @@ public class ConsoleIO extends JavaService {
 	 * Retrieves all votes from bulletinboard and calculates the result.
 	 * @return The result of the election.
 	 */
-	private long[] countVotes() {
+	 private long[] countVotes() {
+	 
 		CommMessage request = CommMessage.createRequest("", aCommunicationPath, null);
 		try {
 			CommMessage response = sendMessage(request).recvResponseFor(request);
@@ -252,6 +260,7 @@ public class ConsoleIO extends JavaService {
 		
 		return null;
 	}
+	
 	
 	private String electionResultToString(long[] result, List<ElectionOption> electionOptions) {
 		String[] electionOptionsOrdered = new String[electionOptions.size()];
