@@ -1,5 +1,5 @@
 include "../Common/IBulletinBoard.iol"
-include "../Common/IAuthorityCommunication.iol"
+include "../Common/IAuthority.iol"
 include "console.iol"
 
 // Enables concurrent execution
@@ -8,22 +8,22 @@ execution {
 }
 
 outputPort BBJavaController {
-    Interfaces: IBulletinBoard, IAuthorityCommunication
+    Interfaces: IBulletinBoard, IAuthority
 }
 
 inputPort BulletinBoardService {
     Location: "socket://localhost:7000/"
     Protocol: sodep
-    Interfaces: IBulletinBoard, IAuthorityCommunication
+    Interfaces: IBulletinBoard, IAuthority
 }
 
 embedded {
     Java: "org.evoting.bulletinboard.Controller" in BBJavaController
 }
 
-//cset {
-//	sid: VoteRequest.sid
-//}
+cset {
+	sid: EncryptedBallot.sid
+}
 
 main {
 	[ getPublicKeys( )( publicKeys ) {
@@ -38,8 +38,10 @@ main {
 	} ] { nullProcess }
 
 	[ login( userInformation )( loginResponse ) {
-		login@BBJavaController( userInformation )( confirmation );
-		loginResponse.sid = csets.sid = new
+		login@BBJavaController( userInformation )( successful );
+		if(successful) {
+			loginResponse.sid = csets.sid = new	
+		}
 	} ] { processVote( encryptedBallot )( registered ) {
 		encryptedBallot.userId = userInformation.userId;
 		processVote@BBJavaController( encryptedBallot )( registered );
@@ -64,12 +66,8 @@ main {
 		getElectionStatus@BBJavaController( )( confirmation )
 	} ] { nullProcess }
 
-	[ startElection( )( confirmation ) {
-		startElection@BBJavaController( )( confirmation )
-	} ] { nullProcess }
-
-	[ stopElection( )( confirmation ) {
-		stopElection@BBJavaController( )( confirmation )
+	[ startElection( electionStart )( confirmation ) {
+		startElection@BBJavaController( electionStart )( confirmation )
 	} ] { nullProcess }
 
 	[ sendElectionOptionList( options )( confirmation ) {

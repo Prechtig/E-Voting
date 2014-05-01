@@ -5,6 +5,7 @@ import java.util.Date;
 
 import jolie.runtime.JavaService;
 import jolie.runtime.Value;
+import jolie.runtime.ValueVector;
 import jolie.runtime.embedding.RequestResponse;
 
 import org.evoting.bulletinboard.exceptions.ElectionNotStartedException;
@@ -14,6 +15,7 @@ import org.evoting.common.EncryptedBallot;
 import org.evoting.common.EncryptedElectionOptions;
 import org.evoting.common.Importer;
 import org.evoting.common.ValueIdentifiers;
+import org.evoting.database.entities.ElectionOption;
 import org.evoting.security.Security;
 
 public class Controller extends JavaService {
@@ -24,14 +26,27 @@ public class Controller extends JavaService {
 	private static Date electionStartDate;
 	private static Date electionEndDate;
 	
-	private void validate(Value validation) {
-		String message = validation.getFirstChild("message").strValue();
-		byte[] signature = validation.getFirstChild("signature").byteArrayValue().getBytes();
-		String hashedMessage = Security.hash(message);
-		if(!hashedMessage.equals(Security.decryptRSA(signature, Security.getAuthorityRSAPublicKey()))) {
-			throw new RuntimeException(); //TODO: throw correct exception
+	@RequestResponse
+	public Boolean sendElectionOptionList(Value electionOptions) {
+		validate(electionOptions.getFirstChild(ValueIdentifiers.getValidator()));
+		
+		ValueVector options = electionOptions.getChildren(ValueIdentifiers.getElectionOptions());
+		
+		ElectionOption[] arr = new ElectionOption[options.size()];
+		for(int i = 0; i < options.size(); i++) {
+			Value currentOption = options.get(i);
+			
+			int id = currentOption.getFirstChild(ValueIdentifiers.getId()).intValue();
+			String name = currentOption.getFirstChild(ValueIdentifiers.getName()).strValue();
+			int partyId = currentOption.getFirstChild(ValueIdentifiers.getPartyId()).intValue();
+			
+			arr[id] = new ElectionOption(id, name, partyId);
 		}
+		Model.setElectionOptions(arr);
+		
+		return Boolean.TRUE;
 	}
+	
 	
 	@RequestResponse
 	public Boolean startElection(Value value) {
@@ -46,19 +61,6 @@ public class Controller extends JavaService {
 		return Boolean.TRUE;
 	}
 	
-	@RequestResponse
-	public Boolean stopElection(Value value) {
-		//TODO: What to do with this method
-		validate(value.getFirstChild("validator"));
-		return Boolean.TRUE;
-	}
-	
-	@RequestResponse
-	public Boolean sendElectionOptionList(Value value) {
-		//TODO: implement
-		return Boolean.TRUE;
-	}
-
 	@RequestResponse
 	/**
 	 * Processes a vote, effectively saving it in the persistent storage
@@ -196,7 +198,14 @@ public class Controller extends JavaService {
 		return currentTime.after(electionStartDate) && currentTime.before(electionEndDate);
 	}
 	
-	public static void main(String[] args) {
-
+	private void validate(Value validation) {
+		String message = validation.getFirstChild("message").strValue();
+		byte[] signature = validation.getFirstChild("signature").byteArrayValue().getBytes();
+		String hashedMessage = Security.hash(message);
+		if(!hashedMessage.equals(Security.decryptRSA(signature, Security.getAuthorityRSAPublicKey()))) {
+			throw new RuntimeException(); //TODO: throw correct exception
+		}
 	}
+	
+	public static void main(String[] args) { }
 }

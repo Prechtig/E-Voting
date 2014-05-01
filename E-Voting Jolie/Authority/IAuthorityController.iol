@@ -1,3 +1,3 @@
 interface IAuthorityController {
-    RequestResponse: getUserInput( void )( void )
+	OneWay: run( void )
 }

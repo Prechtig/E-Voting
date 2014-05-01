@@ -53,7 +53,6 @@ type LoginRequest: void {
 type LoginResponse: void {
 	.sid: string
 }
-}
 
 type Validation: void {
 	.message: string
