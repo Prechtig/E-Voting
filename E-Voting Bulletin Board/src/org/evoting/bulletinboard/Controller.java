@@ -47,13 +47,6 @@ public class Controller extends JavaService {
 	}
 	
 	@RequestResponse
-	public Boolean stopElection(Value value) {
-		//TODO: What to do with this method
-		validate(value.getFirstChild("validator"));
-		return Boolean.TRUE;
-	}
-	
-	@RequestResponse
 	public Boolean sendElectionOptionList(Value value) {
 		//TODO: implement
 		return Boolean.TRUE;

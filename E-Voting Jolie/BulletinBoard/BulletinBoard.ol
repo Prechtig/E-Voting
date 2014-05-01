@@ -64,12 +64,8 @@ main {
 		getElectionStatus@BBJavaController( )( confirmation )
 	} ] { nullProcess }
 
-	[ startElection( )( confirmation ) {
-		startElection@BBJavaController( )( confirmation )
-	} ] { nullProcess }
-
-	[ stopElection( )( confirmation ) {
-		stopElection@BBJavaController( )( confirmation )
+	[ startElection( electionStart )( confirmation ) {
+		startElection@BBJavaController( electionStart )( confirmation )
 	} ] { nullProcess }
 
 	[ sendElectionOptionList( options )( confirmation ) {
