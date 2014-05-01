@@ -38,7 +38,7 @@ public class Converter {
 		return bb.putLong(value).array();
 	}
 	
-	public static byte[] convert(AllVotesAuthority allVotesAuthority)
+	public static byte[] convert(AnonymousVoteList allVotesAuthority)
 	{
 		ArrayList<byte[]> byteList = new ArrayList<byte[]>();
 		List<AnonymousVote> votes = allVotesAuthority.getListOfVotes();

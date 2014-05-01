@@ -4,12 +4,12 @@ import java.io.IOException;
 import java.util.List;
 
 import jolie.net.CommMessage;
-import jolie.runtime.Value;
 import jolie.runtime.JavaService;
+import jolie.runtime.Value;
 
 import org.evoting.authority.Model;
-import org.evoting.common.AllVotesAuthority;
 import org.evoting.common.AnonymousVote;
+import org.evoting.common.AnonymousVoteList;
 import org.evoting.common.Converter;
 import org.evoting.common.exceptions.CorruptDataException;
 import org.evoting.database.entities.ElectionOption;
@@ -40,7 +40,7 @@ public class CountVotes extends Command
 		try {
 			CommMessage response = js.sendMessage(request).recvResponseFor(request);
 			Value listOfVotesValue = response.value();
-			AllVotesAuthority allVotes = new AllVotesAuthority(listOfVotesValue);
+			AnonymousVoteList allVotes = new AnonymousVoteList(listOfVotesValue);
 			
 			boolean isCorruptEdited = Security.authenticate(Converter.convert(allVotes), allVotes.getSignature(), Security.getBulletinBoardRSAPublicKey());
 			if(!isCorruptEdited) {

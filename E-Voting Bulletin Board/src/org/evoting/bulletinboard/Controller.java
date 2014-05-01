@@ -2,12 +2,13 @@ package org.evoting.bulletinboard;
 
 import java.io.IOException;
 import java.util.Date;
+
 import jolie.runtime.JavaService;
 import jolie.runtime.Value;
 import jolie.runtime.embedding.RequestResponse;
 
 import org.evoting.bulletinboard.exceptions.ElectionNotStartedException;
-import org.evoting.common.AllVotesAuthority;
+import org.evoting.common.AnonymousVoteList;
 import org.evoting.common.Ballot;
 import org.evoting.common.EncryptedBallot;
 import org.evoting.common.EncryptedElectionOptions;
@@ -20,7 +21,8 @@ public class Controller extends JavaService {
 		Security.generateRSAKeys();
 	}
 	
-	private static boolean electionRunning = false;
+	private static Date electionStartDate;
+	private static Date electionEndDate;
 	
 	private void validate(Value validation) {
 		String message = validation.getFirstChild("message").strValue();
@@ -34,17 +36,20 @@ public class Controller extends JavaService {
 	@RequestResponse
 	public Boolean startElection(Value value) {
 		validate(value.getFirstChild("validator"));
+		
+		long startTime = value.getFirstChild(ValueIdentifiers.getStartTime()).longValue();
 		long endTime = value.getFirstChild(ValueIdentifiers.getEndTime()).longValue();
-		Date endDate = new Date(endTime);
-		Model.createNewElection(endDate);
-		electionRunning = true;
+		
+		electionStartDate = new Date(startTime);
+		electionEndDate = new Date(endTime);
+		Model.createNewElection(electionStartDate, electionEndDate);
 		return Boolean.TRUE;
 	}
 	
 	@RequestResponse
 	public Boolean stopElection(Value value) {
+		//TODO: What to do with this method
 		validate(value.getFirstChild("validator"));
-		electionRunning = false;
 		return Boolean.TRUE;
 	}
 	
@@ -62,7 +67,7 @@ public class Controller extends JavaService {
 	 * @return true if the vote is registered, otherwise false
 	 */
 	public Boolean processVote(Value valueEncryptedBallot) {
-		if(!electionRunning) {
+		if(!electionIsRunning()) {
 			throw new ElectionNotStartedException();
 		}
 		//TODO: Is this implementation correct?
@@ -103,7 +108,7 @@ public class Controller extends JavaService {
 	 * @return Returns the electionOptionlist as a Value, used in Jolie 
 	 */
 	public Value getElectionOptions() {
-		if(!electionRunning) {
+		if(!electionIsRunning()) {
 			throw new ElectionNotStartedException();
 		}
 		
@@ -116,7 +121,7 @@ public class Controller extends JavaService {
 	 * @return Returns the elgamal + rsa public key
 	 */
 	public Value getPublicKeys() {
-		if(!electionRunning) {
+		if(!electionIsRunning()) {
 			throw new ElectionNotStartedException();
 		}
 		
@@ -132,11 +137,26 @@ public class Controller extends JavaService {
 	 * @return All votes in the database
 	 */
 	public Value getAllVotes() {
-		if(!electionRunning) {
+		if(!electionIsRunning()) {
 			throw new ElectionNotStartedException();
 		}
 		
-		AllVotesAuthority allVotesAuthority = Model.getAllVotesAuthority();
+		AnonymousVoteList allVotesAuthority = Model.getAllVotes();
+		return allVotesAuthority.toValue();
+	}
+	
+	@RequestResponse
+	/**
+	 * @param validator
+	 * @return
+	 */
+	public Value getAllVotesAuthority(Value validator) {
+		if(!electionIsRunning()) {
+			throw new ElectionNotStartedException();
+		}
+		validate(validator);
+		
+		AnonymousVoteList allVotesAuthority = Model.getAllVotesAuthority();
 		return allVotesAuthority.toValue();
 	}
 	
@@ -169,6 +189,11 @@ public class Controller extends JavaService {
 	public boolean loadAuthorityRsaPublicKey(String pathname) {
 		
 		return Boolean.TRUE;
+	}
+	
+	private boolean electionIsRunning() {
+		Date currentTime = new Date(System.currentTimeMillis());
+		return currentTime.after(electionStartDate) && currentTime.before(electionEndDate);
 	}
 	
 	public static void main(String[] args) {

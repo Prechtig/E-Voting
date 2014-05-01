@@ -5,5 +5,6 @@ interface IBulletinBoard {
 	RequestResponse: processVote( EncryptedBallot )( bool )
 	RequestResponse: getPublicKeys( void )( PublicKeys )
 	RequestResponse: getAllVotes( void )( EncryptedBallotList )
+	RequestResponse: getAllVotesAuthority( Validation )( EncryptedBallotList )
 	RequestResponse: login( LoginRequest )( LoginResponse )
 }

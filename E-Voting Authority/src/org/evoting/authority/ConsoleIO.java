@@ -8,7 +8,6 @@ import org.evoting.authority.commands.Load;
 import org.evoting.authority.commands.Send;
 import org.evoting.authority.commands.StartElection;
 import org.evoting.authority.commands.Status;
-//import org.evoting.authority.commands.Command; //TODO: Does not exist
 
 public class ConsoleIO {
 	

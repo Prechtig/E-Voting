@@ -45,16 +45,6 @@ type ElectionStatus: void {
 	.endTime: long
 }
 
-type ElectionStart: void {
-	.endTime: long
-	.validator: Validation
-}
-
-type Validation: void {
-	.message: string
-	.signature: raw
-}
-
 type LoginRequest: void {
 	.userId: int
 	.passwordHash: string
@@ -62,4 +52,25 @@ type LoginRequest: void {
 
 type LoginResponse: void {
 	.sid: string
+}
+}
+
+type Validation: void {
+	.message: string
+	.signature: raw
+}
+
+type ElectionOptionsList: void {
+	.electionOptions: void {
+		.id: int
+		.name: string
+		.partyId: int
+	}
+	.validator: Validation
+}
+
+type ElectionStart: void {
+	.startTime: long
+	.endTime: long
+	.validator: Validation
 }
