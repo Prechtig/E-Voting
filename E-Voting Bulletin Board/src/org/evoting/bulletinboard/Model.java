@@ -179,13 +179,13 @@ public class Model {
 		return Model.election.getEndTime();
 	}
 
-	public static void createNewElection(Date endDate) {
+	public static void createNewElection(Date startDate, Date endDate) {
 		EntityManager entMgr = beginDatabaseSession();
 		
 		ElectionRepository er = new ElectionRepository(entMgr);
 		int nextId = er.findNextId();
 		
-		Election election = new Election(nextId, endDate);
+		Election election = new Election(nextId, startDate, endDate);
 		Model.election = election;
 		
 		entMgr.persist(election);

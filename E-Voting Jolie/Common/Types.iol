@@ -45,6 +45,7 @@ type ElectionStatus: void {
 }
 
 type ElectionStart: void {
+	.startTime: long
 	.endTime: long
 	.validator: Validation
 }
