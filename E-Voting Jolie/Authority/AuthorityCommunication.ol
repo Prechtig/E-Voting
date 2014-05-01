@@ -33,25 +33,22 @@ embedded {
     Java: "org.evoting.authority.ConsoleIO" in Controller
 }
 
+init
+{
+	getUserInput@Controller( )( )
+}
+
 main
 {
-	[ getUserInput( )( ) {
-		getUserInput@Controller( )( )
-	} ] { nullProcess }
-
 	[ getElectionStatus( )( electionDetails ) {// Used to get information regarding the election
 		getElectionStatus@BulletinBoardService( )( electionDetails )
 	} ] { nullProcess }
 
-    [ startElection( )( confirmation ) { //Start the election
-		startElection@BulletinBoardService( )( confirmation )
+    [ startElection( ElectionStart )( confirmation ) { //Start the election
+		startElection@BulletinBoardService( ElectionStart )( confirmation )
 	} ] { nullProcess }
 
-	[ stopElection( )( confirmation ) { //Stop the election
-		stopElection@BulletinBoardService( )( confirmation )
-	} ]  { nullProcess }
-
-	[ sendElectionOptionList( electionOptions )( confirmation ) { // Send the list of electionoptions
-		sendElectionOptionList@BulletinBoardService( electionOptions )( confirmation )
+	[ sendElectionOptionList( AuthElectionOptions )( confirmation ) { // Send the list of electionoptions
+		sendElectionOptionList@BulletinBoardService( AuthElectionOptions )( confirmation )
 	} ]  { nullProcess }
 }
