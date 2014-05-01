@@ -17,7 +17,7 @@ import org.evoting.security.ElGamal;
 import org.evoting.security.Security;
 import org.junit.Test;
 
-public class GroupTest 
+public class HomomorphicEncryptionTest 
 {
 	private final static BigInteger p = new BigInteger("7781871412403125272081994420237498498848517960190636813994593624893166160780445513887821412313009361625936687452586174696909303141691170346568788390764347");
 	private final static BigInteger g = new BigInteger("1112413672743230891881273653171640834687833299890125651932066327486193358080471215100797237775771467149894260123512660136402158406998369481252844452718796");
@@ -188,10 +188,11 @@ public class GroupTest
 		
 		Group.getInstance().setGenerator(ElGamalPublicKey.getParameters().getG());
 		Group.getInstance().setModulo(ElGamalPublicKey.getParameters().getP());
-		
+		System.out.println(ElGamalPublicKey.getParameters().getP().toByteArray().length);
 		BigInteger message1base = new BigInteger("200");
 		BigInteger message1 = Group.getInstance().raiseGenerator(message1base.longValue());
 		byte[] messageByte1 = message1.toByteArray();
+		System.out.println(messageByte1.length);
 		byte[] cipher1 = Security.encryptElGamal(messageByte1, ElGamalPublicKey);
 		
 		BigInteger message2base = new BigInteger("100");
@@ -209,7 +210,7 @@ public class GroupTest
         assertEquals(message1base.add(message2base).longValue(), Group.getInstance().discreteLogarithm(result));
 	}
 	
-	@Test
+	//@Test
 	public void testExponentialHomomorphicPropertiesWithLargeValues()
 	{
 		ElGamalPrivateKeyParameters ElGamalPrivateKey;
