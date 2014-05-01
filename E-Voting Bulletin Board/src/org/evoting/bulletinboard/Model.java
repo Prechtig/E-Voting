@@ -9,7 +9,7 @@ import jolie.runtime.ByteArray;
 import jolie.runtime.Value;
 
 import org.evoting.bulletinboard.exceptions.InvalidUserInformationException;
-import org.evoting.common.AllVotesAuthority;
+import org.evoting.common.AnonymousVoteList;
 import org.evoting.common.EncryptedElectionOptions;
 import org.evoting.database.EntityManagerUtil;
 import org.evoting.database.entities.Election;
@@ -73,15 +73,24 @@ public class Model {
 	/**
 	 * @return All votes in the database
 	 */
-	public static AllVotesAuthority getAllVotesAuthority() {
+	public static AnonymousVoteList getAllVotesAuthority() {
+		EntityManager entMgr = beginDatabaseSession();
+		
+		VoteRepository vRepo = new VoteRepository(entMgr);
+		List<Vote> allVotes = vRepo.findAllValid();
+		
+		endDatabaseSession(entMgr);
+		return new AnonymousVoteList(allVotes);
+	}
+	
+	public static AnonymousVoteList getAllVotes() {
 		EntityManager entMgr = beginDatabaseSession();
 		
 		VoteRepository vRepo = new VoteRepository(entMgr);
 		List<Vote> allVotes = vRepo.findAll();
 		
 		endDatabaseSession(entMgr);
-		//TODO add date on votes and only add the latest vote.
-		return new AllVotesAuthority(allVotes);
+		return new AnonymousVoteList(allVotes);
 	}
 	
 	/**

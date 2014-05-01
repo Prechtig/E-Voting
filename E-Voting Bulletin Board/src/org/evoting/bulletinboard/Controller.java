@@ -2,12 +2,13 @@ package org.evoting.bulletinboard;
 
 import java.io.IOException;
 import java.util.Date;
+
 import jolie.runtime.JavaService;
 import jolie.runtime.Value;
 import jolie.runtime.embedding.RequestResponse;
 
 import org.evoting.bulletinboard.exceptions.ElectionNotStartedException;
-import org.evoting.common.AllVotesAuthority;
+import org.evoting.common.AnonymousVoteList;
 import org.evoting.common.Ballot;
 import org.evoting.common.EncryptedBallot;
 import org.evoting.common.EncryptedElectionOptions;
@@ -136,7 +137,22 @@ public class Controller extends JavaService {
 			throw new ElectionNotStartedException();
 		}
 		
-		AllVotesAuthority allVotesAuthority = Model.getAllVotesAuthority();
+		AnonymousVoteList allVotesAuthority = Model.getAllVotes();
+		return allVotesAuthority.toValue();
+	}
+	
+	@RequestResponse
+	/**
+	 * @param validator
+	 * @return
+	 */
+	public Value getAllVotesAuthority(Value validator) {
+		if(!electionRunning) {
+			throw new ElectionNotStartedException();
+		}
+		validate(validator);
+		
+		AnonymousVoteList allVotesAuthority = Model.getAllVotesAuthority();
 		return allVotesAuthority.toValue();
 	}
 	
