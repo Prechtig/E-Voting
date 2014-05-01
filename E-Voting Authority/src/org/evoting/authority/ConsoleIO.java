@@ -19,6 +19,7 @@ import jolie.runtime.ValueVector;
 import org.bouncycastle.crypto.params.ElGamalPrivateKeyParameters;
 import org.bouncycastle.crypto.params.ElGamalPublicKeyParameters;
 import org.evoting.common.AnonymousVote;
+import org.evoting.common.AnonymousVoteList;
 import org.evoting.common.Converter;
 import org.evoting.common.Exporter;
 import org.evoting.common.Importer;
