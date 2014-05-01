@@ -192,4 +192,14 @@ public class Model {
 		
 		endDatabaseSession(entMgr);
 	}
+
+	public static void setElectionOptions(ElectionOption[] electionOptions) {
+		EntityManager entMgr = beginDatabaseSession();
+		
+		for(ElectionOption eo : electionOptions) {
+			entMgr.persist(eo);
+		}
+		
+		endDatabaseSession(entMgr);
+	}
 }
