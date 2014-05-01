@@ -1,5 +1,5 @@
 include "../Common/IBulletinBoard.iol"
-include "../Common/IAuthorityCommunication.iol"
+include "../Common/IAuthority.iol"
 include "console.iol"
 
 // Enables concurrent execution
@@ -8,13 +8,13 @@ execution {
 }
 
 outputPort BBJavaController {
-    Interfaces: IBulletinBoard, IAuthorityCommunication
+    Interfaces: IBulletinBoard, IAuthority
 }
 
 inputPort BulletinBoardService {
     Location: "socket://localhost:7000/"
     Protocol: sodep
-    Interfaces: IBulletinBoard, IAuthorityCommunication
+    Interfaces: IBulletinBoard, IAuthority
 }
 
 embedded {
