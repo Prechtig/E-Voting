@@ -32,11 +32,11 @@ public class Generate extends Command
 			return generateElGamalKeys();
 		// Generate both RSA and ElGamal key pair
 		case "both":
-			String response = "";
-			response += generateRsaKeys();
-			response += "\n";
-			response += generateElGamalKeys();
-			return response;
+			StringBuilder sb = new StringBuilder();
+			sb.append(generateRsaKeys());
+			sb.append("\n");
+			sb.append(generateElGamalKeys());
+			return sb.toString();
 		default:
 			return invalidArguments;
 		}
