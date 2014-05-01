@@ -40,19 +40,17 @@ main {
 	[ login( userInformation )( loginResponse ) {
 		login@BBJavaController( userInformation )( confirmation );
 		loginResponse.sid = csets.sid = new
-	}
-	//processVote( encryptedBallot )( registered ) {
-	//	encryptedBallot.userId = userInformation.userId;
-	//	processVote@BBJavaController( encryptedBallot )( registered );
-	//	println@Console( "Registered vote: " + registered )()
-	//}
-	] { nullProcess }
-
-	[ processVote( encryptedBallot )( registered ) {
-		//Process the vote in the embedded Java service
+	} ] { processVote( encryptedBallot )( registered ) {
+		encryptedBallot.userId = userInformation.userId;
 		processVote@BBJavaController( encryptedBallot )( registered );
 		println@Console( "Registered vote: " + registered )()
-	} ] { nullProcess }
+	} }
+
+	//[ processVote( encryptedBallot )( registered ) {
+	//	//Process the vote in the embedded Java service
+	//	processVote@BBJavaController( encryptedBallot )( registered );
+	//	println@Console( "Registered vote: " + registered )()
+	//} ] { nullProcess }
 
 	[ getAllVotes( )( allVotes ) {
 		getAllVotes@BBJavaController( )( allVotes )
