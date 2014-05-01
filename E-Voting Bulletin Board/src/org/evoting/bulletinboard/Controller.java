@@ -5,6 +5,7 @@ import java.util.Date;
 
 import jolie.runtime.JavaService;
 import jolie.runtime.Value;
+import jolie.runtime.ValueVector;
 import jolie.runtime.embedding.RequestResponse;
 
 import org.evoting.bulletinboard.exceptions.ElectionNotStartedException;
@@ -14,6 +15,7 @@ import org.evoting.common.EncryptedBallot;
 import org.evoting.common.EncryptedElectionOptions;
 import org.evoting.common.Importer;
 import org.evoting.common.ValueIdentifiers;
+import org.evoting.database.entities.ElectionOption;
 import org.evoting.security.Security;
 
 public class Controller extends JavaService {
@@ -34,6 +36,28 @@ public class Controller extends JavaService {
 	}
 	
 	@RequestResponse
+	public Boolean sendElectionOptionList(Value electionOptions) {
+		validate(electionOptions.getFirstChild(ValueIdentifiers.getValidator()));
+		
+		ValueVector options = electionOptions.getChildren(ValueIdentifiers.getElectionOptions());
+		
+		ElectionOption[] arr = new ElectionOption[options.size()];
+		for(int i = 0; i < options.size(); i++) {
+			Value currentOption = options.get(i);
+			
+			int id = currentOption.getFirstChild(ValueIdentifiers.getId()).intValue();
+			String name = currentOption.getFirstChild(ValueIdentifiers.getName()).strValue();
+			int partyId = currentOption.getFirstChild(ValueIdentifiers.getPartyId()).intValue();
+			
+			arr[id] = new ElectionOption(id, name, partyId);
+		}
+		Model.setElectionOptions(arr);
+		
+		return Boolean.TRUE;
+	}
+	
+	
+	@RequestResponse
 	public Boolean startElection(Value value) {
 		validate(value.getFirstChild("validator"));
 		
@@ -46,12 +70,6 @@ public class Controller extends JavaService {
 		return Boolean.TRUE;
 	}
 	
-	@RequestResponse
-	public Boolean sendElectionOptionList(Value value) {
-		//TODO: implement
-		return Boolean.TRUE;
-	}
-
 	@RequestResponse
 	/**
 	 * Processes a vote, effectively saving it in the persistent storage
