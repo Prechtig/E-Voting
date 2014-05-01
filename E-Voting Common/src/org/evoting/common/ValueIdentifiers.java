@@ -27,12 +27,23 @@ public class ValueIdentifiers {
 	private static final String VOTES = "votes";
 	private static final String ELECTION_OPTION_ID = "electionOptionId";
 	private static final String SID = "sid";
+	private static final String MESSAGE = "message";
+	private static final String VALIDATOR = "validator";
 	
+	public static String getValidator() {
+		return VALIDATOR;
+	}
 	public static String getVotes() {
 		return VOTES;
 	}
 	public static String getId() {
 		return ID;
+	}
+	public static String getElgamalPublicKey() {
+		return ELGAMAL_PUBLIC_KEY;
+	}
+	public static String getMessage() {
+		return MESSAGE;
 	}
 	public static String getName() {
 		return NAME;

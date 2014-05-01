@@ -41,6 +41,7 @@ type PublicKeys: void {
 
 type ElectionStatus: void {
 	.running: bool
+	.startTime: long
 	.endTime: long
 }
 
