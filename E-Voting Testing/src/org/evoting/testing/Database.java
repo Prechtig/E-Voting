@@ -9,6 +9,7 @@ import javax.persistence.EntityManager;
 import org.bouncycastle.crypto.params.ElGamalPublicKeyParameters;
 import org.evoting.common.Converter;
 import org.evoting.database.EntityManagerUtil;
+import org.evoting.database.entities.ElectionOption;
 import org.evoting.database.entities.Vote;
 import org.evoting.database.repositories.VoteRepository;
 import org.evoting.security.Security;
@@ -72,6 +73,20 @@ public class Database {
 		if(validVotes.contains(v1) || validVotes.contains(v2)) {
 			fail("Old vote found");
 		}
+		
+		entMgr.getTransaction().commit();
+		entMgr.getEntityManagerFactory().close();
+	}
+	
+	@Test
+	public void testInsertElectionOption() {
+		
+		
+		EntityManager entMgr = EntityManagerUtil.getEntityManager();
+		entMgr.getTransaction().begin();
+		ElectionOption eo = new ElectionOption(-1, "Name", -1);
+		
+		entMgr.persist(eo);
 		
 		entMgr.getTransaction().commit();
 		entMgr.getEntityManagerFactory().close();

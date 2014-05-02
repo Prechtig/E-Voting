@@ -34,10 +34,8 @@ public class Load extends Command {
 			return loadElectionOptions();
 		case "rsa":
 			return loadRSAKeys();
-
 		case "elgamal":
 			return loadElGamalKeys();
-
 		default:
 			return invalidArguments;
 		}

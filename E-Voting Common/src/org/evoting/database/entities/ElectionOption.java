@@ -10,6 +10,8 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "ElectionOptions")
 public class ElectionOption extends BaseEntity {
+	@Column(name = "electionId", updatable = false, nullable = false)
+	private int electionId;
 	//The name of the electionOption
 	@Column(name = "name", updatable = false, nullable = false)
 	private String name;
@@ -21,7 +23,8 @@ public class ElectionOption extends BaseEntity {
 	 * @param name The name of the electionOption
 	 */
 	public ElectionOption(int electionOptionId, String name, int partyId) {
-		super(electionOptionId);
+		super();
+		this.electionId = electionOptionId;
 		this.name = name;
 		this.partyId = partyId;
 	}
@@ -32,6 +35,10 @@ public class ElectionOption extends BaseEntity {
 	@SuppressWarnings("unused")
 	private ElectionOption() {
 		super();
+	}
+	
+	public int getElectionId() {
+		return electionId;
 	}
 	
 	/**

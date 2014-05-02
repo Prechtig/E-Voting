@@ -14,12 +14,12 @@ abstract public class BaseEntity {
 	@Column(name = "id", updatable = false, nullable = false)
 	private int id;
 	
-	/**
-	 * @param id The id of the entity
-	 */
-	public BaseEntity(int id) {
-		this.id = id;
-	}
+//	/**
+//	 * @param id The id of the entity
+//	 */
+//	public BaseEntity(int id) {
+//		this.id = id;
+//	}
 	
 	/**
 	 * Private constructor needed for Hibernate 
