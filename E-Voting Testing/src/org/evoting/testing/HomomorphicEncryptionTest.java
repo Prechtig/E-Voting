@@ -210,7 +210,7 @@ public class HomomorphicEncryptionTest
         assertEquals(message1base.add(message2base).longValue(), Group.getInstance().discreteLogarithm(result));
 	}
 	
-	//@Test
+	@Test
 	public void testExponentialHomomorphicPropertiesWithLargeValues()
 	{
 		ElGamalPrivateKeyParameters ElGamalPrivateKey;
