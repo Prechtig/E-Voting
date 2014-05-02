@@ -1,3 +1,4 @@
+include "ILoadKeys.iol"
 include "../Common/IBulletinBoard.iol"
 include "../Common/IAuthority.iol"
 include "console.iol"
@@ -8,7 +9,7 @@ execution {
 }
 
 outputPort BBJavaController {
-    Interfaces: IBulletinBoard, IAuthority
+    Interfaces: IBulletinBoard, IAuthority, ILoadKeys
 }
 
 inputPort BulletinBoardService {
@@ -23,6 +24,24 @@ embedded {
 
 cset {
 	sid: EncryptedBallot.sid
+}
+
+init {
+	loadRSAKeys@BBJavaController( )( rsaSuccessful );
+	if(rsaSuccessful) {
+		println@Console("RSA keys successfully set")( )
+	} else {
+		println@Console("RSA keys not successfully set")( )
+	};
+	loadElGamalKey@BBJavaController( )( elGamalSuccessful );
+	if(elGamalSuccessful) {
+		println@Console("ElGamal key successfully set")( )
+	} else {
+		println@Console("ElGamal key not successfully set")( )
+	};
+	if(rsaSuccessful && elGamalSuccessful) {
+		println@Console("The BulletinBoard is now ready to be set up by the authority")( )
+	}
 }
 
 main {

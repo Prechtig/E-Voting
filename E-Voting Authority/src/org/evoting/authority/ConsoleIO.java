@@ -10,43 +10,42 @@ import org.evoting.authority.commands.StartElection;
 import org.evoting.authority.commands.Status;
 
 public class ConsoleIO {
-	
+
 	/**
 	 * Main method. Used to get users input
 	 */
 	public static Command getUserInput() {
 		System.out.println("Enter commmand: ");
-		//String input = System.console().readLine().toLowerCase();
-		
-		//FOR DEBUGGING START// TODO:REMOVE WHEN DONE
-		
-		String input = "";
-		
-		//FOR DEBUGGING END// TODO:REMOVE WHEN DONE
-		
-		
+		String input = System.console().readLine().toLowerCase();
+
+		// FOR DEBUGGING START// TODO:REMOVE WHEN DONE
+
+		//String input = "";
+
+		// FOR DEBUGGING END// TODO:REMOVE WHEN DONE
+
 		String[] args = input.split(" ");
-		
+
 		switch (args[0]) {
 		// Start election
-		case StartElection.KEYWORD://TODO: Jolie needs
+		case StartElection.KEYWORD:// TODO: Jolie needs
 			return new StartElection(args);
-		// Load electionOptions or keys
+			// Load electionOptions or keys
 		case Load.KEYWORD:
 			return new Load(args);
-		// Generate keys
+			// Generate keys
 		case Generate.KEYWORD:
 			return new Generate(args);
-		// Send electionOptions
+			// Send electionOptions
 		case Send.KEYWORD:
 			return new Send(args);
-		// Count votes
+			// Count votes
 		case CountVotes.KEYWORD:
 			return new CountVotes(args);
-		// Update the election status
+			// Update the election status
 		case Status.KEYWORD:
 			return new Status(args);
-		// Terminate program
+			// Terminate program
 		case Exit.KEYWORD:
 			return new Exit(args);
 		default:

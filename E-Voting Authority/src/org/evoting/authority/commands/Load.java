@@ -1,18 +1,20 @@
 package org.evoting.authority.commands;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.util.ArrayList;
 
+import jolie.runtime.JavaService;
+
 import org.bouncycastle.crypto.params.ElGamalPrivateKeyParameters;
 import org.bouncycastle.crypto.params.ElGamalPublicKeyParameters;
 import org.evoting.authority.Model;
 import org.evoting.common.Importer;
+import org.evoting.common.exceptions.CorruptDataException;
 import org.evoting.database.entities.ElectionOption;
 import org.evoting.security.Security;
-
-import jolie.runtime.JavaService;
 
 public class Load extends Command {
 	public static final String KEYWORD = "load";
@@ -43,14 +45,24 @@ public class Load extends Command {
 	 * Load ElGamal key pair into the system.
 	 */
 	private String loadElGamalKeys() { //TODO: add checks to see if the importer actually returns anything, like with optionslist
-		// Import the keys
-		ElGamalPublicKeyParameters elGamalPublicKey = Importer.importElGamalPublicKeyParameters(Model.getElGamalPublicKeyFile());
-		ElGamalPrivateKeyParameters elGamalPrivateKey = Importer.importElGamalPrivateKeyParameters(Model.getElGamalPrivateKeyFile());
-		// Set the keys
-		Security.setElGamalPrivateKey(elGamalPrivateKey);
-		Security.setElGamalPublicKey(elGamalPublicKey);
+		try {
+			ElGamalPublicKeyParameters pubKey = Importer.importElGamalPublicKeyParameters(Model.getElGamalPublicKeyFile());
+			ElGamalPrivateKeyParameters privKey = Importer.importElGamalPrivateKeyParameters(Model.getElGamalPrivateKeyFile());
+			Security.setElGamalPrivateKey(privKey);
+			Security.setElGamalPublicKey(pubKey);
 
-		return "Loaded ElGamal keys";
+			return "Loaded ElGamal keys";
+		} catch(FileNotFoundException e) {
+			e.printStackTrace();
+			System.out.println("Invalid file location.");
+		} catch(CorruptDataException e) {
+			e.printStackTrace();
+			System.out.println("The file does not have the correct format.");
+		} catch(IOException e) {
+			e.printStackTrace();
+			System.out.println("Something went wrong.");
+		}
+		return "ElGamal keys not loaded";
 	}
 
 	/**

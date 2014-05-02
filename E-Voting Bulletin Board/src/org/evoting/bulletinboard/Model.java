@@ -171,6 +171,13 @@ public class Model {
 		entMgr.getTransaction().commit();
 		entMgr.close();
 	}
+	
+	public static Date getElectionStartTime() {
+		if(Model.election == null) {
+			return new Date(0);
+		}
+		return Model.election.getStartTime();
+	}
 
 	public static Date getElectionEndTime() {
 		if(Model.election == null) {

@@ -1,6 +1,11 @@
 package org.evoting.bulletinboard;
 
+import java.io.Console;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.security.Key;
+import java.security.PrivateKey;
+import java.security.PublicKey;
 import java.util.Date;
 
 import jolie.runtime.JavaService;
@@ -8,13 +13,17 @@ import jolie.runtime.Value;
 import jolie.runtime.ValueVector;
 import jolie.runtime.embedding.RequestResponse;
 
+import org.bouncycastle.crypto.params.ElGamalPublicKeyParameters;
 import org.evoting.bulletinboard.exceptions.ElectionNotStartedException;
 import org.evoting.common.AnonymousVoteList;
 import org.evoting.common.Ballot;
 import org.evoting.common.EncryptedBallot;
 import org.evoting.common.EncryptedElectionOptions;
 import org.evoting.common.Importer;
+import org.evoting.common.KeyType;
 import org.evoting.common.ValueIdentifiers;
+import org.evoting.common.exceptions.BadValueException;
+import org.evoting.common.exceptions.CorruptDataException;
 import org.evoting.database.entities.ElectionOption;
 import org.evoting.security.Security;
 
@@ -96,11 +105,13 @@ public class Controller extends JavaService {
 	public Value getElectionStatus() {
 		Value status = Value.create();
 		
+		Date startTime = Model.getElectionStartTime();
 		Date endTime = Model.getElectionEndTime();
 		
 		boolean running = new Date().before(endTime);
-		status.getNewChild("running").setValue(running);
-		status.getNewChild("endTime").setValue(endTime.getTime());
+		status.getNewChild(ValueIdentifiers.getRunning()).setValue(running);
+		status.getNewChild(ValueIdentifiers.getStartTime()).setValue(startTime.getTime());
+		status.getNewChild(ValueIdentifiers.getEndTime()).setValue(endTime.getTime());
 		
 		return status;
 	}
@@ -199,11 +210,94 @@ public class Controller extends JavaService {
 	}
 	
 	private void validate(Value validation) {
-		String message = validation.getFirstChild("message").strValue();
-		byte[] signature = validation.getFirstChild("signature").byteArrayValue().getBytes();
+		String message = validation.getFirstChild(ValueIdentifiers.getMessage()).strValue();
+		byte[] signature = validation.getFirstChild(ValueIdentifiers.getSignature()).byteArrayValue().getBytes();
 		String hashedMessage = Security.hash(message);
-		if(!hashedMessage.equals(Security.decryptRSA(signature, Security.getAuthorityRSAPublicKey()))) {
-			throw new RuntimeException(); //TODO: throw correct exception
+		if(!hashedMessage.equals(new String(Security.decryptRSA(signature, Security.getAuthorityRSAPublicKey())))) {
+			throw new BadValueException("Validation error");
+		}
+	}
+	
+	/**
+	 * Load the ElGamal authority public key
+	 */
+	public Boolean loadElGamalKey() {
+		Console console = System.console();
+		String message = "Enter the location of the Authority ElGamal public key";
+		String input;
+		ElGamalPublicKeyParameters pubKey = null;
+		while(true) {
+			try {
+				System.out.println(message);
+				input = console.readLine();
+				pubKey = Importer.importElGamalPublicKeyParameters(input);
+				break;
+			} catch(FileNotFoundException e) {
+				e.printStackTrace();
+				System.out.println("Invalid file location.");
+			} catch(CorruptDataException e) {
+				e.printStackTrace();
+				System.out.println("The file does not have the correct format.");
+			} catch(IOException e) {
+				e.printStackTrace();
+				System.out.println("Something went wrong.");
+			} finally {
+				if(pubKey != null) {
+					return Boolean.TRUE;
+				}
+				System.out.println("Try again y/n?");
+				input = console.readLine();
+				if(!"y".equals(input.toLowerCase())) {
+					break;
+				}
+			}
+		}
+		return Boolean.FALSE;
+	}
+
+	/**
+	 * Load the RSA keys for the bulletinboard
+	 */
+	public Boolean loadRSAKeys() {
+		String message = "Enter the location of the BulletinBoard RSA private key";
+		PrivateKey bbPrivKey = (PrivateKey) importRsaKey(message, KeyType.PRIVATE);
+
+		message = "Enter the location of the BulletinBoard RSA public key";
+		PublicKey bbPubKey = (PublicKey) importRsaKey(message, KeyType.PUBLIC);
+
+		message = "Enter the location of the Authority RSA public key";
+		PublicKey authPubKey = (PublicKey) importRsaKey(message, KeyType.PUBLIC);
+
+		if(bbPrivKey != null && bbPubKey != null && authPubKey != null) {
+			Security.setBulletinBoardRSAPrivateKey(bbPrivKey);
+			Security.setBulletinBoardRSAPublicKey(bbPubKey);	
+			Security.setAuthorityRSAPublicKey(authPubKey);
+			return Boolean.TRUE;
+		}
+		return Boolean.FALSE;
+	}
+	
+	private Key importRsaKey(String message, KeyType keytype) {
+		Console console = System.console();
+		String input;
+		while(true) {
+			try {
+				System.out.println(message);
+				input = console.readLine();
+				switch (keytype) {
+				case PRIVATE:
+					return Importer.importRsaPrivateKey(input);
+				case PUBLIC:
+					return Importer.importRsaPublicKey(input);
+				}
+			} catch(IOException e) {
+				e.printStackTrace();
+				System.out.println("Invalid file location. Try again y/n?");
+				input = console.readLine();
+				if(!"y".equals(input.toLowerCase())) {
+					return null;
+				}
+			}
 		}
 	}
 	

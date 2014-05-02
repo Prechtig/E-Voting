@@ -60,7 +60,7 @@ type Validation: void {
 }
 
 type ElectionOptionsList: void {
-	.electionOptions: void {
+	.electionOptions*: void {
 		.id: int
 		.name: string
 		.partyId: int

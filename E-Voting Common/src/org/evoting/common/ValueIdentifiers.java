@@ -29,9 +29,13 @@ public class ValueIdentifiers {
 	private static final String SID = "sid";
 	private static final String MESSAGE = "message";
 	private static final String VALIDATOR = "validator";
+	private static final String RUNNING = "running";
 	
 	public static String getValidator() {
 		return VALIDATOR;
+	}
+	public static String getRunning() {
+		return RUNNING;
 	}
 	public static String getVotes() {
 		return VOTES;
