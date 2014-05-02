@@ -10,6 +10,8 @@ import javax.persistence.Entity;
  */
 @Entity
 public class Election extends BaseEntity {
+	@Column(name = "electionId", updatable = false, nullable = false)
+	private int electionId;
 	@Column(name = "startTime", updatable = false, nullable = false)
 	private long startTime;
 	@Column(name = "endTime", updatable = false, nullable = false)
@@ -21,7 +23,8 @@ public class Election extends BaseEntity {
 	 * @param endTime the end time of the Election
 	 */
 	public Election(int id, Date startTime, Date endTime) {
-		super(id);
+		super();
+		this.electionId = id;
 		this.startTime = startTime.getTime();
 		this.endTime = endTime.getTime();
 	}
