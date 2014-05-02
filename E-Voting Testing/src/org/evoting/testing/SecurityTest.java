@@ -2,6 +2,7 @@ package org.evoting.testing;
 
 import static org.junit.Assert.assertEquals;
 
+import java.io.IOException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 
@@ -10,9 +11,11 @@ import org.bouncycastle.crypto.params.ElGamalPublicKeyParameters;
 import org.evoting.common.Converter;
 import org.evoting.common.Exporter;
 import org.evoting.common.Importer;
+import org.evoting.common.exceptions.CorruptDataException;
 import org.evoting.security.ElGamal;
 import org.evoting.security.RSA;
 import org.evoting.security.Security;
+import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -100,14 +103,26 @@ public class SecurityTest {
 	@Test
 	public void saveElgamalKeyPublic(){
 		Exporter.exportElGamalPublicKeyParameters(ElGamalPublicKey, ElGamalPublicKeyFile);
-		ElGamalPublicKeyParameters savedParams =  Importer.importElGamalPublicKeyParameters(ElGamalPublicKeyFile);
-		assert(savedParams.equals(ElGamalPublicKey)); //TODO: why not assertequals
+		ElGamalPublicKeyParameters savedParams = null;
+		try {
+			savedParams = Importer.importElGamalPublicKeyParameters(ElGamalPublicKeyFile);
+		} catch (CorruptDataException | IOException e) {
+			e.printStackTrace();
+			//TODO: Is this alright?
+		}
+		Assert.assertEquals(savedParams, ElGamalPublicKey);
 	}
 	
 	@Test
 	public void saveElgamalKeyPrivate(){
 		Exporter.exportElGamalPrivateKeyParameters(ElGamalPrivateKey, ElGamalPrivateKeyFile);
-		ElGamalPrivateKeyParameters savedParams = Importer.importElGamalPrivateKeyParameters(ElGamalPrivateKeyFile);
-		assert(savedParams.equals(ElGamalPrivateKey)); //TODO: why not assertequals
+		ElGamalPrivateKeyParameters savedParams = null;
+		try {
+			savedParams = Importer.importElGamalPrivateKeyParameters(ElGamalPrivateKeyFile);
+		} catch (CorruptDataException | IOException e) {
+			e.printStackTrace();
+			//TODO: Is this alright?
+		}
+		Assert.assertEquals(savedParams, ElGamalPrivateKey);
 	}
 }
