@@ -22,7 +22,6 @@ import org.evoting.common.EncryptedElectionOptions;
 import org.evoting.common.Importer;
 import org.evoting.common.KeyType;
 import org.evoting.common.ValueIdentifiers;
-import org.evoting.common.exceptions.BadValueException;
 import org.evoting.common.exceptions.CorruptDataException;
 import org.evoting.database.entities.ElectionOption;
 import org.evoting.security.Security;
@@ -212,7 +211,7 @@ public class Controller extends JavaService {
 		byte[] signature = validation.getFirstChild(ValueIdentifiers.getSignature()).byteArrayValue().getBytes();
 		String hashedMessage = Security.hash(message);
 		if (!hashedMessage.equals(new String(Security.decryptRSA(signature, Security.getAuthorityRSAPublicKey())))) {
-			throw new BadValueException("Validation error");
+			throw new CorruptDataException("Validation error");
 		}
 	}
 
