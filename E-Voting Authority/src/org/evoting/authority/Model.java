@@ -129,11 +129,11 @@ public class Model {
 		Model.random = random;
 	}
 
-	public static List<ElectionOption> geteOptions() {
+	public static List<ElectionOption> getElectionOptions() {
 		return eOptions;
 	}
 
-	public static void seteOptions(List<ElectionOption> eOptions) {
+	public static void setElectionOptions(List<ElectionOption> eOptions) {
 		Model.eOptions = eOptions;
 	}
 
