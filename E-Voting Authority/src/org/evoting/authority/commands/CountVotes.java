@@ -27,8 +27,8 @@ public class CountVotes extends Command
 	public String execute(JavaService js)
 	{
 		long[] votes = countVotes(js);
-		votes = addCandidateVotesToParties(votes, Model.geteOptions());
-		return electionResultToString(votes, Model.geteOptions());
+		votes = addCandidateVotesToParties(votes, Model.getElectionOptions());
+		return electionResultToString(votes, Model.getElectionOptions());
 	}
 	
 	/**
@@ -47,7 +47,7 @@ public class CountVotes extends Command
 				throw new CorruptDataException();
 			}
 			
-			byte[][] voteProducts = new byte[Model.geteOptions().size()][];
+			byte[][] voteProducts = new byte[Model.getElectionOptions().size()][];
 			boolean firstIteration = true;
 			for(AnonymousVote v : allVotes.getListOfVotes()) {
 				if(firstIteration) {
@@ -61,7 +61,7 @@ public class CountVotes extends Command
 				}
 			}
 			
-			long[] result = new long[Model.geteOptions().size()];
+			long[] result = new long[Model.getElectionOptions().size()];
 			for (int i = 0; i < result.length; i++) {
 				result[i] = Security.decryptExponentialElgamal(voteProducts[i], Security.getElgamalPrivateKey());
 			}

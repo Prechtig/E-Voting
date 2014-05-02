@@ -94,7 +94,7 @@ public class Load extends Command {
 		ArrayList<ElectionOption> options = Importer.importElectionOptions(Model.getElectionOptionsFile());
 		
 		if(options != null && options.size() > 0){
-			Model.seteOptions(options);
+			Model.setElectionOptions(options);
 		} else {
 			return "Failed to import list of election options";
 		}

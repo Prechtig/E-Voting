@@ -25,7 +25,7 @@ public class Send extends Command {
 	 * Sends the electionOptions list to the bulletinboard. Only when election is not running
 	 */
 	private String sendElectionoptions(JavaService js) {
-		if (Model.geteOptions() != null) {
+		if (Model.getElectionOptions() != null) {
 			// TODO:Create value containing all the electionoptions
 			Value optionsValue = Model.getElectionOptionsValue();
 
