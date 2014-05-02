@@ -15,8 +15,10 @@ public class Hasher {
 	// The encoding used to convert the characters typed by the user.
 	private static final String bitEncoding = "UTF-8";
 	
-	/*
+	/**
 	 * Encrypts the password using the algorithm and encoding specified in the class fields.
+	 * @param password The password to be hashed
+	 * @return The hashed password.
 	 */
 	public static String hashPassword(String password) {
 		byte[] bytesOfPassword;

@@ -62,6 +62,5 @@ public class Controller extends JavaService
     }
     
     public static void main(String[] args) {
-		
 	}
 }
