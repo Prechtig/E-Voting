@@ -26,15 +26,6 @@ public class Controller extends JavaService {
 	private static Date electionStartDate;
 	private static Date electionEndDate;
 	
-	private void validate(Value validation) {
-		String message = validation.getFirstChild("message").strValue();
-		byte[] signature = validation.getFirstChild("signature").byteArrayValue().getBytes();
-		String hashedMessage = Security.hash(message);
-		if(!hashedMessage.equals(Security.decryptRSA(signature, Security.getAuthorityRSAPublicKey()))) {
-			throw new RuntimeException(); //TODO: throw correct exception
-		}
-	}
-	
 	@RequestResponse
 	public Boolean sendElectionOptionList(Value electionOptions) {
 		validate(electionOptions.getFirstChild(ValueIdentifiers.getValidator()));
@@ -207,7 +198,14 @@ public class Controller extends JavaService {
 		return currentTime.after(electionStartDate) && currentTime.before(electionEndDate);
 	}
 	
-	public static void main(String[] args) {
-
+	private void validate(Value validation) {
+		String message = validation.getFirstChild("message").strValue();
+		byte[] signature = validation.getFirstChild("signature").byteArrayValue().getBytes();
+		String hashedMessage = Security.hash(message);
+		if(!hashedMessage.equals(Security.decryptRSA(signature, Security.getAuthorityRSAPublicKey()))) {
+			throw new RuntimeException(); //TODO: throw correct exception
+		}
 	}
+	
+	public static void main(String[] args) { }
 }

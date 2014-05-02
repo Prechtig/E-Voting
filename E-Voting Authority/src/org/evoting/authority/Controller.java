@@ -10,6 +10,7 @@ public class Controller extends JavaService{
 	{
 		Command command;
 		while(true) {
+			//TODO Exit the loop by modifiying exit somehow.
 			command = ConsoleIO.getUserInput();
 			System.out.println(command.execute(this));
 		}

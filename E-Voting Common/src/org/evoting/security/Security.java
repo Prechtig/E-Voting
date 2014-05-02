@@ -26,7 +26,7 @@ public class Security {
 	//True if ElGamal keys have been generated
 	//private static boolean ElGamalKeysSat;
 	//Size of ELGamal byte array
-	public static final int SIZE_OF_ELGAMAL_CIPHER = 128;
+	public static final int SIZE_OF_ELGAMAL_CIPHER = 256;
 	//The group defined by the ElGamal parameters.
 	private static Group group = Group.getInstance();
 	
@@ -311,7 +311,7 @@ public class Security {
 	
 	public static byte[] multiplyElGamalCiphers(byte[] cipher1, byte[] cipher2)
 	{
-		if(cipher1.length != SIZE_OF_ELGAMAL_CIPHER || cipher2.length != SIZE_OF_ELGAMAL_CIPHER) {
+		if(cipher1.length != ElGamal.getSizeOfElgamalCipher() || cipher2.length != ElGamal.getSizeOfElgamalCipher()) {
 			throw new IllegalArgumentException();
 		}
 		
@@ -332,7 +332,7 @@ public class Security {
 		byte[] gammaProductByte = gammaProduct.toByteArray();
 		byte[] phiProductByte = phiProduct.toByteArray();
 		
-        byte[]  result = new byte[128];
+        byte[]  result = new byte[ElGamal.getSizeOfElgamalCipher()];
 
         if (gammaProductByte.length > result.length / 2) {
             System.arraycopy(gammaProductByte, 1, result, result.length / 2 - (gammaProductByte.length - 1), gammaProductByte.length - 1);
