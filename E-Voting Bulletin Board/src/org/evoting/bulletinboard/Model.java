@@ -94,25 +94,6 @@ public class Model {
 	}
 	
 	/**
-	 * Converts a list of votes to a value defined in Types.iol (Jolie)
-	 * @param allVotes The list of votes to be converted
-	 * @return The value representing the list of votes
-	 */
-	public static Value toValue(List<Vote> allVotes) {
-		Value result = Value.create();
-		
-		for(Vote v : allVotes) {
-			Value votes = result.getNewChild("votes");
-			for(int i = 0; i < v.getEncryptedVote().length; i++) {
-				Value vote = votes.getNewChild("vote");
-				vote.getNewChild("electionOptionId").setValue(i);
-				vote.getNewChild("encryptedVote").setValue(new ByteArray(v.getEncryptedVote()[i]));
-			}
-		}
-		return result;
-	}
-	
-	/**
 	 * Returns the public keys as the value defined in Types.iol (Jolie)
 	 * @return The given public keys as a Jolie value
 	 */
