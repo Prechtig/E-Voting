@@ -37,7 +37,9 @@ public class Controller extends JavaService {
 	
 	@RequestResponse
 	public Boolean sendElectionOptionList(Value electionOptions) {
+		System.out.println("Before validation");
 		validate(electionOptions.getFirstChild(ValueIdentifiers.getValidator()));
+		System.out.println("Validated");
 		
 		ValueVector options = electionOptions.getChildren(ValueIdentifiers.getElectionOptions());
 		
@@ -52,14 +54,14 @@ public class Controller extends JavaService {
 			arr[id] = new ElectionOption(id, name, partyId);
 		}
 		Model.setElectionOptions(arr);
-		
+		System.out.println("Before return");
 		return Boolean.TRUE;
 	}
 	
 	
 	@RequestResponse
 	public Boolean startElection(Value value) {
-		validate(value.getFirstChild("validator"));
+		validate(value.getFirstChild(ValueIdentifiers.getValidator()));
 		
 		long startTime = value.getFirstChild(ValueIdentifiers.getStartTime()).longValue();
 		long endTime = value.getFirstChild(ValueIdentifiers.getEndTime()).longValue();
