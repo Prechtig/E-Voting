@@ -12,7 +12,7 @@ import javax.crypto.Cipher;
 public class RSA {
 	private static PublicKey authPubKey, bbPubKey;
 	private static PrivateKey authPrivKey, bbPrivKey;
-	
+
 	public static void generateAuthKeyPair(boolean overwrite) {
 		if ((authPubKey == null && authPrivKey == null) || overwrite == true) {
 			try {
@@ -31,7 +31,7 @@ public class RSA {
 			}
 		}
 	}
-	
+
 	public static void generateBbKeyPair(boolean overwrite) {
 		if ((bbPubKey == null && bbPrivKey == null) || overwrite == true) {
 			try {
@@ -51,40 +51,20 @@ public class RSA {
 		}
 	}
 
-	/*//TODO:Remove?
-	private static void generateKeyPair(PublicKey pubKey, PrivateKey privKey, boolean overwrite) {
-		if ((pubKey == null && privKey == null) || overwrite == true) {
-			try {
-				KeyPairGenerator keyGen;
-				keyGen = KeyPairGenerator.getInstance("RSA");
+	public static PrivateKey getAuthorityPrivateKey() {
+		return authPrivKey;
+	}
 
-				keyGen.initialize(1024);
-
-				KeyPair keys = keyGen.generateKeyPair();
-
-				pubKey = keys.getPublic();
-				privKey = keys.getPrivate();
-			} catch (NoSuchAlgorithmException e) {
-				// Should not happen
-				e.printStackTrace();
-			}
-		}
-	}*/
-	
 	public static PublicKey getAuthorityPublicKey() {
 		return authPubKey;
 	}
 
-	public static PrivateKey getAuthorityPrivateKey() {
-		return authPrivKey;
-	}
-	
-	public static PublicKey getBulletinBoardPublicKey() {
-		return bbPubKey;
-	}
-	
 	public static PrivateKey getBulletinBoardPrivateKey() {
 		return bbPrivKey;
+	}
+
+	public static PublicKey getBulletinBoardPublicKey() {
+		return bbPubKey;
 	}
 
 	public static byte[] encrypt(String m, Key pK) {
@@ -107,6 +87,7 @@ public class RSA {
 		return result;
 	}
 
+	// TODO:Unused
 	public static byte[] decrypt(String m, Key pK) {
 		return decrypt(m.getBytes(), pK);
 	}
@@ -136,7 +117,7 @@ public class RSA {
 	public static void setAuthorityPrivateKey(PrivateKey privK) {
 		authPrivKey = privK;
 	}
-	
+
 	public static void setBulletinBoardPublicKey(PublicKey pubK) {
 		bbPubKey = pubK;
 	}

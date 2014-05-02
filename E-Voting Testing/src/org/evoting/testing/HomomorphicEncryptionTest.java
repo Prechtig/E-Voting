@@ -102,7 +102,7 @@ public class HomomorphicEncryptionTest
 	}
 	
 	@Test
-	public void testLorena()
+	public void testLorena()//TODO:Name change?
 	{
 		ElGamalParameters localElGamalParameters = new ElGamalParameters(p, g, 0);
 		ElGamalKeyGenerationParameters localElGamalKeyGenerationParameters = new ElGamalKeyGenerationParameters(new SecureRandom(), localElGamalParameters);

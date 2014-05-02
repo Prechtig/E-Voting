@@ -38,6 +38,7 @@ public class StartElection extends Command {
 		Value result = Value.create();
 		result.getNewChild(ValueIdentifiers.getStartTime()).setValue(startDate.getTime());
 		result.getNewChild(ValueIdentifiers.getEndTime()).setValue(endDate.getTime());
+		
 		Value validator = Model.getNewValidator();
 		ValueVector children = result.getChildren(ValueIdentifiers.getValidator());
 		children.set(0, validator);
