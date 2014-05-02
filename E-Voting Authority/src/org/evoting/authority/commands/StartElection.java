@@ -22,9 +22,11 @@ public class StartElection extends Command {
 
 	public String execute(JavaService js) {
 		try {
-			// Date d = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse(date); //TODO:uncommented because of testing
-			Date startDate = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse("2014-04-30 20:00");
-			Date endDate = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse("2014-05-30 20:00");
+			Date startDate = new SimpleDateFormat("yyyy-MM-ddHH:mm").parse(this.args[1]);
+			Date endDate = new SimpleDateFormat("yyyy-MM-ddHH:mm").parse(this.args[2]);
+			
+			//Date startDate = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse("2014-04-30 20:00");//TODO: for debugging
+			//Date endDate = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse("2014-05-30 20:00");
 			return startElection(startDate, endDate, js);
 		} catch (ParseException e) {
 			e.printStackTrace();
@@ -33,7 +35,6 @@ public class StartElection extends Command {
 	}
 
 	private String startElection(Date startDate, Date endDate, JavaService js) {
-		// Create value with endtime and signed endtime
 		Value result = Value.create();
 		result.getNewChild(ValueIdentifiers.getStartTime()).setValue(startDate.getTime());
 		result.getNewChild(ValueIdentifiers.getEndTime()).setValue(endDate.getTime());

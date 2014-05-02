@@ -42,6 +42,13 @@ public class Election extends BaseEntity {
 	}
 	
 	/**
+	 * @return The start time of the Election
+	 */
+	public Date getstartTime() {
+		return new Date(startTime);
+	}
+	
+	/**
 	 * @return The end time of the Election
 	 */
 	public Date getEndTime() {

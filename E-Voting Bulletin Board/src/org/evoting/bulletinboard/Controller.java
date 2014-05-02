@@ -96,11 +96,13 @@ public class Controller extends JavaService {
 	public Value getElectionStatus() {
 		Value status = Value.create();
 		
+		Date startTime = Model.getElectionStartTime();
 		Date endTime = Model.getElectionEndTime();
 		
 		boolean running = new Date().before(endTime);
-		status.getNewChild("running").setValue(running);
-		status.getNewChild("endTime").setValue(endTime.getTime());
+		status.getNewChild(ValueIdentifiers.getRunning()).setValue(running);
+		status.getNewChild(ValueIdentifiers.getStartTime()).setValue(startTime.getTime());
+		status.getNewChild(ValueIdentifiers.getEndTime()).setValue(endTime.getTime());
 		
 		return status;
 	}
