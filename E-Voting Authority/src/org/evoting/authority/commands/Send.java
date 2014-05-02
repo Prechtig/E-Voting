@@ -35,7 +35,7 @@ public class Send extends Command
 			ValueVector children = optionsValue.getChildren(ValueIdentifiers.getValidator());
 			children.set(0, validator);
 			
-			CommMessage request = CommMessage.createRequest("sendElectionOptionList", Model.getaCommunicationPath(), null); // TODO:
+			CommMessage request = CommMessage.createRequest("sendElectionOptionList", Model.getaCommunicationPath(), optionsValue); // TODO:
 																													// null
 																													// skal
 																													// være
