@@ -3,16 +3,27 @@ package org.evoting.authority;
 import jolie.runtime.JavaService;
 
 import org.evoting.authority.commands.Command;
+import org.evoting.authority.commands.Exit;
 
 public class Controller extends JavaService{
+	
+	private static final String UNKNOWN_COMMAND = "Could not find any command matching the input.";
 	
 	public void run()
 	{
 		Command command;
 		while(true) {
-			//TODO Exit the loop by modifiying exit somehow.
 			command = ConsoleIO.getUserInput();
-			System.out.println(command.execute(this));
+			//Command not found
+			if(command == null) {
+				System.out.println(UNKNOWN_COMMAND);
+			} else {
+				System.out.println(command.execute(this));
+				//Special case
+				if(command instanceof Exit) {
+					break;
+				}
+			}
 		}
 	}
 	

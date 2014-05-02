@@ -27,6 +27,8 @@ public class ElGamal {
 			BigInteger paramBigInteger2 = p512;
 			int paramInt2 = 0;
 
+			System.out.println("length of keys " + g512.bitLength() + " " + p512.bitLength());
+				
 			// Elgamal magic
 			ElGamalParameters localElGamalParameters = new ElGamalParameters(paramBigInteger2, paramBigInteger1, paramInt2);
 			ElGamalKeyGenerationParameters localElGamalKeyGenerationParameters = new ElGamalKeyGenerationParameters(new SecureRandom(), localElGamalParameters);
