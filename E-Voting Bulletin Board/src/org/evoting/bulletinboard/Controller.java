@@ -52,7 +52,6 @@ public class Controller extends JavaService {
 			arr[id] = new ElectionOption(id, name, partyId);
 		}
 		Model.setElectionOptions(arr);
-		System.out.println("Before return");
 		return Boolean.TRUE;
 	}
 

@@ -37,6 +37,10 @@ public class Election extends BaseEntity {
 		super();
 	}
 	
+	public int getElectionId() {
+		return electionId;
+	}
+	
 	/**
 	 * @return The start time of the Election
 	 */
