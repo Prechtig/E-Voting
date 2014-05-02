@@ -31,47 +31,44 @@ public class Controller extends JavaService {
 	static {
 		Security.generateRSAKeys();
 	}
-	
+
 	private static Date electionStartDate;
 	private static Date electionEndDate;
-	
+
 	@RequestResponse
 	public Boolean sendElectionOptionList(Value electionOptions) {
-		System.out.println("Before validation");
 		validate(electionOptions.getFirstChild(ValueIdentifiers.getValidator()));
-		System.out.println("Validated");
-		
+
 		ValueVector options = electionOptions.getChildren(ValueIdentifiers.getElectionOptions());
-		
+
 		ElectionOption[] arr = new ElectionOption[options.size()];
-		for(int i = 0; i < options.size(); i++) {
+		for (int i = 0; i < options.size(); i++) {
 			Value currentOption = options.get(i);
-			
+
 			int id = currentOption.getFirstChild(ValueIdentifiers.getId()).intValue();
 			String name = currentOption.getFirstChild(ValueIdentifiers.getName()).strValue();
 			int partyId = currentOption.getFirstChild(ValueIdentifiers.getPartyId()).intValue();
-			
+
 			arr[id] = new ElectionOption(id, name, partyId);
 		}
 		Model.setElectionOptions(arr);
 		System.out.println("Before return");
 		return Boolean.TRUE;
 	}
-	
-	
+
 	@RequestResponse
 	public Boolean startElection(Value value) {
 		validate(value.getFirstChild(ValueIdentifiers.getValidator()));
-		
+
 		long startTime = value.getFirstChild(ValueIdentifiers.getStartTime()).longValue();
 		long endTime = value.getFirstChild(ValueIdentifiers.getEndTime()).longValue();
-		
+
 		electionStartDate = new Date(startTime);
 		electionEndDate = new Date(endTime);
 		Model.createNewElection(electionStartDate, electionEndDate);
 		return Boolean.TRUE;
 	}
-	
+
 	@RequestResponse
 	/**
 	 * Processes a vote, effectively saving it in the persistent storage
@@ -80,41 +77,41 @@ public class Controller extends JavaService {
 	 * @return true if the vote is registered, otherwise false
 	 */
 	public Boolean processVote(Value valueEncryptedBallot) {
-		if(!electionIsRunning()) {
+		if (!electionIsRunning()) {
 			throw new ElectionNotStartedException();
 		}
-		//TODO: Is this implementation correct?
+		// TODO: Is this implementation correct?
 		Ballot ballot = new EncryptedBallot(valueEncryptedBallot).getBallot();
-		
+
 		String userId = ballot.getUserId();
 		byte[][] encryptedVote = ballot.getVote();
-		
+
 		Model.processVote(userId, encryptedVote);
-		
+
 		return Boolean.TRUE;
 	}
-	
+
 	@RequestResponse
 	public Boolean login(Value userInformation) {
 		int userId = userInformation.getFirstChild(ValueIdentifiers.getUserId()).intValue();
 		String passwordHash = userInformation.getFirstChild(ValueIdentifiers.getPasswordHash()).strValue();
 		Model.validateUser(userId, passwordHash);
-		
+
 		return Boolean.TRUE;
 	}
-	
+
 	@RequestResponse
 	public Value getElectionStatus() {
 		Value status = Value.create();
-		
+
 		Date startTime = Model.getElectionStartTime();
 		Date endTime = Model.getElectionEndTime();
-		
+
 		boolean running = new Date().before(endTime);
 		status.getNewChild(ValueIdentifiers.getRunning()).setValue(running);
 		status.getNewChild(ValueIdentifiers.getStartTime()).setValue(startTime.getTime());
 		status.getNewChild(ValueIdentifiers.getEndTime()).setValue(endTime.getTime());
-		
+
 		return status;
 	}
 
@@ -123,103 +120,103 @@ public class Controller extends JavaService {
 	 * @return Returns the electionOptionlist as a Value, used in Jolie 
 	 */
 	public Value getElectionOptions() {
-		if(!electionIsRunning()) {
+		if (!electionIsRunning()) {
 			throw new ElectionNotStartedException();
 		}
-		
+
 		EncryptedElectionOptions electionOptions = Model.getEncryptedElectionOptions();
 		return electionOptions.getValue();
 	}
-	
+
 	@RequestResponse
 	/**
 	 * @return Returns the elgamal + rsa public key
 	 */
 	public Value getPublicKeys() {
-		if(!electionIsRunning()) {
+		if (!electionIsRunning()) {
 			throw new ElectionNotStartedException();
 		}
-		
-		//TODO: Do we need this check?
-		if(!Model.keysGenerated()) {
+
+		// TODO: Do we need this check?
+		if (!Model.keysGenerated()) {
 			throw new RuntimeException("The Bulletin Board has not received the keys from the Authority yet");
 		}
 		return Model.getPublicKeysValue();
 	}
-	
+
 	@RequestResponse
 	/**
 	 * @return All votes in the database
 	 */
 	public Value getAllVotes() {
-		if(!electionIsRunning()) {
+		if (!electionIsRunning()) {
 			throw new ElectionNotStartedException();
 		}
-		
+
 		AnonymousVoteList allVotesAuthority = Model.getAllVotes();
 		return allVotesAuthority.toValue();
 	}
-	
+
 	@RequestResponse
 	/**
 	 * @param validator
 	 * @return
 	 */
 	public Value getAllVotesAuthority(Value validator) {
-		if(!electionIsRunning()) {
+		if (!electionIsRunning()) {
 			throw new ElectionNotStartedException();
 		}
 		validate(validator);
-		
+
 		AnonymousVoteList allVotesAuthority = Model.getAllVotesAuthority();
 		return allVotesAuthority.toValue();
 	}
-	
+
 	@RequestResponse
 	public boolean setKeys(Value publicKeys) {
-		//TODO: Check that the public keys comes from the authority
-		while(true) {
+		// TODO: Check that the public keys comes from the authority
+		while (true) {
 			try {
 				Importer.importRsaPublicKey("");
 				break;
-			} catch(IOException e) {
-				
+			} catch (IOException e) {
+
 			}
 		}
-		
-		Value elgamalPublicKey = publicKeys.getFirstChild("elgamalPublicKey"); 
+
+		Value elgamalPublicKey = publicKeys.getFirstChild("elgamalPublicKey");
 		Value elgamalPublicKeyParameters = elgamalPublicKey.getFirstChild("parameters");
-		//Extract elgamal key
+		// Extract elgamal key
 		String y = elgamalPublicKey.getFirstChild("y").strValue();
 		String p = elgamalPublicKeyParameters.getFirstChild("p").strValue();
 		String g = elgamalPublicKeyParameters.getFirstChild("g").strValue();
-		int l    = elgamalPublicKeyParameters.getFirstChild("l").intValue();
-		//Extract rsa key
+		int l = elgamalPublicKeyParameters.getFirstChild("l").intValue();
+		// Extract rsa key
 		byte[] rsaPublicKey = publicKeys.getFirstChild("rsaPublicKey").byteArrayValue().getBytes();
-		
+
 		Model.setKeys(y, p, g, l, rsaPublicKey);
 		return Boolean.TRUE;
 	}
-	
+
 	public boolean loadAuthorityRsaPublicKey(String pathname) {
-		
+
 		return Boolean.TRUE;
 	}
-	
+
 	private boolean electionIsRunning() {
 		Date currentTime = new Date(System.currentTimeMillis());
 		return currentTime.after(electionStartDate) && currentTime.before(electionEndDate);
 	}
-	
+
 	private void validate(Value validation) {
 		String message = validation.getFirstChild(ValueIdentifiers.getMessage()).strValue();
 		byte[] signature = validation.getFirstChild(ValueIdentifiers.getSignature()).byteArrayValue().getBytes();
 		String hashedMessage = Security.hash(message);
-		if(!hashedMessage.equals(new String(Security.decryptRSA(signature, Security.getAuthorityRSAPublicKey())))) {
+		if (!hashedMessage.equals(new String(Security.decryptRSA(signature, Security.getAuthorityRSAPublicKey())))) {
 			throw new BadValueException("Validation error");
 		}
 	}
-	
+
 	/**
 	 * Load the ElGamal authority public key
 	 */
@@ -228,28 +225,28 @@ public class Controller extends JavaService {
 		String message = "Enter the location of the Authority ElGamal public key";
 		String input;
 		ElGamalPublicKeyParameters pubKey = null;
-		while(true) {
+		while (true) {
 			try {
 				System.out.println(message);
 				input = console.readLine();
 				pubKey = Importer.importElGamalPublicKeyParameters(input);
 				break;
-			} catch(FileNotFoundException e) {
+			} catch (FileNotFoundException e) {
 				e.printStackTrace();
 				System.out.println("Invalid file location.");
-			} catch(CorruptDataException e) {
+			} catch (CorruptDataException e) {
 				e.printStackTrace();
 				System.out.println("The file does not have the correct format.");
-			} catch(IOException e) {
+			} catch (IOException e) {
 				e.printStackTrace();
 				System.out.println("Something went wrong.");
 			} finally {
-				if(pubKey != null) {
+				if (pubKey != null) {
 					return Boolean.TRUE;
 				}
 				System.out.println("Try again y/n?");
 				input = console.readLine();
-				if(!"y".equals(input.toLowerCase())) {
+				if (!"y".equals(input.toLowerCase())) {
 					break;
 				}
 			}
@@ -270,19 +267,19 @@ public class Controller extends JavaService {
 		message = "Enter the location of the Authority RSA public key";
 		PublicKey authPubKey = (PublicKey) importRsaKey(message, KeyType.PUBLIC);
 
-		if(bbPrivKey != null && bbPubKey != null && authPubKey != null) {
+		if (bbPrivKey != null && bbPubKey != null && authPubKey != null) {
 			Security.setBulletinBoardRSAPrivateKey(bbPrivKey);
-			Security.setBulletinBoardRSAPublicKey(bbPubKey);	
+			Security.setBulletinBoardRSAPublicKey(bbPubKey);
 			Security.setAuthorityRSAPublicKey(authPubKey);
 			return Boolean.TRUE;
 		}
 		return Boolean.FALSE;
 	}
-	
+
 	private Key importRsaKey(String message, KeyType keytype) {
 		Console console = System.console();
 		String input;
-		while(true) {
+		while (true) {
 			try {
 				System.out.println(message);
 				input = console.readLine();
@@ -292,16 +289,17 @@ public class Controller extends JavaService {
 				case PUBLIC:
 					return Importer.importRsaPublicKey(input);
 				}
-			} catch(IOException e) {
+			} catch (IOException e) {
 				e.printStackTrace();
 				System.out.println("Invalid file location. Try again y/n?");
 				input = console.readLine();
-				if(!"y".equals(input.toLowerCase())) {
+				if (!"y".equals(input.toLowerCase())) {
 					return null;
 				}
 			}
 		}
 	}
-	
-	public static void main(String[] args) { }
+
+	public static void main(String[] args) {
+	}
 }

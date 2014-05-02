@@ -10,19 +10,17 @@ import jolie.runtime.ValueVector;
 import org.evoting.authority.Model;
 import org.evoting.common.ValueIdentifiers;
 
-public class Send extends Command
-{
+public class Send extends Command {
 	public static final String KEYWORD = "send";
-	
+
 	public Send(String[] args) {
 		super(args);
 	}
-	
-	public String execute(JavaService js)
-	{
+
+	public String execute(JavaService js) {
 		return sendElectionoptions(js);
 	}
-	
+
 	/**
 	 * Sends the electionOptions list to the bulletinboard. Only when election is not running
 	 */
@@ -30,21 +28,14 @@ public class Send extends Command
 		if (Model.geteOptions() != null) {
 			// TODO:Create value containing all the electionoptions
 			Value optionsValue = Model.getElectionOptionsValue();
-			
+
 			Value validator = Model.getNewValidator();
 			ValueVector children = optionsValue.getChildren(ValueIdentifiers.getValidator());
 			children.set(0, validator);
-			
-			CommMessage request = CommMessage.createRequest("sendElectionOptionList", Model.getaCommunicationPath(), optionsValue); // TODO:
-																													// null
-																													// skal
-																													// være
-																													// election
-																													// options
+
+			CommMessage request = CommMessage.createRequest("sendElectionOptionList", Model.getaCommunicationPath(), optionsValue);
 			try {
-				CommMessage response = js.sendMessage(request).recvResponseFor(request);// Den skal tage imod en
-																						// value? som indeholder
-																						// confirmation
+				CommMessage response = js.sendMessage(request).recvResponseFor(request);
 				if (response.value().boolValue()) {
 					return "Successfully sent list of election options";
 				} else {

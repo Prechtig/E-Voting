@@ -18,14 +18,14 @@ public class Model {
 	private static String authRsaPubKeyFilepath = "AuthRsaPub";
 	private static String bbRsaPrivKeyFilepath = "BbRsaPriv";
 	private static String bbRsaPubKeyFilepath = "BbRsaPub";
-	
+
 	private static String aCommunicationPath = "/";
 	private static String electionOptionsFile = "ElectionOptions";
 
 	private static List<ElectionOption> eOptions;
 
 	private static SecureRandom random = new SecureRandom();
-	
+
 	/**
 	 * Creates a value containing a string and the string signed using the private key of the authority
 	 * 
@@ -47,7 +47,7 @@ public class Model {
 		}
 		return null;
 	}
-	
+
 	/**
 	 * Generates a random string
 	 * 
@@ -139,14 +139,14 @@ public class Model {
 
 	public static Value getElectionOptionsValue() {
 		Value result = Value.create();
-		
-		for(ElectionOption e : eOptions) {
+
+		for (ElectionOption e : eOptions) {
 			Value electionOptions = result.getNewChild(ValueIdentifiers.getElectionOptions());
-			electionOptions.getNewChild(ValueIdentifiers.getId()).setValue(e.getId());
+			electionOptions.getNewChild(ValueIdentifiers.getId()).setValue(e.getElectionId());
 			electionOptions.getNewChild(ValueIdentifiers.getName()).setValue(e.getName());
 			electionOptions.getNewChild(ValueIdentifiers.getPartyId()).setValue(e.getPartyId());
 		}
-		
+
 		return result;
 	}
 }
