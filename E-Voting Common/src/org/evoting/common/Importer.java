@@ -2,6 +2,7 @@ package org.evoting.common;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.math.BigInteger;
@@ -36,8 +37,11 @@ public class Importer {
 	 * 
 	 * @param fileName Path to the file containing the ElGamal public key
 	 * @return The corresponding ElGamal public key parameters
+	 * @throws IOException 
+	 * @throws CorruptDataException 
+	 * @throws FileNotFoundException 
 	 */
-	public static ElGamalPublicKeyParameters importElGamalPublicKeyParameters(String fileName) {
+	public static ElGamalPublicKeyParameters importElGamalPublicKeyParameters(String fileName) throws FileNotFoundException, CorruptDataException, IOException {
 		//Retreives the 3 values for the parameters
 		BigInteger[] result = loadElGamalKeyFile(fileName, KeyType.PUBLIC);
 
@@ -61,8 +65,11 @@ public class Importer {
 	 * 
 	 * @param fileName Path to the file containing the ElGamal private key
 	 * @return The corresponding ElGamal private key parameters
+	 * @throws IOException 
+	 * @throws CorruptDataException 
+	 * @throws FileNotFoundException 
 	 */
-	public static ElGamalPrivateKeyParameters importElGamalPrivateKeyParameters(String fileName) {
+	public static ElGamalPrivateKeyParameters importElGamalPrivateKeyParameters(String fileName) throws FileNotFoundException, CorruptDataException, IOException {
 		//Retreives the 3 values for the parameters
 		BigInteger[] result = loadElGamalKeyFile(fileName, KeyType.PRIVATE);
 
@@ -80,39 +87,32 @@ public class Importer {
 	 * @param fileName
 	 * @param type
 	 * @return
+	 * @throws IOException 
+	 * @throws FileNotFoundException
+	 * @throws CorruptDataException 
 	 */
-	private static BigInteger[] loadElGamalKeyFile(String fileName, KeyType type) {
+	private static BigInteger[] loadElGamalKeyFile(String fileName, KeyType type) throws FileNotFoundException, CorruptDataException, IOException {
 		BigInteger[] result = new BigInteger[3];
-		try {
-			File file = new File(fileName);
+		File file = new File(fileName);
 
-			if (file.exists()) {
-				FileReader fr = new FileReader(file);
-				BufferedReader br = new BufferedReader(fr);
-				int i = 0;
-				String line;
-				while ((line = br.readLine()) != null) {
-					switch (type) {
-					case PUBLIC:
-						result[i] = ElGamalKeySwitch(line, type);
-						break;
-					case PRIVATE:
-						result[i] = ElGamalKeySwitch(line, type);
-						break;
-					}
-					i++;
+		if (file.exists()) {
+			FileReader fr = new FileReader(file);
+			BufferedReader br = new BufferedReader(fr);
+			int i = 0;
+			String line;
+			while ((line = br.readLine()) != null) {
+				switch (type) {
+				case PUBLIC:
+					result[i] = ElGamalKeySwitch(line, type);
+					break;
+				case PRIVATE:
+					result[i] = ElGamalKeySwitch(line, type);
+					break;
 				}
-				br.close();
+				i++;
 			}
-
-		} catch (CorruptDataException e) {
-			System.out.println("ElGamal key file is corrupted");
-			e.printStackTrace();
-		} catch (IOException e) {
-			System.out.println("Could not work with ElGamal key file");
-			e.printStackTrace();
+			br.close();
 		}
-
 		return result;
 	}
 
@@ -205,9 +205,5 @@ public class Importer {
 			e.printStackTrace();
 		}
 		return null;
-	}
-
-	private enum KeyType {
-		PRIVATE, PUBLIC
 	}
 }
