@@ -2,10 +2,13 @@ package org.evoting.authority.commands;
 
 import java.io.IOException;
 
-import org.evoting.authority.Model;
-
 import jolie.net.CommMessage;
 import jolie.runtime.JavaService;
+import jolie.runtime.Value;
+import jolie.runtime.ValueVector;
+
+import org.evoting.authority.Model;
+import org.evoting.common.ValueIdentifiers;
 
 public class Send extends Command
 {
@@ -26,6 +29,12 @@ public class Send extends Command
 	private String sendElectionoptions(JavaService js) {
 		if (Model.geteOptions() != null) {
 			// TODO:Create value containing all the electionoptions
+			Value optionsValue = Model.getElectionOptionsValue();
+			
+			Value validator = Model.getNewValidator();
+			ValueVector children = optionsValue.getChildren(ValueIdentifiers.getValidator());
+			children.set(0, validator);
+			
 			CommMessage request = CommMessage.createRequest("sendElectionOptionList", Model.getaCommunicationPath(), null); // TODO:
 																													// null
 																													// skal

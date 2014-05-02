@@ -153,8 +153,8 @@ public class Importer {
 				BufferedReader br = new BufferedReader(fr);
 
 				String delimiter = br.readLine();
+				
 				ArrayList<ElectionOption> electionOptions = new ArrayList<ElectionOption>();
-
 				String line;
 				while ((line = br.readLine()) != null) {
 					String[] parts = line.split(delimiter);
@@ -168,6 +168,9 @@ public class Importer {
 				br.close();
 
 				return electionOptions;
+			} else {
+				System.out.println("File does not exist");
+				return null;
 			}
 		} catch (IOException e) {
 			System.out.println("Error working with election options file");

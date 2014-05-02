@@ -14,4 +14,18 @@ public class Controller extends JavaService{
 			System.out.println(command.execute(this));
 		}
 	}
+	
+	
+	public static void main(String[] args) {
+		//For making it executable
+		
+		
+		
+		//FOR DEBUGGING START// TODO:REMOVE WHEN DONE
+		
+				Controller c = new Controller();
+				c.run();
+				
+				//FOR DEBUGGING END// TODO:REMOVE WHEN DONE
+	}
 }

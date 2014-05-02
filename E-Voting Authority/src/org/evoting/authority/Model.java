@@ -20,7 +20,7 @@ public class Model {
 	private static String bbRsaPubKeyFilepath = "BbRsaPub";
 	
 	private static String aCommunicationPath = "/";
-	private static String electionOptionsFile = "ElectionOptions.txt";
+	private static String electionOptionsFile = "ElectionOptions";
 
 	private static List<ElectionOption> eOptions;
 
@@ -34,7 +34,7 @@ public class Model {
 	public static Value getNewValidator() {
 		// Get random string
 		String message = nextRandomString();
-		if (Security.RSAKeysSat()) {
+		if (Security.RSAAuthKeysSat()) {
 			// Sign the random message
 			byte[] signature = Security.sign(message, Security.getAuthorityRSAPrivateKey());
 			// Create new value and set children
@@ -136,7 +136,17 @@ public class Model {
 	public static void seteOptions(List<ElectionOption> eOptions) {
 		Model.eOptions = eOptions;
 	}
-	
-	
-	
+
+	public static Value getElectionOptionsValue() {
+		Value result = Value.create();
+		
+		for(ElectionOption e : eOptions) {
+			Value electionOptions = result.getNewChild(ValueIdentifiers.getElectionOptions());
+			electionOptions.getNewChild(ValueIdentifiers.getId()).setValue(e.getId());
+			electionOptions.getNewChild(ValueIdentifiers.getName()).setValue(e.getName());
+			electionOptions.getNewChild(ValueIdentifiers.getPartyId()).setValue(e.getPartyId());
+		}
+		
+		return result;
+	}
 }

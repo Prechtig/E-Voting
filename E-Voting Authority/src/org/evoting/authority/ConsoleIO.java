@@ -16,12 +16,16 @@ public class ConsoleIO {
 	 */
 	public static Command getUserInput() {
 		System.out.println("Enter commmand: ");
-		String input = System.console().readLine().toLowerCase();
-		String[] args = input.split(" ");
+		//String input = System.console().readLine().toLowerCase();
 		
-		if(!args[0].equals("")) {
-			return null;
-		}
+		//FOR DEBUGGING START// TODO:REMOVE WHEN DONE
+		
+		String input = "";
+		
+		//FOR DEBUGGING END// TODO:REMOVE WHEN DONE
+		
+		
+		String[] args = input.split(" ");
 		
 		switch (args[0]) {
 		// Start election

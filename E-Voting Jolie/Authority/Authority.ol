@@ -28,20 +28,20 @@ embedded {
 
 init
 {
-	run@Controller( )( )
+	run@Controller( )
 }
 
 main
 {
-	[ getElectionStatus( )( ElectionStatus ) {// Used to get information regarding the election
-		getElectionStatus@BulletinBoardService( )( ElectionStatus )
+	[ getElectionStatus( )( status ) {// Used to get information regarding the election
+		getElectionStatus@BulletinBoardService( )( status )
 	} ] { nullProcess }
 
-    [ startElection( ElectionStart )( bool ) { //Start the election
-		startElection@BulletinBoardService( ElectionStart )( bool )
+    [ startElection( startElection )( confirmation ) { //Start the election
+		startElection@BulletinBoardService( startElection )( confirmation )
 	} ] { nullProcess }
 
-	[ sendElectionOptionList( ElectionOptionsList )( confirmation ) { // Send the list of electionoptions
-		sendElectionOptionList@BulletinBoardService( ElectionOptionsList )( bool )
+	[ sendElectionOptionList( eOptionsList )( confirmation ) { // Send the list of electionoptions
+		sendElectionOptionList@BulletinBoardService( eOptionsList )( confirmation )
 	} ]  { nullProcess }
 }

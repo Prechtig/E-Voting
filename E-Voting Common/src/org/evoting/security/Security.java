@@ -67,6 +67,14 @@ public class Security {
 	}
 	
 	/**
+	 * Check if the authority RSA keys have been sat
+	 * @return if the RSA keys of the authority have been sat
+	 */
+	public static boolean RSAAuthKeysSat() {
+		return (RSA.getAuthorityPrivateKey() != null && RSA.getAuthorityPublicKey() != null);
+	}
+	
+	/**
 	 * Check if ElGamal keys have been sat
 	 * @return if ElGamal keys have been sat
 	 */
