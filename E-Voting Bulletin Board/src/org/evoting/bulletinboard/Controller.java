@@ -56,11 +56,17 @@ public class Controller extends JavaService {
 	}
 
 	@RequestResponse
-	public Boolean startElection(Value value) {
-		validate(value.getFirstChild(ValueIdentifiers.getValidator()));
+	public Boolean startElection(Value electionStart) {
+		if(!electionStart.hasChildren(ValueIdentifiers.getValidator()) ||
+		   !electionStart.hasChildren(ValueIdentifiers.getStartTime()) ||
+		   !electionStart.hasChildren(ValueIdentifiers.getEndTime())) {
+			throw new BadValueException();
+		}
+		
+		validate(electionStart.getFirstChild(ValueIdentifiers.getValidator()));
 
-		long startTime = value.getFirstChild(ValueIdentifiers.getStartTime()).longValue();
-		long endTime = value.getFirstChild(ValueIdentifiers.getEndTime()).longValue();
+		long startTime = electionStart.getFirstChild(ValueIdentifiers.getStartTime()).longValue();
+		long endTime = electionStart.getFirstChild(ValueIdentifiers.getEndTime()).longValue();
 
 		electionStartDate = new Date(startTime);
 		electionEndDate = new Date(endTime);
@@ -75,12 +81,12 @@ public class Controller extends JavaService {
 	 * @param valueEncryptedBallot The vote to process, as a value from Jolie
 	 * @return true if the vote is registered, otherwise false
 	 */
-	public Boolean processVote(Value valueEncryptedBallot) {
+	public Boolean processVote(Value encryptedBallot) {
 		if (!electionIsRunning()) {
 			throw new ElectionNotStartedException();
 		}
 		// TODO: Is this implementation correct?
-		Ballot ballot = new EncryptedBallot(valueEncryptedBallot).getBallot();
+		Ballot ballot = new EncryptedBallot(encryptedBallot).getBallot();
 
 		String userId = ballot.getUserId();
 		byte[][] encryptedVote = ballot.getVote();
@@ -92,6 +98,11 @@ public class Controller extends JavaService {
 
 	@RequestResponse
 	public Boolean login(Value userInformation) {
+		if(!userInformation.hasChildren(ValueIdentifiers.getUserId()) ||
+		   !userInformation.hasChildren(ValueIdentifiers.getPasswordHash())) {
+			throw new BadValueException();
+		}
+		
 		int userId = userInformation.getFirstChild(ValueIdentifiers.getUserId()).intValue();
 		String passwordHash = userInformation.getFirstChild(ValueIdentifiers.getPasswordHash()).strValue();
 		Model.validateUser(userId, passwordHash);
@@ -208,6 +219,11 @@ public class Controller extends JavaService {
 	}
 
 	private void validate(Value validation) {
+		if(!validation.hasChildren(ValueIdentifiers.getMessage()) ||
+		   !validation.hasChildren(ValueIdentifiers.getSignature())) {
+			throw new BadValueException();
+		}
+		
 		String message = validation.getFirstChild(ValueIdentifiers.getMessage()).strValue();
 		byte[] signature = validation.getFirstChild(ValueIdentifiers.getSignature()).byteArrayValue().getBytes();
 		String hashedMessage = Security.hash(message);
