@@ -26,7 +26,7 @@ public class Database {
 			Security.generateRSAKeys();
 		}
 		if (!Security.ElGamalKeysSat()) {
-			Security.generateElGamalKeys();
+			Security.generateElGamalKeys(true);
 		}
 		pubKey = Security.getElgamalPublicKey();
 	}

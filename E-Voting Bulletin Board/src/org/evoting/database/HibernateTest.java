@@ -23,7 +23,7 @@ public class HibernateTest {
 			Security.generateRSAKeys();
 		}
 		if(!Security.ElGamalKeysSat()) {
-			Security.generateElGamalKeys();
+			Security.generateElGamalKeys(true);
 		}
 		
 		ElGamalPublicKeyParameters pubKey = Security.getElgamalPublicKey();

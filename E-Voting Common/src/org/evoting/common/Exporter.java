@@ -16,7 +16,7 @@ import org.bouncycastle.crypto.params.ElGamalPublicKeyParameters;
 
 public class Exporter {
 	// write one method to save a given string to a given filename. A static class to handle that maybe? to load and save files
-	public static void exportElGamalPublicKeyParameters(ElGamalPublicKeyParameters pubK, String fileName){
+	public static void exportElGamalPublicKeyParameters(ElGamalPublicKeyParameters pubK, String fileName) throws IOException {
 		BigInteger y = pubK.getY();
 		ElGamalParameters param = pubK.getParameters();
 		BigInteger g = param.getG();
@@ -33,23 +33,19 @@ public class Exporter {
 		sb.append(p);
 		sb.append(System.getProperty("line.separator"));
 
-		try {
-			File file = new File(fileName);
-
-			if (!file.exists()) {
-				file.createNewFile();
-			}
-
-			FileWriter fw = new FileWriter(file.getAbsoluteFile());
-			BufferedWriter bw = new BufferedWriter(fw);
-			bw.write(sb.toString());
-			bw.close();
-		} catch (IOException e) {
-			e.printStackTrace();
+		File file = new File(fileName);
+		if (!file.exists()) {
+			file.createNewFile();
 		}
+
+		FileWriter fw = new FileWriter(file.getAbsoluteFile());
+		BufferedWriter bw = new BufferedWriter(fw);
+		bw.write(sb.toString());
+		bw.close();
+
 	}
-	
-	public static void exportElGamalPrivateKeyParameters(ElGamalPrivateKeyParameters privK, String fileName) {
+
+	public static void exportElGamalPrivateKeyParameters(ElGamalPrivateKeyParameters privK, String fileName) throws IOException {
 		BigInteger x = privK.getX();
 		ElGamalParameters param = privK.getParameters();
 		BigInteger g = param.getG();
@@ -66,22 +62,18 @@ public class Exporter {
 		sb.append(p);
 		sb.append(System.getProperty("line.separator"));
 
-		try {
-			File file = new File(fileName);
-
-			if (!file.exists()) {
-				file.createNewFile();
-			}
-
-			FileWriter fw = new FileWriter(file.getAbsoluteFile());
-			BufferedWriter bw = new BufferedWriter(fw);
-			bw.write(sb.toString());
-			bw.close();
-		} catch (IOException e) {
-			e.printStackTrace();
+		File file = new File(fileName);
+		if (!file.exists()) {
+			file.createNewFile();
 		}
+
+		FileWriter fw = new FileWriter(file.getAbsoluteFile());
+		BufferedWriter bw = new BufferedWriter(fw);
+		bw.write(sb.toString());
+		bw.close();
+
 	}
-	
+
 	public static void exportRsaKey(String pathname, Key key) throws IOException {
 		Files.write(Paths.get(pathname), key.getEncoded(), StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.WRITE);
 	}
