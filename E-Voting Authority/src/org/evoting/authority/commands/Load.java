@@ -66,7 +66,7 @@ public class Load extends Command {
 	}
 
 	/**
-	 * Load RSA key pairs into the system. Only if election is not running
+	 * Load RSA key pairs into the system.
 	 */
 	private String loadRSAKeys() {//TODO: add checks to see if the importer actually returns anything, like with optionslist
 		try {

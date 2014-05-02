@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.security.Key;
 import java.security.PrivateKey;
 import java.security.PublicKey;
+import java.util.Arrays;
 import java.util.Date;
 
 import jolie.runtime.JavaService;
@@ -22,14 +23,12 @@ import org.evoting.common.EncryptedElectionOptions;
 import org.evoting.common.Importer;
 import org.evoting.common.KeyType;
 import org.evoting.common.ValueIdentifiers;
+import org.evoting.common.exceptions.BadValueException;
 import org.evoting.common.exceptions.CorruptDataException;
 import org.evoting.database.entities.ElectionOption;
 import org.evoting.security.Security;
 
 public class Controller extends JavaService {
-	static {
-		Security.generateRSAKeys();
-	}
 
 	private static Date electionStartDate;
 	private static Date electionEndDate;

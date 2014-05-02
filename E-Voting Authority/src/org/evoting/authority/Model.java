@@ -2,6 +2,7 @@ package org.evoting.authority;
 
 import java.math.BigInteger;
 import java.security.SecureRandom;
+import java.util.Arrays;
 import java.util.List;
 
 import jolie.runtime.ByteArray;

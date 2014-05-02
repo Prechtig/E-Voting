@@ -170,10 +170,7 @@ public class Model {
 	public static void createNewElection(Date startDate, Date endDate) {
 		EntityManager entMgr = beginDatabaseSession();
 		
-		ElectionRepository er = new ElectionRepository(entMgr);
-		int nextId = er.findNextId();
-		
-		Election election = new Election(nextId, startDate, endDate);
+		Election election = new Election(startDate, endDate);
 		Model.election = election;
 		
 		entMgr.persist(election);
