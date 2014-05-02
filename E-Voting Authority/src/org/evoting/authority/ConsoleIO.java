@@ -16,11 +16,11 @@ public class ConsoleIO {
 	 */
 	public static Command getUserInput() {
 		System.out.println("Enter commmand: ");
-		// String input = System.console().readLine().toLowerCase();
+		String input = System.console().readLine().toLowerCase();
 
 		// FOR DEBUGGING START// TODO:REMOVE WHEN DONE
 
-		String input = "";
+		//String input = "";
 
 		// FOR DEBUGGING END// TODO:REMOVE WHEN DONE
 
