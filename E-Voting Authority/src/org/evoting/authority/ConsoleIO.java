@@ -6,7 +6,7 @@ import org.evoting.authority.commands.Exit;
 import org.evoting.authority.commands.Generate;
 import org.evoting.authority.commands.Load;
 import org.evoting.authority.commands.Send;
-import org.evoting.authority.commands.StartElection;
+import org.evoting.authority.commands.Start;
 import org.evoting.authority.commands.Status;
 
 public class ConsoleIO {
@@ -28,8 +28,8 @@ public class ConsoleIO {
 
 		switch (args[0]) {
 		// Start election
-		case StartElection.KEYWORD:// TODO: Jolie needs
-			return new StartElection(args);
+		case Start.KEYWORD:// TODO: Jolie needs
+			return new Start(args);
 			// Load electionOptions or keys
 		case Load.KEYWORD:
 			return new Load(args);

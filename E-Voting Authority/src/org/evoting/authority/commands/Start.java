@@ -13,10 +13,10 @@ import jolie.runtime.ValueVector;
 import org.evoting.authority.Model;
 import org.evoting.common.ValueIdentifiers;
 
-public class StartElection extends Command {
+public class Start extends Command {
 	public static final String KEYWORD = "start";
 
-	public StartElection(String[] args) {
+	public Start(String[] args) {
 		super(args);
 	}
 
