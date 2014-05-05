@@ -3,9 +3,9 @@ include "../Common/IBulletinBoard.iol"
 
 interface IClientController {
     RequestResponse: getBallot( void )( EncryptedBallot )
-    RequestResponse: setElectionOptions( EncryptedElectionOptions )( void )
+    RequestResponse: setElectionOptions( SignedElectionOptions )( void )
     RequestResponse: setPublicKeys( PublicKeys )( void )
-    RequestResponse: setElectionOptionsAndGetBallot( EncryptedElectionOptions )( EncryptedBallot )
+    RequestResponse: setElectionOptionsAndGetBallot( SignedElectionOptions )( EncryptedBallot )
     RequestResponse: getElectionStatus( void )( ElectionStatus )
 }
 

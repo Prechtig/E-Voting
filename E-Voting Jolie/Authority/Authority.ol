@@ -13,7 +13,7 @@ inputPort IPJava {
 }
 
 outputPort BulletinBoardService {
-    Location: "socket://localhost:7000"
+    Location: "socket://localhost:8000"
     Protocol: sodep
     Interfaces: IAuthority
 }

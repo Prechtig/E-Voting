@@ -1,0 +1,2 @@
+Rename electionId til electionOptionId
+Rename encryptedelectionoptions til signedelectionsoptions

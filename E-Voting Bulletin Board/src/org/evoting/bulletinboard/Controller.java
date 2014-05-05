@@ -28,10 +28,6 @@ import org.evoting.database.entities.ElectionOption;
 import org.evoting.security.Security;
 
 public class Controller extends JavaService {
-	static {
-		Security.generateRSAKeys();
-	}
-
 	private static Date electionStartDate;
 	private static Date electionEndDate;
 
@@ -135,11 +131,6 @@ public class Controller extends JavaService {
 		if (!electionIsRunning()) {
 			throw new ElectionNotStartedException();
 		}
-
-		// TODO: Do we need this check?
-		if (!Model.keysGenerated()) {
-			throw new RuntimeException("The Bulletin Board has not received the keys from the Authority yet");
-		}
 		return Model.getPublicKeysValue();
 	}
 
@@ -170,35 +161,7 @@ public class Controller extends JavaService {
 		AnonymousVoteList allVotesAuthority = Model.getAllVotesAuthority();
 		return allVotesAuthority.toValue();
 	}
-
-	@RequestResponse
-	public boolean setKeys(Value publicKeys) {
-		// TODO: Check that the public keys comes from the authority
-		while (true) {
-			try {
-				Importer.importRsaPublicKey("");
-				break;
-			} catch (IOException e) {
-				System.out.println("Could not find file");
-			} catch (InvalidKeySpecException e) {
-				System.out.println("Invalid key file");
-			}
-		}
-
-		Value elgamalPublicKey = publicKeys.getFirstChild("elgamalPublicKey");
-		Value elgamalPublicKeyParameters = elgamalPublicKey.getFirstChild("parameters");
-		// Extract elgamal key
-		String y = elgamalPublicKey.getFirstChild("y").strValue();
-		String p = elgamalPublicKeyParameters.getFirstChild("p").strValue();
-		String g = elgamalPublicKeyParameters.getFirstChild("g").strValue();
-		int l = elgamalPublicKeyParameters.getFirstChild("l").intValue();
-		// Extract rsa key
-		byte[] rsaPublicKey = publicKeys.getFirstChild("rsaPublicKey").byteArrayValue().getBytes();
-
-		Model.setKeys(y, p, g, l, rsaPublicKey);
-		return Boolean.TRUE;
-	}
-
+	
 	public boolean loadAuthorityRsaPublicKey(String pathname) {
 
 		return Boolean.TRUE;
@@ -243,6 +206,7 @@ public class Controller extends JavaService {
 				System.out.println("Something went wrong.");
 			} finally {
 				if (pubKey != null) {
+					Security.setElGamalPublicKey(pubKey);
 					return Boolean.TRUE;
 				}
 				System.out.println("Try again y/n?");

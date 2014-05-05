@@ -38,7 +38,7 @@ public class HibernateTest {
 		Date startDate = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse("2014-06-30 08:00");
 		Date endDate = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse("2014-06-31 20:00");
 
-		Election t0 = new Election(0, startDate, endDate);
+		Election t0 = new Election(startDate, endDate);
 
 		EntityManager entMgr = EntityManagerUtil.getEntityManager();
 		entMgr.getTransaction().begin();
