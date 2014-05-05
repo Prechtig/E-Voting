@@ -8,9 +8,12 @@ import javax.persistence.EntityManager;
 import jolie.runtime.ByteArray;
 import jolie.runtime.Value;
 
+import org.bouncycastle.crypto.params.ElGamalParameters;
+import org.bouncycastle.crypto.params.ElGamalPublicKeyParameters;
 import org.evoting.bulletinboard.exceptions.InvalidUserInformationException;
 import org.evoting.common.AnonymousVoteList;
 import org.evoting.common.EncryptedElectionOptions;
+import org.evoting.common.ValueIdentifiers;
 import org.evoting.database.EntityManagerUtil;
 import org.evoting.database.entities.Election;
 import org.evoting.database.entities.ElectionOption;
@@ -18,16 +21,12 @@ import org.evoting.database.entities.Vote;
 import org.evoting.database.repositories.ElectionOptionRepository;
 import org.evoting.database.repositories.ElectionRepository;
 import org.evoting.database.repositories.VoteRepository;
+import org.evoting.security.Security;
 
 public class Model {
 	
-	private static byte[] rsaPublicKey = null;
-	private static boolean keysValueGenerated = false;
-	private static String y = null, p = null, g = null;
-	private static int l;
 	private static Value publicKeys = null;
 	private static Election election;
-	
 	
 	/**
 	 * Saves the vote in the database, overwriting the existing vote, if one is present
@@ -86,23 +85,22 @@ public class Model {
 	 * @return The given public keys as a Jolie value
 	 */
 	public static Value getPublicKeysValue() {
-		if(!keysValueGenerated) {
+		if(publicKeys == null) {
 			Value keys = Value.create();
-			
+			ElGamalPublicKeyParameters elgamalPubKey = Security.getElgamalPublicKey();
+			ElGamalParameters elgamalParams = elgamalPubKey.getParameters();
 			//Set the children regarding elgamal
-			Value elgamalPublicKeyValue = keys.getNewChild("elgamalPublicKey");
-			elgamalPublicKeyValue.getNewChild("y").setValue(y);
-			Value elgamalParametersValue = elgamalPublicKeyValue.getNewChild("parameters");
-			elgamalParametersValue.getNewChild("p").setValue(p);
-			elgamalParametersValue.getNewChild("g").setValue(g);
-			elgamalParametersValue.getNewChild("l").setValue(l);
+			Value elgamalPublicKeyValue = keys.getNewChild(ValueIdentifiers.getElgamalPublicKey());
+			elgamalPublicKeyValue.getNewChild(ValueIdentifiers.getY()).setValue(elgamalPubKey.getY());
+			Value elgamalParametersValue = elgamalPublicKeyValue.getNewChild(ValueIdentifiers.getParameters());
+			elgamalParametersValue.getNewChild(ValueIdentifiers.getP()).setValue(elgamalParams.getP());
+			elgamalParametersValue.getNewChild(ValueIdentifiers.getG()).setValue(elgamalParams.getP());
+			elgamalParametersValue.getNewChild(ValueIdentifiers.getL()).setValue(elgamalParams.getP());
 			
 			//Set the children regarding rsa
-			keys.getNewChild("rsaPublicKey").setValue(new ByteArray(rsaPublicKey));
+			keys.getNewChild(ValueIdentifiers.getRsaPublicKey()).setValue(new ByteArray(Security.getBulletinBoardRSAPublicKey().getEncoded()));
 			
 			publicKeys = keys;
-			keysValueGenerated = true;
-			return keys;
 		}
 		return publicKeys;
 	}
