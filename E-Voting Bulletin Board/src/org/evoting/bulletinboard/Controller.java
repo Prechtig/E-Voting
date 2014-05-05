@@ -27,10 +27,6 @@ import org.evoting.database.entities.ElectionOption;
 import org.evoting.security.Security;
 
 public class Controller extends JavaService {
-	static {
-		Security.generateRSAKeys();
-	}
-
 	private static Date electionStartDate;
 	private static Date electionEndDate;
 

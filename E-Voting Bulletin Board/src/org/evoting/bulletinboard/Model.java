@@ -98,9 +98,6 @@ public class Model {
 	 * @return The given public keys as a Jolie value
 	 */
 	public static Value getPublicKeysValue() {
-		if(!keysGenerated) {
-			throw new RuntimeException("The Bulletin Board has not received the keys from the Authority yet");
-		}
 		if(!keysValueGenerated) {
 			Value keys = Value.create();
 			
@@ -170,10 +167,7 @@ public class Model {
 	public static void createNewElection(Date startDate, Date endDate) {
 		EntityManager entMgr = beginDatabaseSession();
 		
-		ElectionRepository er = new ElectionRepository(entMgr);
-		int nextId = er.findNextId();
-		
-		Election election = new Election(nextId, startDate, endDate);
+		Election election = new Election(startDate, endDate);
 		Model.election = election;
 		
 		entMgr.persist(election);

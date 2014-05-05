@@ -18,15 +18,6 @@ public class ElectionRepository extends EntityRepository<Election> {
 		super(Election.class, entMgr);
 	}
 	
-	public int findNextId() {
-		String query = "SELECT MAX(e.electionId) FROM Election e";
-		List<Election> elections = super.findByQuery(query);
-		if(elections.isEmpty()) {
-			return 0;
-		}
-		return elections.get(0).getElectionId() + 1;
-	}
-	
 	/**
 	 * @return The Election with the given id.
 	 */
