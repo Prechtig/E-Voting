@@ -4,6 +4,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
+import java.security.spec.InvalidKeySpecException;
 import java.util.ArrayList;
 
 import jolie.runtime.JavaService;
@@ -81,9 +82,10 @@ public class Load extends Command {
 			
 			return "Loaded RSA keys";
 		} catch (IOException e) {
-			e.printStackTrace();
-			return "IO failed";
-		}
+			return "Could not find file";
+		} catch (InvalidKeySpecException e) {
+			return "Invalid key file";
+		} 
 	}
 
 	/**
@@ -91,7 +93,14 @@ public class Load extends Command {
 	 */
 	private String loadElectionOptions() {
 		// Load the election options
-		ArrayList<ElectionOption> options = Importer.importElectionOptions(Model.getElectionOptionsFile());
+		ArrayList<ElectionOption> options;
+		try{
+		options = Importer.importElectionOptions(Model.getElectionOptionsFile());
+		} catch (IOException e){
+			return "Could not find file";
+		} catch (CorruptDataException e) {
+			return "Corrupted file";
+		}
 		
 		if(options != null && options.size() > 0){
 			Model.setElectionOptions(options);

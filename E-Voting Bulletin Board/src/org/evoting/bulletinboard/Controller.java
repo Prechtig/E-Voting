@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.security.Key;
 import java.security.PrivateKey;
 import java.security.PublicKey;
-import java.util.Arrays;
+import java.security.spec.InvalidKeySpecException;
 import java.util.Date;
 
 import jolie.runtime.JavaService;
@@ -29,7 +29,6 @@ import org.evoting.database.entities.ElectionOption;
 import org.evoting.security.Security;
 
 public class Controller extends JavaService {
-
 	private static Date electionStartDate;
 	private static Date electionEndDate;
 
@@ -144,11 +143,6 @@ public class Controller extends JavaService {
 		if (!electionIsRunning()) {
 			throw new ElectionNotStartedException();
 		}
-
-		// TODO: Do we need this check?
-		if (!Model.keysGenerated()) {
-			throw new RuntimeException("The Bulletin Board has not received the keys from the Authority yet");
-		}
 		return Model.getPublicKeysValue();
 	}
 
@@ -179,33 +173,7 @@ public class Controller extends JavaService {
 		AnonymousVoteList allVotesAuthority = Model.getAllVotesAuthority();
 		return allVotesAuthority.toValue();
 	}
-
-	@RequestResponse
-	public boolean setKeys(Value publicKeys) {
-		// TODO: Check that the public keys comes from the authority
-		while (true) {
-			try {
-				Importer.importRsaPublicKey("");
-				break;
-			} catch (IOException e) {
-
-			}
-		}
-
-		Value elgamalPublicKey = publicKeys.getFirstChild("elgamalPublicKey");
-		Value elgamalPublicKeyParameters = elgamalPublicKey.getFirstChild("parameters");
-		// Extract elgamal key
-		String y = elgamalPublicKey.getFirstChild("y").strValue();
-		String p = elgamalPublicKeyParameters.getFirstChild("p").strValue();
-		String g = elgamalPublicKeyParameters.getFirstChild("g").strValue();
-		int l = elgamalPublicKeyParameters.getFirstChild("l").intValue();
-		// Extract rsa key
-		byte[] rsaPublicKey = publicKeys.getFirstChild("rsaPublicKey").byteArrayValue().getBytes();
-
-		Model.setKeys(y, p, g, l, rsaPublicKey);
-		return Boolean.TRUE;
-	}
-
+	
 	public boolean loadAuthorityRsaPublicKey(String pathname) {
 
 		return Boolean.TRUE;
@@ -255,6 +223,7 @@ public class Controller extends JavaService {
 				System.out.println("Something went wrong.");
 			} finally {
 				if (pubKey != null) {
+					Security.setElGamalPublicKey(pubKey);
 					return Boolean.TRUE;
 				}
 				System.out.println("Try again y/n?");
@@ -303,12 +272,13 @@ public class Controller extends JavaService {
 					return Importer.importRsaPublicKey(input);
 				}
 			} catch (IOException e) {
-				e.printStackTrace();
 				System.out.println("Invalid file location. Try again y/n?");
 				input = console.readLine();
 				if (!"y".equals(input.toLowerCase())) {
 					return null;
 				}
+			} catch (InvalidKeySpecException e) {
+				System.out.println("Invalid key file");
 			}
 		}
 	}

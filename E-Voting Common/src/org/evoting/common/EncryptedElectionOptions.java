@@ -22,9 +22,7 @@ public class EncryptedElectionOptions
 {
 	private int electionId;
 	private List<ElectionOption> electionOptions;
-	private Date endTime;
 	// All the fields below are ciphertext.
-	private byte[] encryptedElectionOptions;
 	private byte[] signature;
 	
 	/**
@@ -35,7 +33,7 @@ public class EncryptedElectionOptions
 	public EncryptedElectionOptions(List<ElectionOption> electionOptions, int electionId, Date endTime)
 	{
 		for(int i = 0; i < electionOptions.size(); i++) {
-			if(electionOptions.get(i).getId() != i) {
+			if(electionOptions.get(i).getElectionId() != i) {
 				//TODO: throw correct exception.
 				throw new RuntimeException();
 			}
@@ -43,8 +41,7 @@ public class EncryptedElectionOptions
 		
 		this.electionId = electionId;
 		this.electionOptions = electionOptions;
-		this.endTime = endTime;
-		this.signature = Security.sign(Security.getBulletinBoardRSAPrivateKey(), Converter.toByteArray(electionId), Converter.toByteArray(endTime.getTime()), encryptedElectionOptions);
+		this.signature = Security.sign(Security.getBulletinBoardRSAPrivateKey(), Converter.toByteArray(electionId), Converter.toByteArray(endTime.getTime()));
 	}
 	
 	/**
@@ -56,8 +53,6 @@ public class EncryptedElectionOptions
 		// Checks whether the value object has the required fields.
 		if(!encryptedElectionOptionsValue.hasChildren(ValueIdentifiers.getElectionId()) ||
 			!encryptedElectionOptionsValue.hasChildren(ValueIdentifiers.getElectionOptions()) ||
-			!encryptedElectionOptionsValue.hasChildren(ValueIdentifiers.getStartTime()) ||
-			!encryptedElectionOptionsValue.hasChildren(ValueIdentifiers.getEndTime()) ||
 			!encryptedElectionOptionsValue.hasChildren(ValueIdentifiers.getSignature())) {
 				throw new BadValueException();
 		}
@@ -79,7 +74,6 @@ public class EncryptedElectionOptions
 		}
 		electionOptions = Arrays.asList(options);
 		
-		endTime = new Date(encryptedElectionOptionsValue.getFirstChild(ValueIdentifiers.getEndTime()).longValue());
 		signature = encryptedElectionOptionsValue.getFirstChild(ValueIdentifiers.getSignature()).byteArrayValue().getBytes();
 	}
 	
@@ -103,20 +97,12 @@ public class EncryptedElectionOptions
 		result.getNewChild(ValueIdentifiers.getElectionId()).setValue(electionId);
 		for(ElectionOption e : electionOptions) {
 			Value electionOptions = result.getNewChild(ValueIdentifiers.getElectionOptions());
-			electionOptions.getNewChild(ValueIdentifiers.getId()).setValue(e.getId());
+			electionOptions.getNewChild(ValueIdentifiers.getId()).setValue(e.getElectionId());
 			electionOptions.getNewChild(ValueIdentifiers.getName()).setValue(e.getName());
 			electionOptions.getNewChild(ValueIdentifiers.getPartyId()).setValue(e.getPartyId());
 		}
-		result.getNewChild(ValueIdentifiers.getEndTime()).setValue(endTime);
 		result.getNewChild(ValueIdentifiers.getSignature()).setValue(new ByteArray(signature));
 
 		return result;
-	}
-	
-	@Override
-	public String toString()
-	{
-		return "ElectionOption ciphertext: " + encryptedElectionOptions.toString() +
-				"\nElectionId: " + electionId;
 	}
 }

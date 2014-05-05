@@ -1,5 +1,8 @@
 package org.evoting.common;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+
 import jolie.runtime.ByteArray;
 import jolie.runtime.Value;
 import jolie.runtime.ValueVector;
@@ -32,7 +35,7 @@ public class EncryptedBallot {
 		this.electionId = encrypt(electionId);
 		this.vote = encryptVote(vote);
 		//TODO: generate signature
-		//this.signature = Security.sign(Security.getBulletinBoardRSAPublicKey(), this.userId, this.passwordHash, this.electionId);
+		this.signature = Security.sign(Security.getBulletinBoardRSAPublicKey(), toByteArray());
 	}
 	
 	/**
@@ -144,6 +147,19 @@ public class EncryptedBallot {
 	 */
 	public Ballot getBallot() {
 		return new Ballot(sid, decryptString(userId), decryptInteger(electionId), vote, signature);
+	}
+	
+	private byte[] toByteArray() {
+		ByteArrayOutputStream stream = new ByteArrayOutputStream();
+		try {
+			stream.write(userId);
+			stream.write(electionId);
+			stream.write(Converter.toByteArray(vote));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		return stream.toByteArray();
 	}
 
 }

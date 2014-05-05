@@ -25,60 +25,60 @@ import org.evoting.common.exceptions.CorruptDataException;
 import org.evoting.database.entities.ElectionOption;
 
 public class Importer {
-	
+
 	/**
 	 * Loads ElGamal public key parameters from file
 	 * <p>
-	 * File structure:
-	 * <br>
+	 * File structure: <br>
 	 * y: BIGINTEGER <br>
 	 * g: BIGINTEGER <br>
 	 * p: BIGINTEGER <br>
 	 * 
-	 * @param fileName Path to the file containing the ElGamal public key
+	 * @param fileName
+	 *            Path to the file containing the ElGamal public key
 	 * @return The corresponding ElGamal public key parameters
-	 * @throws IOException 
-	 * @throws CorruptDataException 
-	 * @throws FileNotFoundException 
+	 * @throws IOException
+	 * @throws CorruptDataException
+	 * @throws FileNotFoundException
 	 */
 	public static ElGamalPublicKeyParameters importElGamalPublicKeyParameters(String fileName) throws FileNotFoundException, CorruptDataException, IOException {
-		//Retreives the 3 values for the parameters
+		// Retreives the 3 values for the parameters
 		BigInteger[] result = loadElGamalKeyFile(fileName, KeyType.PUBLIC);
 
-		//Sets the values
+		// Sets the values
 		BigInteger y = result[0];
 		BigInteger g = result[1];
 		BigInteger p = result[2];
 
-		//Create and return value
+		// Create and return value
 		return new ElGamalPublicKeyParameters(y, new ElGamalParameters(g, p));
 	}
 
 	/**
 	 * Loads ElGamal public key parameters from file
 	 * <p>
-	 * File structure:
-	 * <br>
+	 * File structure: <br>
 	 * x: BIGINTEGER <br>
 	 * g: BIGINTEGER <br>
 	 * p: BIGINTEGER <br>
 	 * 
-	 * @param fileName Path to the file containing the ElGamal private key
+	 * @param fileName
+	 *            Path to the file containing the ElGamal private key
 	 * @return The corresponding ElGamal private key parameters
-	 * @throws IOException 
-	 * @throws CorruptDataException 
-	 * @throws FileNotFoundException 
+	 * @throws IOException
+	 * @throws CorruptDataException
+	 * @throws FileNotFoundException
 	 */
 	public static ElGamalPrivateKeyParameters importElGamalPrivateKeyParameters(String fileName) throws FileNotFoundException, CorruptDataException, IOException {
-		//Retreives the 3 values for the parameters
+		// Retreives the 3 values for the parameters
 		BigInteger[] result = loadElGamalKeyFile(fileName, KeyType.PRIVATE);
 
-		//Sets the values
+		// Sets the values
 		BigInteger x = result[0];
 		BigInteger g = result[1];
 		BigInteger p = result[2];
 
-		//Create and return value
+		// Create and return value
 		return new ElGamalPrivateKeyParameters(x, new ElGamalParameters(g, p));
 	}
 
@@ -87,9 +87,9 @@ public class Importer {
 	 * @param fileName
 	 * @param type
 	 * @return
-	 * @throws IOException 
+	 * @throws IOException
 	 * @throws FileNotFoundException
-	 * @throws CorruptDataException 
+	 * @throws CorruptDataException
 	 */
 	private static BigInteger[] loadElGamalKeyFile(String fileName, KeyType type) throws FileNotFoundException, CorruptDataException, IOException {
 		BigInteger[] result = new BigInteger[3];
@@ -140,20 +140,20 @@ public class Importer {
 				throw new CorruptDataException("Corrupted file");
 			}
 		}
-		//Should not happen
+		// Should not happen
 		return null;
 	}
-	
-	public static ArrayList<ElectionOption> importElectionOptions(String fileName) {
-		try {
-			File file = new File(fileName);
 
+	public static ArrayList<ElectionOption> importElectionOptions(String fileName) throws IOException, CorruptDataException {
+
+		File file = new File(fileName);
+		try {
 			if (file.exists()) {
 				FileReader fr = new FileReader(file);
 				BufferedReader br = new BufferedReader(fr);
 
 				String delimiter = br.readLine();
-				
+
 				ArrayList<ElectionOption> electionOptions = new ArrayList<ElectionOption>();
 				String line;
 				while ((line = br.readLine()) != null) {
@@ -169,26 +169,24 @@ public class Importer {
 
 				return electionOptions;
 			} else {
-				System.out.println("File does not exist");
-				return null;
+				throw new IOException("File does not exist");
 			}
 		} catch (IOException e) {
-			System.out.println("Error working with election options file");
-			e.printStackTrace();
+			throw e;
+		} catch (Exception e) {
+			throw new CorruptDataException("Corrupted file");
 		}
-
-		return null;
 	}
 
-	public static PublicKey importRsaPublicKey(String pathname) throws IOException {
+	public static PublicKey importRsaPublicKey(String pathname) throws IOException, InvalidKeySpecException {
 		return (PublicKey) importRsaKey(pathname, KeyType.PUBLIC);
 	}
 
-	public static PrivateKey importRsaPrivateKey(String pathname) throws IOException {
+	public static PrivateKey importRsaPrivateKey(String pathname) throws IOException, InvalidKeySpecException {
 		return (PrivateKey) importRsaKey(pathname, KeyType.PRIVATE);
 	}
 
-	private static Key importRsaKey(String pathname, KeyType type) throws IOException {
+	private static Key importRsaKey(String pathname, KeyType type) throws IOException, InvalidKeySpecException {
 		try {
 			byte[] readBytes = Files.readAllBytes(Paths.get(pathname));
 			switch (type) {
@@ -197,9 +195,6 @@ public class Importer {
 			case PUBLIC:
 				return KeyFactory.getInstance("RSA").generatePublic(new X509EncodedKeySpec(readBytes));
 			}
-		} catch (InvalidKeySpecException e) {
-			System.out.println("Invalid key file");
-			e.printStackTrace();
 		} catch (NoSuchAlgorithmException e) {
 			// Should not happen.
 			e.printStackTrace();

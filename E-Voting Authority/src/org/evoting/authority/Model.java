@@ -45,8 +45,8 @@ public class Model {
 			return val;
 		} else {
 			System.out.println("Cannot create validator without RSA keys");
+			return null;
 		}
-		return null;
 	}
 
 	/**

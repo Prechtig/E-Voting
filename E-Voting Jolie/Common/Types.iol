@@ -18,12 +18,11 @@ type EncryptedBallotList: void {
 
 type SignedElectionOptions: void {
 	.electionId: int
-	.electionOptions: void {
+	.electionOptions*: void {
 		.id: int
 		.name: string
 		.partyId: int
 	}
-	.endTime: long
 	.signature: raw
 }
 
