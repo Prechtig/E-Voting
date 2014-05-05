@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.security.Key;
 import java.security.PrivateKey;
 import java.security.PublicKey;
+import java.security.spec.InvalidKeySpecException;
 import java.util.Date;
 
 import jolie.runtime.JavaService;
@@ -160,7 +161,7 @@ public class Controller extends JavaService {
 		AnonymousVoteList allVotesAuthority = Model.getAllVotesAuthority();
 		return allVotesAuthority.toValue();
 	}
-
+	
 	public boolean loadAuthorityRsaPublicKey(String pathname) {
 
 		return Boolean.TRUE;
@@ -254,12 +255,13 @@ public class Controller extends JavaService {
 					return Importer.importRsaPublicKey(input);
 				}
 			} catch (IOException e) {
-				e.printStackTrace();
 				System.out.println("Invalid file location. Try again y/n?");
 				input = console.readLine();
 				if (!"y".equals(input.toLowerCase())) {
 					return null;
 				}
+			} catch (InvalidKeySpecException e) {
+				System.out.println("Invalid key file");
 			}
 		}
 	}
