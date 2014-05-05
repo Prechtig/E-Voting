@@ -3,6 +3,7 @@ package org.evoting.testing;
 import java.io.IOException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
+import java.security.spec.InvalidKeySpecException;
 
 import org.evoting.common.Exporter;
 import org.evoting.common.Importer;
@@ -28,8 +29,11 @@ public class ImportExportTest {
 			PublicKey importedKey = Importer.importRsaPublicKey(bbPubRsaKey);
 			Assert.assertEquals(key, importedKey);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			System.out.println("Could not find file");
+			assert false;
+		} catch (InvalidKeySpecException e) {
+			System.out.println("Invalid key file");
+			assert false;
 		}
 	}
 	
@@ -41,8 +45,11 @@ public class ImportExportTest {
 			PrivateKey importedKey = Importer.importRsaPrivateKey(bbPrivRsaKey);
 			Assert.assertEquals(key, importedKey);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			System.out.println("Could not find file");
+			assert false;
+		} catch (InvalidKeySpecException e) {
+			System.out.println("Invalid key file");
+			assert false;
 		}
 	}
 }
