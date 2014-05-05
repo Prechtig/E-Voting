@@ -29,8 +29,9 @@ public class Start extends Command {
 			//Date endDate = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse("2014-05-30 20:00");
 			return startElection(startDate, endDate, js);
 		} catch (ParseException e) {
-			e.printStackTrace();
-			return "Could not parse the entered date and time";
+			return "Could not parse the entered date and time. Use yyyy-MM-ddHH:mm format";
+		} catch (ArrayIndexOutOfBoundsException e) {
+			return "Please enter start and end date. Use yyyy-MM-ddHH:mm format";
 		}
 	}
 
@@ -40,6 +41,9 @@ public class Start extends Command {
 		result.getNewChild(ValueIdentifiers.getEndTime()).setValue(endDate.getTime());
 		
 		Value validator = Model.getNewValidator();
+		if(validator == null){
+			return "";
+		}
 		ValueVector children = result.getChildren(ValueIdentifiers.getValidator());
 		children.set(0, validator);
 
