@@ -1,5 +1,7 @@
 package org.evoting.common;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.ArrayList;
@@ -36,6 +38,19 @@ public class Converter {
 		ByteBuffer bb = ByteBuffer.allocate(8);
 		bb.order(ByteOrder.LITTLE_ENDIAN);
 		return bb.putLong(value).array();
+	}
+	
+	public static byte[] toByteArray(byte[][] bytes) {
+		ByteArrayOutputStream stream = new ByteArrayOutputStream();
+		for(byte[] b : bytes) {
+			try {
+				stream.write(b);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return stream.toByteArray();
 	}
 	
 	public static byte[] convert(AnonymousVoteList allVotesAuthority)

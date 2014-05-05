@@ -23,7 +23,6 @@ type SignedElectionOptions: void {
 		.name: string
 		.partyId: int
 	}
-	.endTime: long
 	.signature: raw
 }
 
