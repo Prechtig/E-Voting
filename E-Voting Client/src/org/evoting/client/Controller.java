@@ -6,6 +6,7 @@ import jolie.runtime.Value;
 import org.evoting.client.exceptions.NoElectionOptionsException;
 import org.evoting.common.ElectionOptions;
 import org.evoting.common.EncryptedElectionOptions;
+import org.evoting.common.LoginRequest;
 
 /**
  * Contains the methods that the client jolie script calls.
@@ -36,13 +37,20 @@ public class Controller extends JavaService
 		Model.setPublicKeys(publicKeyValues);
 	}
 	
+	public Value getLoginInformation()
+	{
+		//TODO change jolie so it calls this
+		LoginRequest userInfo = ConsoleIO.getLoginData();
+		return userInfo.getValue();
+	}
+	
 	/**
 	 * Gets the voting ballot from user input.
 	 * @return Value representation of the ballot.
 	 */
-    public Value getBallot()
+    private Value getBallot()
     {
-    	UserInputData userInputData = ConsoleIO.getUserInput(Model.getNumberOfElectionOptions());
+    	UserInputData userInputData = ConsoleIO.getElectionOptionInput(Model.getNumberOfElectionOptions());
 		try {
 	    	return Model.getEncryptedBallot(userInputData).getValue();
 		} catch (NoElectionOptionsException e) {

@@ -13,6 +13,7 @@ import org.bouncycastle.crypto.params.ElGamalPublicKeyParameters;
 import org.evoting.bulletinboard.exceptions.InvalidUserInformationException;
 import org.evoting.common.AnonymousVoteList;
 import org.evoting.common.EncryptedElectionOptions;
+import org.evoting.common.LoginRequest;
 import org.evoting.common.ValueIdentifiers;
 import org.evoting.database.EntityManagerUtil;
 import org.evoting.database.entities.Election;
@@ -106,12 +107,11 @@ public class Model {
 	
 	/**
 	 * Validates the user
-	 * @param userId The id of the user
-	 * @param passwordHash The passwordHash of the user
+	 * @param loginRequest The user information
 	 * @return true if the userId and passwordHash matches otherwise false
 	 */
-	public static boolean validateUser(int userId, String passwordHash) {
-		if(userId < 0) {
+	public static boolean validateUser(LoginRequest loginRequest) {
+		if(Integer.parseInt(loginRequest.getUserId()) < 0) {
 			throw new InvalidUserInformationException("userId and passwordHash did not match.");
 		}
 		return true;

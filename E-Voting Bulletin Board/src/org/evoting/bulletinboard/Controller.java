@@ -22,6 +22,7 @@ import org.evoting.common.EncryptedBallot;
 import org.evoting.common.EncryptedElectionOptions;
 import org.evoting.common.Importer;
 import org.evoting.common.KeyType;
+import org.evoting.common.LoginRequest;
 import org.evoting.common.ValueIdentifiers;
 import org.evoting.common.exceptions.BadValueException;
 import org.evoting.common.exceptions.CorruptDataException;
@@ -95,14 +96,8 @@ public class Controller extends JavaService {
 
 	@RequestResponse
 	public Boolean login(Value userInformation) {
-		if(!userInformation.hasChildren(ValueIdentifiers.getUserId()) ||
-		   !userInformation.hasChildren(ValueIdentifiers.getPasswordHash())) {
-			throw new BadValueException();
-		}
-		
-		int userId = userInformation.getFirstChild(ValueIdentifiers.getUserId()).intValue();
-		String passwordHash = userInformation.getFirstChild(ValueIdentifiers.getPasswordHash()).strValue();
-		Model.validateUser(userId, passwordHash);
+		LoginRequest loginRequest = new LoginRequest(userInformation);
+		Model.validateUser(loginRequest);
 
 		return Boolean.TRUE;
 	}

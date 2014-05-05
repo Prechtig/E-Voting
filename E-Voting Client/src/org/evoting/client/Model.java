@@ -1,12 +1,14 @@
 package org.evoting.client;
 
 import java.math.BigInteger;
+import java.security.acl.LastOwnerException;
 
 import jolie.runtime.Value;
 
 import org.evoting.client.exceptions.NoElectionOptionsException;
 import org.evoting.common.ElectionOptions;
 import org.evoting.common.EncryptedBallot;
+import org.evoting.common.LoginRequest;
 import org.evoting.common.ValueIdentifiers;
 import org.evoting.common.exceptions.BadValueException;
 import org.evoting.security.Security;
@@ -21,6 +23,8 @@ public class Model
 {
 	// The list of candidate and parties available for voting.
 	private static ElectionOptions electionOptions;
+	// The information contained in the last login
+	private static LoginRequest lastLogin;
 	
 	/**
 	 * Sets the list of available electionOptions.
@@ -81,8 +85,10 @@ public class Model
 		if(Model.electionOptions == null) {
 			throw new NoElectionOptionsException();
 		}
+		userInputData.setLoginRequest(lastLogin);
 		int[] votes = getVoteFromElectionOptionId(userInputData.getElectionOptionId());
-		return new EncryptedBallot(userInputData.getUserId(), userInputData.getPassword(), electionOptions.getElectionId(), votes);
+		//TODO How to get SID
+		return new EncryptedBallot(userInputData.getUserId(),"", votes);
 	}
 	
 	/**
@@ -96,4 +102,14 @@ public class Model
 		result[electionOptionId] = 1;
 		return result;
 	}
+	
+	public void setLastLogin(LoginRequest loginRequest) {
+		lastLogin = loginRequest;
+	}
+
+	public LoginRequest getLastLogin() {
+		return lastLogin;
+	}
+	
+	
 }

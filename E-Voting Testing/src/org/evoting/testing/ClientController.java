@@ -27,8 +27,8 @@ public class ClientController {
 		
 		UserInputData userInputData = new UserInputData();
     	userInputData.setElectionOptionId(1);
-    	userInputData.setPassword("123");
-    	userInputData.setUserId("123");
+    	//userInputData.setPassword("123");
+    	//userInputData.setUserId("123");
     	
     	Value status = BBController.getElectionStatus();
     	long endTime = status.getFirstChild("endTime").longValue();

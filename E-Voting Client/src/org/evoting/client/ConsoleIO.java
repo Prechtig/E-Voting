@@ -2,23 +2,18 @@ package org.evoting.client;
 
 import java.io.Console;
 
+import org.evoting.common.LoginRequest;
+
 public class ConsoleIO
 {	
 	public static final int CPR_NUMBER_LENGTH = 10;
-	/**
-	 * Gets user input data required to create a ballot from console.
-	 * @param numberOfElectionOptions the number of electionOptions available for voting.
-	 * @return Object containing the input data.
-	 */
-	public static UserInputData getUserInput(int numberOfElectionOptions)
-	{
+	
+	public static LoginRequest getLoginData() {
+		
 		Console console = System.console();
-		System.out.println("Number of canditates is: " + numberOfElectionOptions);
 		String input = "";
-		int electionOptionId;
 		String userId;
 		String password;
-		UserInputData userData = new UserInputData();
 		
 		while(!isCPRNumber(input)) {
 			System.out.println("Enter CPR number:");
@@ -40,7 +35,22 @@ public class ConsoleIO
 		}
 		
 		password = input;
-		input = "";
+		
+		return new LoginRequest(userId, Hasher.hashPassword(password));
+	}
+	
+	/**
+	 * Gets user input data required to create a ballot from console.
+	 * @param numberOfElectionOptions the number of electionOptions available for voting.
+	 * @return Object containing the input data.
+	 */
+	public static UserInputData getElectionOptionInput(int numberOfElectionOptions)
+	{
+		Console console = System.console();
+		System.out.println("Number of canditates is: " + numberOfElectionOptions);
+		String input = "";
+		int electionOptionId;
+		UserInputData userData = new UserInputData();
 		
 		while(!isElectionOptionId(input, numberOfElectionOptions)) {
 			System.out.println("Enter the ID of the candidate or party that you want to vote for:");
@@ -52,8 +62,6 @@ public class ConsoleIO
 		
 		electionOptionId = Integer.parseInt(input);
 		
-		userData.setUserId(userId);
-		userData.setPassword(password);
 		userData.setElectionOptionId(electionOptionId);
 		return userData;
 	}
