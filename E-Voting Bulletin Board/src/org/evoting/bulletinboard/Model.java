@@ -22,24 +22,12 @@ import org.evoting.database.repositories.VoteRepository;
 public class Model {
 	
 	private static byte[] rsaPublicKey = null;
-	private static boolean keysGenerated = false, keysValueGenerated = false;
+	private static boolean keysValueGenerated = false;
 	private static String y = null, p = null, g = null;
 	private static int l;
 	private static Value publicKeys = null;
 	private static Election election;
 	
-	public static boolean keysGenerated() {
-		return keysGenerated;
-	}
-	
-	public static void setKeys(String y, String p, String g, int l, byte[] rsaPublicKey) {
-		Model.y = y;
-		Model.p = p;
-		Model.g = g;
-		Model.l = l;
-		Model.rsaPublicKey = rsaPublicKey;
-		keysGenerated = true;
-	}
 	
 	/**
 	 * Saves the vote in the database, overwriting the existing vote, if one is present
@@ -98,9 +86,6 @@ public class Model {
 	 * @return The given public keys as a Jolie value
 	 */
 	public static Value getPublicKeysValue() {
-		if(!keysGenerated) {
-			throw new RuntimeException("The Bulletin Board has not received the keys from the Authority yet");
-		}
 		if(!keysValueGenerated) {
 			Value keys = Value.create();
 			
