@@ -90,11 +90,11 @@ public class Model {
 			ElGamalParameters elgamalParams = elgamalPubKey.getParameters();
 			//Set the children regarding elgamal
 			Value elgamalPublicKeyValue = keys.getNewChild(ValueIdentifiers.getElgamalPublicKey());
-			elgamalPublicKeyValue.getNewChild(ValueIdentifiers.getY()).setValue(elgamalPubKey.getY());
+			elgamalPublicKeyValue.getNewChild(ValueIdentifiers.getY()).setValue(elgamalPubKey.getY().toString());
 			Value elgamalParametersValue = elgamalPublicKeyValue.getNewChild(ValueIdentifiers.getParameters());
-			elgamalParametersValue.getNewChild(ValueIdentifiers.getP()).setValue(elgamalParams.getP());
-			elgamalParametersValue.getNewChild(ValueIdentifiers.getG()).setValue(elgamalParams.getP());
-			elgamalParametersValue.getNewChild(ValueIdentifiers.getL()).setValue(elgamalParams.getP());
+			elgamalParametersValue.getNewChild(ValueIdentifiers.getP()).setValue(elgamalParams.getP().toString());
+			elgamalParametersValue.getNewChild(ValueIdentifiers.getG()).setValue(elgamalParams.getG().toString());
+			elgamalParametersValue.getNewChild(ValueIdentifiers.getL()).setValue(elgamalParams.getL());
 			
 			//Set the children regarding rsa
 			keys.getNewChild(ValueIdentifiers.getRsaPublicKey()).setValue(new ByteArray(Security.getBulletinBoardRSAPublicKey().getEncoded()));

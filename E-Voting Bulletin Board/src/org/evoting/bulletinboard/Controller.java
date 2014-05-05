@@ -205,6 +205,7 @@ public class Controller extends JavaService {
 				System.out.println("Something went wrong.");
 			} finally {
 				if (pubKey != null) {
+					Security.setElGamalPublicKey(pubKey);
 					return Boolean.TRUE;
 				}
 				System.out.println("Try again y/n?");
