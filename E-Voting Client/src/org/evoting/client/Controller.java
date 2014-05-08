@@ -15,6 +15,10 @@ import org.evoting.common.LoginRequest;
  */
 public class Controller extends JavaService
 {
+	public String getCommand() {
+		return ConsoleIO.getCommand();
+	}
+	
 	/**
 	 * Sets the list of electionOptions that can be voted for.
 	 * @param encryptedElectionOptions The value representation of the electionOption object.
