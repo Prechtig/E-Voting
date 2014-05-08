@@ -2,6 +2,7 @@ include "../Common/Types.iol"
 include "../Common/IBulletinBoard.iol"
 
 interface IClientController {
+	RequestResponse: getLoginInformation( void )( LoginRequest )
     RequestResponse: getBallot( void )( EncryptedBallot )
     RequestResponse: setElectionOptions( SignedElectionOptions )( void )
     RequestResponse: setPublicKeys( PublicKeys )( void )

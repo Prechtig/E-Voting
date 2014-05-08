@@ -44,7 +44,7 @@ type ElectionStatus: void {
 }
 
 type LoginRequest: void {
-	.userId: int
+	.userId: string
 	.passwordHash: string
 }
 

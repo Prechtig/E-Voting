@@ -11,8 +11,11 @@ embedded {
 
 main
 {
-	getLoginInformations@Controller() ( loginRequest );
-	login@BulletinBoardService( loginRequest ) ();
+	loginResponse.sid = "";
+	while( loginResponse.sid == "" ) {
+		getLoginInformation@Controller() ( loginRequest );
+		login@BulletinBoardService( loginRequest ) ( loginRespose )
+	};
 	getPublicKeys@BulletinBoardService()( publicKeys );
 	println@Console( publicKeys.elgamalPublicKey.y )(  );
 	println@Console( publicKeys.elgamalPublicKey.parameters.p )(  );
