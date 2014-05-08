@@ -49,6 +49,7 @@ type LoginRequest: void {
 }
 
 type LoginResponse: void {
+	.success: bool
 	.sid: string
 }
 

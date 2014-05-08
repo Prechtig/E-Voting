@@ -110,11 +110,10 @@ public class Model {
 	 * @param loginRequest The user information
 	 * @return true if the userId and passwordHash matches otherwise false
 	 */
-	public static boolean validateUser(LoginRequest loginRequest) {
-		if(Integer.parseInt(loginRequest.getUserId()) < 0) {
+	public static void validateUser(LoginRequest loginRequest) {
+		if("".equals(loginRequest.getUserId())) {
 			throw new InvalidUserInformationException("userId and passwordHash did not match.");
 		}
-		return true;
 	}
 	
 	/**
