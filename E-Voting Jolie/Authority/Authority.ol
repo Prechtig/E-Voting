@@ -44,4 +44,7 @@ main
 	[ sendElectionOptionList( eOptionsList )( confirmation ) { // Send the list of electionoptions
 		sendElectionOptionList@BulletinBoardService( eOptionsList )( confirmation )
 	} ]  { nullProcess }
+	[ getAllVotesAuthority( validator )( allVotes ) {
+		getAllVotesAuthority@BulletinBoardService( validator )( allVotes )
+	} ]  { nullProcess }
 }

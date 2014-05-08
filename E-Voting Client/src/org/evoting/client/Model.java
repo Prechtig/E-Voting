@@ -102,11 +102,11 @@ public class Model
 		return result;
 	}
 	
-	public void setLastLogin(LoginRequest loginRequest) {
+	public static void setLastLogin(LoginRequest loginRequest) {
 		lastLogin = loginRequest;
 	}
 
-	public LoginRequest getLastLogin() {
+	public static LoginRequest getLastLogin() {
 		return lastLogin;
 	}
 	

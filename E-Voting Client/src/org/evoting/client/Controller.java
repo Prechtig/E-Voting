@@ -41,6 +41,7 @@ public class Controller extends JavaService
 	{
 		//TODO change jolie so it calls this
 		LoginRequest userInfo = ConsoleIO.getLoginData();
+		Model.setLastLogin(userInfo);
 		return userInfo.getValue();
 	}
 	

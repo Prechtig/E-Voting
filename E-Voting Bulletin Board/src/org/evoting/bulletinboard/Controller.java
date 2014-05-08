@@ -155,8 +155,8 @@ public class Controller extends JavaService {
 			throw new ElectionNotStartedException();
 		}
 
-		AnonymousVoteList allVotesAuthority = Model.getAllVotes();
-		return allVotesAuthority.toValue();
+		AnonymousVoteList allVotes = Model.getAllVotes();
+		return allVotes.toValue();
 	}
 
 	@RequestResponse

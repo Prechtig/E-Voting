@@ -62,7 +62,6 @@ main {
 			loginResponse.sid = csets.sid = new	
 		}
 	} ] { processVote( encryptedBallot )( registered ) {
-		encryptedBallot.userId = userInformation.userId;
 		processVote@BBJavaController( encryptedBallot )( registered );
 		println@Console( "Registered vote: " + registered )()
 	} }
@@ -87,7 +86,7 @@ main {
 
 	[ startElection( electionStart )( confirmation ) {
 		startElection@BBJavaController( electionStart )( confirmation )
-	} ] { nullProcess }
+	} ] { println@Console("The Authorities has started the election")() }
 
 	[ sendElectionOptionList( options )( confirmation ) {
 		sendElectionOptionList@BBJavaController( options )( confirmation )

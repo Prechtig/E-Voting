@@ -17,22 +17,11 @@ main
 		login@BulletinBoardService( loginRequest ) ( loginResponse )
 	};
 	getPublicKeys@BulletinBoardService()( publicKeys );
-	println@Console( publicKeys.elgamalPublicKey.y )(  );
-	println@Console( publicKeys.elgamalPublicKey.parameters.p )(  );
-	println@Console( publicKeys.elgamalPublicKey.parameters.g )(  );
-	println@Console( publicKeys.elgamalPublicKey.parameters.l )(  );
-	println@Console( publicKeys.rsaPublicKey )(  );
 	setPublicKeys@Controller( publicKeys )();
 	getElectionOptions@BulletinBoardService( )( electionOptions );
     setElectionOptionsAndGetBallot@Controller( electionOptions )( ballot );
-
-    println@Console( "userId: " + ballot.userId )( );
-    println@Console( "passwordHash: " + ballot.passwordHash )( );
-    println@Console( "timestamp: " + ballot.timestamp )( );
-    println@Console( "vote[0]: " + ballot.vote[0] )( );
-    println@Console( "vote[1]: " + ballot.vote[1] )( );
-    println@Console( "vote[2]: " + ballot.vote[2] )( );
-
+	ballot.sid = loginResponse.sid;
+	println@Console(ballot.userId)();
     processVote@BulletinBoardService( ballot )( registered );
     println@Console( "The vote is registered: " + registered )( );
 

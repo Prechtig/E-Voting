@@ -4,10 +4,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
-import java.util.ArrayList;
-import java.util.List;
-
-import org.evoting.security.Security;
 
 
 public class Converter {
@@ -53,19 +49,6 @@ public class Converter {
 		return stream.toByteArray();
 	}
 	
-	public static byte[] convert(AnonymousVoteList allVotesAuthority)
-	{
-		ArrayList<byte[]> byteList = new ArrayList<byte[]>();
-		List<AnonymousVote> votes = allVotesAuthority.getListOfVotes();
-		for(AnonymousVote v : votes) {
-			for(int i = 0; i < v.getEncryptedVote().length; i++) {
-				byteList.add(v.getEncryptedVote()[i]);
-				byteList.add(toByteArray(i));
-			}
-		}
-		byte[][] bytes = new byte[byteList.size()][];
-		byte[] result = Security.concatenateByteArrays(byteList.toArray(bytes));
-		return result;
-	}
+
 	
 }

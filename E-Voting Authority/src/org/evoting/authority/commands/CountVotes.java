@@ -10,7 +10,6 @@ import jolie.runtime.Value;
 import org.evoting.authority.Model;
 import org.evoting.common.AnonymousVote;
 import org.evoting.common.AnonymousVoteList;
-import org.evoting.common.Converter;
 import org.evoting.common.exceptions.CorruptDataException;
 import org.evoting.database.entities.ElectionOption;
 import org.evoting.security.Security;
@@ -36,13 +35,13 @@ public class CountVotes extends Command
 	 * @return The result of the election as long array with index representing election option id.
 	 */
 	private long[] countVotes(JavaService js) {
-		CommMessage request = CommMessage.createRequest("", Model.getaCommunicationPath(), null);
+		CommMessage request = CommMessage.createRequest("getAllVotesAuthority", Model.getaCommunicationPath(), Model.getNewValidator());
 		try {
 			CommMessage response = js.sendMessage(request).recvResponseFor(request);
 			Value listOfVotesValue = response.value();
 			AnonymousVoteList allVotes = new AnonymousVoteList(listOfVotesValue);
 			
-			boolean isCorruptEdited = Security.authenticate(Converter.convert(allVotes), allVotes.getSignature(), Security.getBulletinBoardRSAPublicKey());
+			boolean isCorruptEdited = Security.authenticate(allVotes.toByteArray(), allVotes.getSignature(), Security.getBulletinBoardRSAPublicKey());
 			if(!isCorruptEdited) {
 				throw new CorruptDataException();
 			}

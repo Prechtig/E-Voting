@@ -30,7 +30,12 @@ public class ValueIdentifiers {
 	private static final String MESSAGE = "message";
 	private static final String VALIDATOR = "validator";
 	private static final String RUNNING = "running";
+	private static final String ENCRYPTED_VOTE = "encryptedVote";
+	private static final String INDEX = "index";
 	
+	public static String getEncryptedVote() {
+		return ENCRYPTED_VOTE;
+	}
 	public static String getValidator() {
 		return VALIDATOR;
 	}
@@ -102,5 +107,8 @@ public class ValueIdentifiers {
 	}
 	public static String getSid() {
 		return SID;
+	}
+	public static String getIndex() {
+		return INDEX;
 	}
 }
