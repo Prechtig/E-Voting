@@ -16,6 +16,7 @@ import jolie.runtime.embedding.RequestResponse;
 
 import org.bouncycastle.crypto.params.ElGamalPublicKeyParameters;
 import org.evoting.bulletinboard.exceptions.ElectionNotStartedException;
+import org.evoting.bulletinboard.exceptions.InvalidUserInformationException;
 import org.evoting.common.AnonymousVoteList;
 import org.evoting.common.Ballot;
 import org.evoting.common.EncryptedBallot;
@@ -23,6 +24,7 @@ import org.evoting.common.EncryptedElectionOptions;
 import org.evoting.common.Importer;
 import org.evoting.common.KeyType;
 import org.evoting.common.LoginRequest;
+import org.evoting.common.LoginResponse;
 import org.evoting.common.ValueIdentifiers;
 import org.evoting.common.exceptions.BadValueException;
 import org.evoting.common.exceptions.CorruptDataException;
@@ -95,11 +97,14 @@ public class Controller extends JavaService {
 	}
 
 	@RequestResponse
-	public Boolean login(Value userInformation) {
+	public Value login(Value userInformation) {
 		LoginRequest loginRequest = new LoginRequest(userInformation);
-		Model.validateUser(loginRequest);
-
-		return Boolean.TRUE;
+		try {
+			Model.validateUser(loginRequest);
+		} catch (InvalidUserInformationException e) {
+			return new LoginResponse(false, "").getValue();
+		}
+		return new LoginResponse(true, "").getValue();
 	}
 
 	@RequestResponse

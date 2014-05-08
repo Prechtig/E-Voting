@@ -57,11 +57,9 @@ main {
 	} ] { nullProcess }
 
 	[ login( userInformation )( loginResponse ) {
-		login@BBJavaController( userInformation )( successful );
-		if(successful) {
+		login@BBJavaController( userInformation )( loginResponse );
+		if(loginResponse.success) {
 			loginResponse.sid = csets.sid = new	
-		} else {
-			loginResponse.sid = ""
 		}
 	} ] { processVote( encryptedBallot )( registered ) {
 		encryptedBallot.userId = userInformation.userId;
