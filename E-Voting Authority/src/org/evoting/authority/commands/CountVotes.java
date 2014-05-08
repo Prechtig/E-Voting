@@ -1,6 +1,7 @@
 package org.evoting.authority.commands;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 
 import jolie.net.CommMessage;
@@ -41,8 +42,8 @@ public class CountVotes extends Command
 			Value listOfVotesValue = response.value();
 			AnonymousVoteList allVotes = new AnonymousVoteList(listOfVotesValue);
 			
-			boolean isCorruptEdited = Security.authenticate(allVotes.toByteArray(), allVotes.getSignature(), Security.getBulletinBoardRSAPublicKey());
-			if(!isCorruptEdited) {
+			boolean notCorrupted = Security.authenticate(allVotes.toByteArray(), allVotes.getSignature(), Security.getBulletinBoardRSAPublicKey());
+			if(!notCorrupted) {
 				throw new CorruptDataException();
 			}
 			
@@ -58,11 +59,13 @@ public class CountVotes extends Command
 						voteProducts[i] = Security.multiplyElGamalCiphers(voteProducts[i], v.getEncryptedVote()[i]);
 					}
 				}
+				decryptAndPrintSingleVote(v);
 			}
 			
 			long[] result = new long[Model.getElectionOptions().size()];
 			for (int i = 0; i < result.length; i++) {
-				result[i] = Security.decryptExponentialElgamal(voteProducts[i], Security.getElgamalPrivateKey());
+				System.out.println("Decrypting exponential elgamal");
+				//result[i] = Security.decryptExponentialElgamal(voteProducts[i], Security.getElgamalPrivateKey());
 			}
 			
 			return result;
@@ -72,6 +75,17 @@ public class CountVotes extends Command
 		}
 		
 		return null;
+	}
+	
+	private void decryptAndPrintSingleVote(AnonymousVote v) {
+		long[] result = new long[Model.getElectionOptions().size()];
+		int i = 0;
+		for (byte[] b : v.getEncryptedVote()) {
+			System.out.println("Decrypting..");
+			result[i] = Security.decryptExponentialElgamal(b, Security.getElgamalPrivateKey());
+			i++;
+		}
+		System.out.println("One of the voters voted the following: \n" + Arrays.toString(result));
 	}
 	
 	private String electionResultToString(long[] result, List<ElectionOption> electionOptions) {

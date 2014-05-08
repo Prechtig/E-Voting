@@ -95,24 +95,22 @@ public class Importer {
 		BigInteger[] result = new BigInteger[3];
 		File file = new File(fileName);
 
-		if (file.exists()) {
-			FileReader fr = new FileReader(file);
-			BufferedReader br = new BufferedReader(fr);
-			int i = 0;
-			String line;
-			while ((line = br.readLine()) != null) {
-				switch (type) {
-				case PUBLIC:
-					result[i] = ElGamalKeySwitch(line, type);
-					break;
-				case PRIVATE:
-					result[i] = ElGamalKeySwitch(line, type);
-					break;
-				}
-				i++;
+		FileReader fr = new FileReader(file);
+		BufferedReader br = new BufferedReader(fr);
+		int i = 0;
+		String line;
+		while ((line = br.readLine()) != null) {
+			switch (type) {
+			case PUBLIC:
+				result[i] = ElGamalKeySwitch(line, type);
+				break;
+			case PRIVATE:
+				result[i] = ElGamalKeySwitch(line, type);
+				break;
 			}
-			br.close();
+			i++;
 		}
+		br.close();
 		return result;
 	}
 

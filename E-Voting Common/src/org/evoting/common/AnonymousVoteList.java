@@ -1,6 +1,7 @@
 package org.evoting.common;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -67,7 +68,7 @@ public class AnonymousVoteList {
 		byte[][] encryptedVote = new byte[voteVector.size()][];
 		
 		for(Value v : voteVector) {
-			encryptedVote[v.getFirstChild(ValueIdentifiers.getElectionOptionId()).intValue()] = v.byteArrayValue().getBytes();
+			encryptedVote[v.getFirstChild(ValueIdentifiers.getElectionOptionId()).intValue()] = v.getFirstChild(ValueIdentifiers.getEncryptedVote()).byteArrayValue().getBytes();
 		}
 		return new AnonymousVote(encryptedVote, index.intValue());
 	}

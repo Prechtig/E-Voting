@@ -51,7 +51,6 @@ public class Load extends Command {
 			ElGamalPrivateKeyParameters privKey = Importer.importElGamalPrivateKeyParameters(Model.getElGamalPrivateKeyFile());
 			Security.setElGamalPrivateKey(privKey);
 			Security.setElGamalPublicKey(pubKey);
-
 			return "Loaded ElGamal keys";
 		} catch(FileNotFoundException e) {
 			e.printStackTrace();

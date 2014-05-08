@@ -176,7 +176,7 @@ public class Security {
 	}
 	
 	public static boolean authenticate(byte[] receivedData, byte[] signature, PublicKey pk) {
-		String signatureHash = SHA1.byteToHex(decryptRSA(signature, pk));
+		String signatureHash = new String(decryptRSA(signature, pk));
 		String receivedDataHash = SHA1.hash(receivedData);
 		
 		return signatureHash.equals(receivedDataHash);

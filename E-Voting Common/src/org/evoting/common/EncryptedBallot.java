@@ -27,7 +27,7 @@ public class EncryptedBallot {
 	 * @param vote The vote of the voter
 	 * @throws InvalidVoteException Is thrown if the vote is invalid
 	 */
-	public EncryptedBallot(String userId, String sid, int[] vote) throws InvalidVoteException {
+	public EncryptedBallot(String userId, String sid, long[] vote) throws InvalidVoteException {
 		this.userId = encrypt(userId);
 		this.sid = sid;
 		this.vote = encryptVote(vote);
@@ -74,11 +74,11 @@ public class EncryptedBallot {
 	 * @return The encrypted vote
 	 * @throws InvalidVoteException Is thrown if the vote is invalid
 	 */
-	private byte[][] encryptVote(int[] vote) {
+	private byte[][] encryptVote(long[] vote) {
 		byte[][] result = new byte[vote.length][];
 		if(voteIsValid(vote)) {
 			for(int i = 0; i < vote.length; i++) {
-				byte[] message = Group.getInstance().raiseGenerator((long)vote[i]).toByteArray();
+				byte[] message = Group.getInstance().raiseGenerator(vote[i]).toByteArray();
 				result[i] = Security.encryptElGamal(message, Security.getElgamalPublicKey());
 			}
 			return result;
@@ -91,7 +91,7 @@ public class EncryptedBallot {
 	 * @param vote The vote to check
 	 * @return True if the vote is valid
 	 */
-	private boolean voteIsValid(int[] vote) {
+	private boolean voteIsValid(long[] vote) {
 		boolean voted = false;
 		for(int i = 0; i < vote.length; i++) {
 			if(vote[i] == 1) {
@@ -99,6 +99,8 @@ public class EncryptedBallot {
 					return false;
 				}
 				voted = true;
+			} else if(vote[i] != 0) {
+				return false;
 			}
 		}
 		return true;

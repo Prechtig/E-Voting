@@ -85,7 +85,7 @@ public class Model
 			throw new NoElectionOptionsException();
 		}
 		userInputData.setLoginRequest(lastLogin);
-		int[] votes = getVoteFromElectionOptionId(userInputData.getElectionOptionId());
+		long[] votes = getVoteFromElectionOptionId(userInputData.getElectionOptionId());
 		//TODO How to get SID
 		return new EncryptedBallot(userInputData.getUserId(),"", votes);
 	}
@@ -95,9 +95,9 @@ public class Model
 	 * @param electionOptionId The index that is true in the return array.
 	 * @return Boolean array with one value set to true.
 	 */
-	private static int[] getVoteFromElectionOptionId(int electionOptionId)
+	private static long[] getVoteFromElectionOptionId(int electionOptionId)
 	{
-		int[] result = new int[getNumberOfElectionOptions()];
+		long[] result = new long[getNumberOfElectionOptions()];
 		result[electionOptionId] = 1;
 		return result;
 	}
