@@ -83,7 +83,7 @@ public class EncryptedBallot {
 			}
 			return result;
 		} else {
-			throw new InvalidVoteException("Multiple electionOption-votes detected.");
+			throw new InvalidVoteException("Multiple election option choices detected.");
 		}
 	}
 	
