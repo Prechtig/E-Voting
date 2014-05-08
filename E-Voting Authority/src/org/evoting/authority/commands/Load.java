@@ -37,6 +37,12 @@ public class Load extends Command {
 			return loadRSAKeys();
 		case "elgamal":
 			return loadElGamalKeys();
+		case "all":
+			StringBuilder sb = new StringBuilder();
+			sb.append(loadRSAKeys()).append("\n");
+			sb.append(loadElGamalKeys()).append("\n");
+			sb.append(loadElectionOptions());
+			return sb.toString();
 		default:
 			return invalidArguments;
 		}
