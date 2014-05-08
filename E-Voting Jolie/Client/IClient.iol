@@ -8,6 +8,7 @@ interface IClientController {
     RequestResponse: setPublicKeys( PublicKeys )( void )
     RequestResponse: setElectionOptionsAndGetBallot( SignedElectionOptions )( EncryptedBallot )
     RequestResponse: getElectionStatus( void )( ElectionStatus )
+    RequestResponse: getCommand( void )( string )
 }
 
 outputPort BulletinBoardService {
