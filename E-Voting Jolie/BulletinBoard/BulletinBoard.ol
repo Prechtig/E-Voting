@@ -60,6 +60,8 @@ main {
 		login@BBJavaController( userInformation )( successful );
 		if(successful) {
 			loginResponse.sid = csets.sid = new	
+		} else {
+			loginResponse.sid = ""
 		}
 	} ] { processVote( encryptedBallot )( registered ) {
 		encryptedBallot.userId = userInformation.userId;

@@ -19,8 +19,8 @@ public class LoginRequest {
 			throw new BadValueException();
 		}
 			
-		int userId = value.getFirstChild(ValueIdentifiers.getUserId()).intValue();
-		String passwordHash = value.getFirstChild(ValueIdentifiers.getPasswordHash()).strValue();
+		this.userId = value.getFirstChild(ValueIdentifiers.getUserId()).strValue();
+		this.passwordHash = value.getFirstChild(ValueIdentifiers.getPasswordHash()).strValue();
 	}
 	
 	public Value getValue() {
