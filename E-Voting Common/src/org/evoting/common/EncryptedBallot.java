@@ -63,21 +63,6 @@ public class EncryptedBallot {
 	private byte[] encrypt(String value) {
 		return Security.encryptRSA(value, Security.getBulletinBoardRSAPublicKey());
 	}
-
-	/**
-	 * Encrypts the userId.
-	 * @param userId The userId to encrypt
-	 * @return The encrypted userId
-	 */
-	private byte[] encrypt(int value) {
-		byte[] bytes = Converter.toByteArray(value);
-		return Security.encryptRSA(bytes, Security.getBulletinBoardRSAPublicKey());
-	}
-	
-	private int decryptInteger(byte[] value) {
-		byte[] decryptedValue = Security.decryptRSA(value, Security.getBulletinBoardRSAPrivateKey());
-		return Converter.toInt(decryptedValue);
-	}
 	
 	private String decryptString(byte[] value) {
 		return new String(Security.decryptRSA(value, Security.getBulletinBoardRSAPrivateKey()));

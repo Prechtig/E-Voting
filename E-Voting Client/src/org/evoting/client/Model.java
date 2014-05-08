@@ -1,7 +1,6 @@
 package org.evoting.client;
 
 import java.math.BigInteger;
-import java.security.acl.LastOwnerException;
 
 import jolie.runtime.Value;
 
