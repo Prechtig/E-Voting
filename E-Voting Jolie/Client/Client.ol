@@ -26,15 +26,15 @@ main
         println@Console(ballot.userId)();
         processVote@BulletinBoardService( ballot )( registered );
         println@Console( "The vote is registered: " + registered )( );
-
-        println@Console( "The number of election options are " + allVotes.numberOfElectionOptions )( );
-        for(i = 0, i < #allVotes.votes, i++) {
-            for(j = 0, j < #allVotes.votes.vote, j++) {
-                println@Console("vote[" + i + "][" + j + "] = " + allVotes.votes[i].vote[j].encryptedVote )( )
-            }
-        }
     } else if(command == "get") {
         getAllVotes@BulletinBoardService( )( allVotes )
+        for(i = 0, i < #allVotes.votes, i++) {
+            println@Console( "Vote #" + i )( );
+            for(j = 0, j < #allVotes.votes.vote, j++) {
+                println@Console("vote[" + i + "][" + j + "] = " + allVotes.votes[i].vote[j].encryptedVote )( )
+            };
+            println@Console( )( )
+        }
     }
 	
 }
