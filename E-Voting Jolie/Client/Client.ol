@@ -11,6 +11,8 @@ embedded {
 
 main
 {
+	getLoginInformations@Controller() ( loginRequest );
+	login@BulletinBoardService( loginRequest ) ();
 	getPublicKeys@BulletinBoardService()( publicKeys );
 	println@Console( publicKeys.elgamalPublicKey.y )(  );
 	println@Console( publicKeys.elgamalPublicKey.parameters.p )(  );
