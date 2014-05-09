@@ -5,6 +5,9 @@ import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.spec.InvalidKeySpecException;
 
+import org.bouncycastle.crypto.params.ElGamalPrivateKeyParameters;
+import org.bouncycastle.crypto.params.ElGamalPublicKeyParameters;
+import org.evoting.authority.Model;
 import org.evoting.common.Exporter;
 import org.evoting.common.Importer;
 import org.evoting.security.Security;
@@ -51,5 +54,17 @@ public class ImportExportTest {
 			System.out.println("Invalid key file");
 			assert false;
 		}
+	}
+	
+	@Test
+	public void testElGamalImportExport() throws IOException {
+		ElGamalPrivateKeyParameters privKey = Security.getElgamalPrivateKey();
+		ElGamalPublicKeyParameters pubKey = Security.getElgamalPublicKey();
+		Exporter.exportElGamalPrivateKeyParameters(privKey, Model.getElGamalPrivateKeyFile());
+		Exporter.exportElGamalPublicKeyParameters(pubKey, Model.getElGamalPublicKeyFile());
+		ElGamalPrivateKeyParameters importedPrivKey = Importer.importElGamalPrivateKeyParameters(Model.getElGamalPrivateKeyFile());
+		ElGamalPublicKeyParameters importedPubKey = Importer.importElGamalPublicKeyParameters(Model.getElGamalPublicKeyFile());
+		Assert.assertEquals(privKey, importedPrivKey);
+		Assert.assertEquals(pubKey, importedPubKey);
 	}
 }

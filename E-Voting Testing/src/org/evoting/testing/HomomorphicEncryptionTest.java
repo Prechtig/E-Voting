@@ -126,16 +126,11 @@ public class HomomorphicEncryptionTest
 			e.printStackTrace();
 		}
 		
-		ElGamalPrivateKeyParameters ElGamalPrivateKey;
-		ElGamalPublicKeyParameters ElGamalPublicKey;
-		ElGamalPrivateKey = ElGamal.getPrivateKey();
-		ElGamalPublicKey = ElGamal.getPublicKey();
-		
 		BigInteger message1 = new BigInteger("900");
 		byte[] messageByte1 = message1.toByteArray();
-		byte[] cipher1 = Security.encryptElGamal(messageByte1, ElGamalPublicKey);
+		byte[] cipher1 = Security.encryptElGamal(messageByte1, Security.getElgamalPublicKey());
 		
-        byte[] messageByte = Security.decryptElgamal(cipher1, ElGamalPrivateKey);
+        byte[] messageByte = Security.decryptElgamal(cipher1, Security.getElgamalPrivateKey());
         BigInteger result = new BigInteger(messageByte);
         
         assertEquals(message1, result);
