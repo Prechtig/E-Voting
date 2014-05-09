@@ -13,7 +13,6 @@ import org.bouncycastle.crypto.params.ElGamalKeyGenerationParameters;
 import org.bouncycastle.crypto.params.ElGamalParameters;
 import org.bouncycastle.crypto.params.ElGamalPrivateKeyParameters;
 import org.bouncycastle.crypto.params.ElGamalPublicKeyParameters;
-import org.bouncycastle.jce.interfaces.ElGamalPublicKey;
 import org.bouncycastle.util.Arrays;
 import org.evoting.authority.Model;
 import org.evoting.common.Group;
