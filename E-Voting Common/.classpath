@@ -2,9 +2,9 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7"/>
-	<classpathentry kind="lib" path="lib/bcprov-jdk15on-150.jar">
+	<classpathentry kind="lib" path="lib/bcprov-jdk15on-150.jar" sourcepath="C:/Users/Andreas/Repositories/E-Voting/E-Voting Common/lib/src/bcprov-jdk15on-150-source.zip">
 		<attributes>
-			<attribute name="javadoc_location" value="jar:file:/C:/Users/Andreas/Repositories/E-Voting/E-Voting%20Common/lib/javadoc/docs1.5on.zip!/docs1.5on"/>
+			<attribute name="javadoc_location" value="jar:file:/C:/Users/Andreas/Repositories/E-Voting/E-Voting%20Common/lib/javadoc/bcprov-jdk15on-150-source.zip!/docs1.5on"/>
 			<attribute name="source_encoding" value="UTF-8"/>
 		</attributes>
 	</classpathentry>
