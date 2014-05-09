@@ -51,7 +51,7 @@ public class Importer {
 		BigInteger p = result[2];
 
 		// Create and return value
-		return new ElGamalPublicKeyParameters(y, new ElGamalParameters(g, p));
+		return new ElGamalPublicKeyParameters(y, new ElGamalParameters(p, g));
 	}
 
 	/**
@@ -79,7 +79,7 @@ public class Importer {
 		BigInteger p = result[2];
 
 		// Create and return value
-		return new ElGamalPrivateKeyParameters(x, new ElGamalParameters(g, p));
+		return new ElGamalPrivateKeyParameters(x, new ElGamalParameters(p, g));
 	}
 
 	/**
