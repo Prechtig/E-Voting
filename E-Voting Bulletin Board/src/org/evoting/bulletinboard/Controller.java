@@ -21,7 +21,7 @@ import org.evoting.bulletinboard.exceptions.InvalidUserInformationException;
 import org.evoting.common.AnonymousVoteList;
 import org.evoting.common.Ballot;
 import org.evoting.common.EncryptedBallot;
-import org.evoting.common.EncryptedElectionOptions;
+import org.evoting.common.SignedElectionOptions;
 import org.evoting.common.Importer;
 import org.evoting.common.KeyType;
 import org.evoting.common.LoginRequest;
@@ -134,9 +134,9 @@ public class Controller extends JavaService {
 		}
 
 		List<ElectionOption> electionOptions = Model.getEncryptedElectionOptions();
-		EncryptedElectionOptions encryptedElectionOptions = new EncryptedElectionOptions(electionOptions, election.getId(), election.getEndTime());
+		SignedElectionOptions signedElectionOptions = new SignedElectionOptions(electionOptions, election.getId(), election.getEndTime());
 		
-		return encryptedElectionOptions.getValue();
+		return signedElectionOptions.getValue();
 	}
 
 	@RequestResponse

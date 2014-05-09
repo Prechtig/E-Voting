@@ -18,7 +18,7 @@ import org.evoting.security.Security;
  * @author Mark
  *
  */
-public class EncryptedElectionOptions
+public class SignedElectionOptions
 {
 	private int electionId;
 	private List<ElectionOption> electionOptions;
@@ -30,7 +30,7 @@ public class EncryptedElectionOptions
 	 * @param electionOptions The list of electionOptions to be encrypted.
 	 * @param signedElectionId The time stamp.
 	 */
-	public EncryptedElectionOptions(List<ElectionOption> electionOptions, int electionId, Date endTime)
+	public SignedElectionOptions(List<ElectionOption> electionOptions, int electionId, Date endTime)
 	{
 		for(int i = 0; i < electionOptions.size(); i++) {
 			if(electionOptions.get(i).getElectionId() != i) {
@@ -48,7 +48,7 @@ public class EncryptedElectionOptions
 	 * Interprets a value as an encrypted electionOption list.
 	 * @param value The value object.
 	 */
-	public EncryptedElectionOptions(Value encryptedElectionOptionsValue)
+	public SignedElectionOptions(Value encryptedElectionOptionsValue)
 	{
 		// Checks whether the value object has the required fields.
 		if(!encryptedElectionOptionsValue.hasChildren(ValueIdentifiers.getElectionId()) ||

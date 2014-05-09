@@ -5,7 +5,7 @@ type EncryptedBallot: void {
 	.signature: raw
 }
 
-type EncryptedBallotList: void {
+type SignedBallotList: void {
 	.votes*: void {
 		.index: int
 		.vote*: void {
