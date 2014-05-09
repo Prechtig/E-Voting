@@ -2,6 +2,8 @@ package org.evoting.testing;
 
 import static org.junit.Assert.assertEquals;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.math.BigInteger;
 import java.security.SecureRandom;
 
@@ -11,8 +13,12 @@ import org.bouncycastle.crypto.params.ElGamalKeyGenerationParameters;
 import org.bouncycastle.crypto.params.ElGamalParameters;
 import org.bouncycastle.crypto.params.ElGamalPrivateKeyParameters;
 import org.bouncycastle.crypto.params.ElGamalPublicKeyParameters;
+import org.bouncycastle.jce.interfaces.ElGamalPublicKey;
 import org.bouncycastle.util.Arrays;
+import org.evoting.authority.Model;
 import org.evoting.common.Group;
+import org.evoting.common.Importer;
+import org.evoting.common.exceptions.CorruptDataException;
 import org.evoting.security.ElGamal;
 import org.evoting.security.Security;
 import org.junit.Test;
@@ -102,6 +108,35 @@ public class HomomorphicEncryptionTest
 	}
 	
 	@Test
+	public void testEncryptionAndDecryptionWithImporter()
+	{
+		try {
+			ElGamalPublicKeyParameters pubKey = Importer.importElGamalPublicKeyParameters(Model.getElGamalPublicKeyFile());
+			ElGamalPrivateKeyParameters privKey = Importer.importElGamalPrivateKeyParameters(Model.getElGamalPrivateKeyFile());
+			Security.setElGamalPrivateKey(privKey);
+			Security.setElGamalPublicKey(pubKey);
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (CorruptDataException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		BigInteger message1 = new BigInteger("900");
+		byte[] messageByte1 = message1.toByteArray();
+		byte[] cipher1 = Security.encryptElGamal(messageByte1, Security.getElgamalPublicKey());
+		
+        byte[] messageByte = Security.decryptElgamal(cipher1, Security.getElgamalPrivateKey());
+        BigInteger result = new BigInteger(messageByte);
+        
+        assertEquals(message1, result);
+	}
+	
+	@Test
 	public void testLorena()//TODO:Name change?
 	{
 		ElGamalParameters localElGamalParameters = new ElGamalParameters(p, g, 0);
@@ -116,7 +151,6 @@ public class HomomorphicEncryptionTest
 		
 		ElGamalPublicKeyParameters pubK = localElGamalPublicKeyParameters;
 		ElGamalPrivateKeyParameters privK = localElGamalPrivateKeyParameters;
-		
 		
 		Group.getInstance().setGenerator(g);
 		Group.getInstance().setModulo(p);
@@ -202,6 +236,46 @@ public class HomomorphicEncryptionTest
 		byte[] product = Security.multiplyElGamalCiphers(cipher1, cipher2);
         
         byte[] messageByte = Security.decryptElgamal(product, ElGamalPrivateKey);
+        BigInteger result = new BigInteger(messageByte);
+        
+        assertEquals(message1.multiply(message2).mod(Group.getInstance().getModulo()), result);
+        
+        assertEquals(message1base.add(message2base).longValue(), Group.getInstance().discreteLogarithm(result));
+	}
+	
+	@Test
+	public void testExponentialHomomorphicPropertiesWithImporter()
+	{
+		try {
+			ElGamalPublicKeyParameters pubKey = Importer.importElGamalPublicKeyParameters(Model.getElGamalPublicKeyFile());
+			ElGamalPrivateKeyParameters privKey = Importer.importElGamalPrivateKeyParameters(Model.getElGamalPrivateKeyFile());
+			Security.setElGamalPrivateKey(privKey);
+			Security.setElGamalPublicKey(pubKey);
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (CorruptDataException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		BigInteger message1base = new BigInteger("200");
+		BigInteger message1 = Group.getInstance().raiseGenerator(message1base.longValue());
+		byte[] messageByte1 = message1.toByteArray();
+		messageByte1 = removeSignByte(messageByte1);
+		byte[] cipher1 = Security.encryptElGamal(messageByte1, Security.getElgamalPublicKey());
+		
+		BigInteger message2base = new BigInteger("100");
+		BigInteger message2 = Group.getInstance().raiseGenerator(message2base.longValue());
+		byte[] messageByte2 = message2.toByteArray();
+		byte[] cipher2 = Security.encryptElGamal(messageByte2, Security.getElgamalPublicKey());
+		
+		byte[] product = Security.multiplyElGamalCiphers(cipher1, cipher2);
+        
+        byte[] messageByte = Security.decryptElgamal(product, Security.getElgamalPrivateKey());
         BigInteger result = new BigInteger(messageByte);
         
         assertEquals(message1.multiply(message2).mod(Group.getInstance().getModulo()), result);

@@ -223,18 +223,22 @@ public class Security {
 		ElGamalParameters elGamalp = new ElGamalParameters(p, g);
 		ElGamalPublicKeyParameters elGamalpkp = new ElGamalPublicKeyParameters(y, elGamalp);
 		setElGamalPublicKey(elGamalpkp);
+		setGroupParameters(g, p);
 	}
 	
 	public static void setElGamalPublicKey(ElGamalPublicKeyParameters elGamalPublicKey) {
 		ElGamal.setPublicKey(elGamalPublicKey);
-		group.setGenerator(elGamalPublicKey.getParameters().getG());
-		group.setModulo(elGamalPublicKey.getParameters().getP());
+		setGroupParameters(elGamalPublicKey.getParameters().getG(), elGamalPublicKey.getParameters().getP());
 	}
 
 	public static void setElGamalPrivateKey(ElGamalPrivateKeyParameters privK) {
 		ElGamal.setPrivateKey(privK);
-		group.setGenerator(privK.getParameters().getG());
-		group.setModulo(privK.getParameters().getP());
+		setGroupParameters(privK.getParameters().getG(), privK.getParameters().getP());
+	}
+	
+	private static void setGroupParameters(BigInteger g, BigInteger p) {
+		group.setGenerator(g);
+		group.setModulo(p);
 	}
 
 	public static void setAuthorityRSAPublicKey(PublicKey pubK) {

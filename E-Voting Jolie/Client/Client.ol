@@ -25,9 +25,9 @@ main
         ballot.sid = loginResponse.sid;
         println@Console(ballot.userId)();
         processVote@BulletinBoardService( ballot )( registered );
-        println@Console( "The vote is registered: " + registered )( );
+        println@Console( "The vote is registered: " + registered )( )
     } else if(command == "get") {
-        getAllVotes@BulletinBoardService( )( allVotes )
+        getAllVotes@BulletinBoardService( )( allVotes );
         for(i = 0, i < #allVotes.votes, i++) {
             println@Console( "Vote #" + i )( );
             for(j = 0, j < #allVotes.votes.vote, j++) {
