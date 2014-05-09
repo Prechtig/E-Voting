@@ -211,7 +211,36 @@ public class HomomorphicEncryptionTest
 	}
 	
 	@Test
-	public void testExponentialHomomorphicProperties()
+	public void testExponentialHomomorphicProperties1()
+	{
+		testExponentialHomomorphicProperties(200, 100);
+	}
+	
+	@Test
+	public void testExponentialHomomorphicProperties2()
+	{
+		testExponentialHomomorphicProperties(17, 16);
+	}
+	
+	@Test
+	public void testExponentialHomomorphicProperties3()
+	{
+		testExponentialHomomorphicProperties(1, 1);
+	}
+	
+	@Test
+	public void testExponentialHomomorphicProperties4()
+	{
+		testExponentialHomomorphicProperties(10, 20);
+	}
+	
+	@Test
+	public void testExponentialHomomorphicProperties5()
+	{
+		testExponentialHomomorphicProperties(5, 4);
+	}
+	
+	public void testExponentialHomomorphicProperties(long base1, long base2)
 	{
 		ElGamalPrivateKeyParameters ElGamalPrivateKey;
 		ElGamalPublicKeyParameters ElGamalPublicKey;
@@ -221,14 +250,12 @@ public class HomomorphicEncryptionTest
 		
 		Group.getInstance().setGenerator(ElGamalPublicKey.getParameters().getG());
 		Group.getInstance().setModulo(ElGamalPublicKey.getParameters().getP());
-		BigInteger message1base = new BigInteger("200");
-		BigInteger message1 = Group.getInstance().raiseGenerator(message1base.longValue());
+		BigInteger message1 = Group.getInstance().raiseGenerator(base1);
 		byte[] messageByte1 = message1.toByteArray();
 		messageByte1 = removeSignByte(messageByte1);
 		byte[] cipher1 = Security.encryptElGamal(messageByte1, ElGamalPublicKey);
 		
-		BigInteger message2base = new BigInteger("100");
-		BigInteger message2 = Group.getInstance().raiseGenerator(message2base.longValue());
+		BigInteger message2 = Group.getInstance().raiseGenerator(base2);
 		byte[] messageByte2 = message2.toByteArray();
 		byte[] cipher2 = Security.encryptElGamal(messageByte2, ElGamalPublicKey);
 		
@@ -239,7 +266,7 @@ public class HomomorphicEncryptionTest
         
         assertEquals(message1.multiply(message2).mod(Group.getInstance().getModulo()), result);
         
-        assertEquals(message1base.add(message2base).longValue(), Group.getInstance().discreteLogarithm(result));
+        assertEquals(base1+base2, Group.getInstance().discreteLogarithm(result));
 	}
 	
 	@Test

@@ -27,6 +27,7 @@ public class CountVotes extends Command
 	public String execute(JavaService js)
 	{
 		long[] votes = countVotes(js);
+		System.out.println(Arrays.toString(votes));
 		votes = addCandidateVotesToParties(votes, Model.getElectionOptions());
 		return electionResultToString(votes, Model.getElectionOptions());
 	}
@@ -53,6 +54,7 @@ public class CountVotes extends Command
 				if(firstIteration) {
 					for(int i = 0; i < voteProducts.length; i++) {
 						voteProducts[i] = v.getEncryptedVote()[i];
+						firstIteration = false;
 					}
 				} else {
 					for (int i = 0; i < voteProducts.length; i++) {
@@ -64,8 +66,7 @@ public class CountVotes extends Command
 			
 			long[] result = new long[Model.getElectionOptions().size()];
 			for (int i = 0; i < result.length; i++) {
-				System.out.println("Decrypting exponential elgamal");
-				//result[i] = Security.decryptExponentialElgamal(voteProducts[i], Security.getElgamalPrivateKey());
+				result[i] = Security.decryptExponentialElgamal(voteProducts[i], Security.getElgamalPrivateKey());
 			}
 			
 			return result;
@@ -81,7 +82,6 @@ public class CountVotes extends Command
 		long[] result = new long[Model.getElectionOptions().size()];
 		int i = 0;
 		for (byte[] b : v.getEncryptedVote()) {
-			System.out.println("Decrypting..");
 			result[i] = Security.decryptExponentialElgamal(b, Security.getElgamalPrivateKey());
 			i++;
 		}
