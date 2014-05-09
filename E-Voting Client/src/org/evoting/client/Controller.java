@@ -5,7 +5,7 @@ import jolie.runtime.Value;
 
 import org.evoting.client.exceptions.NoElectionOptionsException;
 import org.evoting.common.ElectionOptions;
-import org.evoting.common.EncryptedElectionOptions;
+import org.evoting.common.SignedElectionOptions;
 import org.evoting.common.LoginRequest;
 
 /**
@@ -26,9 +26,9 @@ public class Controller extends JavaService
 	public void setElectionOptions(Value encryptedElectionOptionsValue)
 	{
 		// Interprets the value object as an encrypted election option list.
-		EncryptedElectionOptions encryptedElectionOptions = new EncryptedElectionOptions(encryptedElectionOptionsValue);
+		SignedElectionOptions signedElectionOptions = new SignedElectionOptions(encryptedElectionOptionsValue);
 		// Decrypts the electionOption list.
-		ElectionOptions electionOptions = encryptedElectionOptions.getElectionOptions();
+		ElectionOptions electionOptions = signedElectionOptions.getElectionOptions();
 		Model.setElectionOptions(electionOptions);
 	}
 	

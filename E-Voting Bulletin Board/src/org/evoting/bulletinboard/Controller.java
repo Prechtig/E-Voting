@@ -8,6 +8,7 @@ import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.spec.InvalidKeySpecException;
 import java.util.Date;
+import java.util.List;
 
 import jolie.runtime.JavaService;
 import jolie.runtime.Value;
@@ -20,7 +21,7 @@ import org.evoting.bulletinboard.exceptions.InvalidUserInformationException;
 import org.evoting.common.AnonymousVoteList;
 import org.evoting.common.Ballot;
 import org.evoting.common.EncryptedBallot;
-import org.evoting.common.EncryptedElectionOptions;
+import org.evoting.common.SignedElectionOptions;
 import org.evoting.common.Importer;
 import org.evoting.common.KeyType;
 import org.evoting.common.LoginRequest;
@@ -28,12 +29,15 @@ import org.evoting.common.LoginResponse;
 import org.evoting.common.ValueIdentifiers;
 import org.evoting.common.exceptions.BadValueException;
 import org.evoting.common.exceptions.CorruptDataException;
+import org.evoting.database.entities.Election;
 import org.evoting.database.entities.ElectionOption;
 import org.evoting.security.Security;
 
 public class Controller extends JavaService {
 	private static Date electionStartDate;
 	private static Date electionEndDate;
+	private static Election election;
+	private static Value publicKeys = null;
 
 	@RequestResponse
 	public Boolean sendElectionOptionList(Value electionOptions) {
@@ -70,7 +74,7 @@ public class Controller extends JavaService {
 
 		electionStartDate = new Date(startTime);
 		electionEndDate = new Date(endTime);
-		Model.createNewElection(electionStartDate, electionEndDate);
+		election = Model.createNewElection(electionStartDate, electionEndDate);
 		return Boolean.TRUE;
 	}
 
@@ -85,13 +89,12 @@ public class Controller extends JavaService {
 		if (!electionIsRunning()) {
 			throw new ElectionNotStartedException();
 		}
-		// TODO: Is this implementation correct?
 		Ballot ballot = new EncryptedBallot(encryptedBallot).getBallot();
 
 		String userId = ballot.getUserId();
 		byte[][] encryptedVote = ballot.getVote();
 
-		Model.processVote(userId, encryptedVote);
+		Model.persistVote(userId, encryptedVote);
 
 		return Boolean.TRUE;
 	}
@@ -111,11 +114,10 @@ public class Controller extends JavaService {
 	public Value getElectionStatus() {
 		Value status = Value.create();
 
-		Date startTime = Model.getElectionStartTime();
-		Date endTime = Model.getElectionEndTime();
+		Date startTime = election.getStartTime();
+		Date endTime = election.getEndTime();
 
-		boolean running = new Date().before(endTime);
-		status.getNewChild(ValueIdentifiers.getRunning()).setValue(running);
+		status.getNewChild(ValueIdentifiers.getRunning()).setValue(electionIsRunning());
 		status.getNewChild(ValueIdentifiers.getStartTime()).setValue(startTime.getTime());
 		status.getNewChild(ValueIdentifiers.getEndTime()).setValue(endTime.getTime());
 
@@ -131,8 +133,10 @@ public class Controller extends JavaService {
 			throw new ElectionNotStartedException();
 		}
 
-		EncryptedElectionOptions electionOptions = Model.getEncryptedElectionOptions();
-		return electionOptions.getValue();
+		List<ElectionOption> electionOptions = Model.getEncryptedElectionOptions();
+		SignedElectionOptions signedElectionOptions = new SignedElectionOptions(electionOptions, election.getId(), election.getEndTime());
+		
+		return signedElectionOptions.getValue();
 	}
 
 	@RequestResponse
@@ -143,7 +147,10 @@ public class Controller extends JavaService {
 		if (!electionIsRunning()) {
 			throw new ElectionNotStartedException();
 		}
-		return Model.getPublicKeysValue();
+		if(publicKeys == null) {
+			publicKeys = Model.getPublicKeysValue();
+		}
+		return publicKeys;
 	}
 
 	@RequestResponse
