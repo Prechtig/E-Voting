@@ -237,6 +237,12 @@ public class HomomorphicEncryptionTest
 	@Test
 	public void testExponentialHomomorphicProperties5()
 	{
+		testExponentialHomomorphicProperties(1000, 2000);
+	}
+	
+	@Test
+	public void testExponentialHomomorphicProperties6()
+	{
 		testExponentialHomomorphicProperties(5, 4);
 	}
 	
@@ -262,7 +268,7 @@ public class HomomorphicEncryptionTest
 		byte[] product = Security.multiplyElGamalCiphers(cipher1, cipher2);
         
         byte[] messageByte = Security.decryptElgamal(product, ElGamalPrivateKey);
-        BigInteger result = new BigInteger(messageByte);
+        BigInteger result = new BigInteger(1, messageByte);
         
         assertEquals(message1.multiply(message2).mod(Group.getInstance().getModulo()), result);
         

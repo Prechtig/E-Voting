@@ -21,7 +21,7 @@ import org.evoting.common.Group;
 
 public class Security {
 	//Size of ELGamal byte array
-	public static final int SIZE_OF_ELGAMAL_CIPHER = 256;
+	public static final int SIZE_OF_ELGAMAL_CIPHER = 128;
 	//The group defined by the ElGamal parameters.
 	private static Group group = Group.getInstance();
 	
@@ -81,7 +81,7 @@ public class Security {
 	 */
 	public static long decryptExponentialElgamal(byte[] m, ElGamalPrivateKeyParameters pK) {
 		byte[] decrypted = ElGamal.decrypt(m, pK);
-		BigInteger messageToPower = new BigInteger(decrypted);
+		BigInteger messageToPower = new BigInteger(1, decrypted);
 		return group.discreteLogarithm(messageToPower);
 	}
 
