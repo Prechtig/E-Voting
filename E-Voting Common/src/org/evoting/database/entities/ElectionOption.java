@@ -51,4 +51,8 @@ public class ElectionOption extends BaseEntity {
 	public int getPartyId() {
 		return this.partyId;
 	}
+	
+	public String toString() {
+		return name + " with election option id: " + electionId + " and party id: " + partyId;
+	}
 }

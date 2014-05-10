@@ -73,6 +73,11 @@ public class Security {
 		return ElGamal.encrypt(m, pK);
 	}
 	
+	public static byte[] encryptExponentialElgamal(long message, ElGamalPublicKeyParameters pK) {
+		byte[] raisedMessageByte = group.raiseGenerator(message).toByteArray();
+		return encryptElGamal(raisedMessageByte, pK);
+	}
+	
 	/**
 	 * Decrypts a byte array and solves the discrete logarithm.
 	 * @param m The byte array to decrypt

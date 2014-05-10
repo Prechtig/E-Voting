@@ -20,6 +20,7 @@ import org.evoting.common.Importer;
 import org.evoting.common.exceptions.CorruptDataException;
 import org.evoting.security.ElGamal;
 import org.evoting.security.Security;
+import org.junit.Assert;
 import org.junit.Test;
 
 public class HomomorphicEncryptionTest 
@@ -259,10 +260,12 @@ public class HomomorphicEncryptionTest
 		BigInteger message1 = Group.getInstance().raiseGenerator(base1);
 		byte[] messageByte1 = message1.toByteArray();
 		messageByte1 = removeSignByte(messageByte1);
+		messageByte1 = removeSignByte(messageByte1);
 		byte[] cipher1 = Security.encryptElGamal(messageByte1, ElGamalPublicKey);
 		
 		BigInteger message2 = Group.getInstance().raiseGenerator(base2);
 		byte[] messageByte2 = message2.toByteArray();
+		messageByte2 = removeSignByte(messageByte2);
 		byte[] cipher2 = Security.encryptElGamal(messageByte2, ElGamalPublicKey);
 		
 		byte[] product = Security.multiplyElGamalCiphers(cipher1, cipher2);
@@ -315,7 +318,7 @@ public class HomomorphicEncryptionTest
         assertEquals(message1base.add(message2base).longValue(), Group.getInstance().discreteLogarithm(result));
 	}
 	
-	//@Test
+	@Test
 	public void testExponentialHomomorphicPropertiesWithLargeValues()
 	{
 		ElGamalPrivateKeyParameters ElGamalPrivateKey;
@@ -330,7 +333,7 @@ public class HomomorphicEncryptionTest
 		BigInteger message1base;
 		BigInteger message2base;
 		
-		for(long i = 10; i < 200000; i = i*10) {
+		for(long i = 10; i < 500000; i = i*10) {
 			message1base = BigInteger.valueOf(i);
 			message2base = BigInteger.valueOf(i*2);
 			
@@ -339,7 +342,6 @@ public class HomomorphicEncryptionTest
 			messageByte1 = removeSignByte(messageByte1);
 			System.out.println(byteArrayToString(messageByte1));
 			byte[] cipher1 = Security.encryptElGamal(messageByte1, ElGamalPublicKey);
-			
 			
 			BigInteger message2 = Group.getInstance().raiseGenerator(message2base.longValue());
 			byte[] messageByte2 = message2.toByteArray();
@@ -356,7 +358,47 @@ public class HomomorphicEncryptionTest
 		}
 	}
 	
-	//@Test
+	@Test
+	public void testExponentialHomomorphicPropertiesWithAccumulatedVotes() {
+		try {
+			ElGamalPublicKeyParameters pubKey = Importer.importElGamalPublicKeyParameters(Model.getElGamalPublicKeyFile());
+			ElGamalPrivateKeyParameters privKey = Importer.importElGamalPrivateKeyParameters(Model.getElGamalPrivateKeyFile());
+			Security.setElGamalPrivateKey(privKey);
+			Security.setElGamalPublicKey(pubKey);
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (CorruptDataException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		long message1 = 1;
+		long message2 = 0;
+		long accumulator = 0;
+		
+		byte[] cipher;
+		
+		byte[] productCipher = Security.encryptExponentialElgamal(message2, Security.getElgamalPublicKey());
+		
+		for (int i = 1; i < 100000; i = i * 10) {
+			productCipher = Security.encryptExponentialElgamal(message2, Security.getElgamalPublicKey());
+			accumulator = 0;
+			for (int j = 0; j < i; j++) {
+				cipher = Security.encryptExponentialElgamal(message1, Security.getElgamalPublicKey());
+				productCipher = Security.multiplyElGamalCiphers(productCipher, cipher);
+				accumulator += message1;
+				cipher = Security.encryptExponentialElgamal(message2, Security.getElgamalPublicKey());
+				productCipher = Security.multiplyElGamalCiphers(productCipher, cipher);
+			}
+			Assert.assertEquals(accumulator, Security.decryptExponentialElgamal(productCipher, Security.getElgamalPrivateKey()));
+		}
+	}
+	
+	@Test
 	@SuppressWarnings("unused")
 	public void testCipherLength() {
 		ElGamalPrivateKeyParameters ElGamalPrivateKey;

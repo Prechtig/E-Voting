@@ -27,4 +27,15 @@ public class ElectionOptions
 	public List<ElectionOption> getElectionOptions() {
 		return electionOptions;
 	}
+	
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("Election id: ");
+		sb.append(electionId);
+		for(ElectionOption e : electionOptions) {
+			sb.append("\n");
+			sb.append(e.toString());
+		}
+		return sb.toString();
+	}
 }

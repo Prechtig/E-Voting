@@ -27,7 +27,6 @@ public class CountVotes extends Command
 	public String execute(JavaService js)
 	{
 		long[] votes = countVotes(js);
-		System.out.println(Arrays.toString(votes));
 		votes = addCandidateVotesToParties(votes, Model.getElectionOptions());
 		return electionResultToString(votes, Model.getElectionOptions());
 	}
@@ -61,7 +60,6 @@ public class CountVotes extends Command
 						voteProducts[i] = Security.multiplyElGamalCiphers(voteProducts[i], v.getEncryptedVote()[i]);
 					}
 				}
-				decryptAndPrintSingleVote(v);
 			}
 			
 			long[] result = new long[Model.getElectionOptions().size()];
@@ -78,23 +76,13 @@ public class CountVotes extends Command
 		return null;
 	}
 	
-	private void decryptAndPrintSingleVote(AnonymousVote v) {
-		long[] result = new long[Model.getElectionOptions().size()];
-		int i = 0;
-		for (byte[] b : v.getEncryptedVote()) {
-			result[i] = Security.decryptExponentialElgamal(b, Security.getElgamalPrivateKey());
-			i++;
-		}
-		System.out.println("One of the voters voted the following: \n" + Arrays.toString(result));
-	}
-	
-	private String electionResultToString(long[] result, List<ElectionOption> electionOptions) {
+	private String electionResultToString(long[] electionResult, List<ElectionOption> electionOptions) {
 		String[] electionOptionsOrdered = new String[electionOptions.size()];
 		for(ElectionOption e : electionOptions) {
 			if(e.getPartyId() != -1) {
-				electionOptionsOrdered[e.getId()] = e.getName() + " from " + getPartyName(e.getPartyId(), electionOptions);
+				electionOptionsOrdered[e.getElectionId()] = e.getName() + " from " + getPartyName(e.getPartyId(), electionOptions);
 			} else {
-				electionOptionsOrdered[e.getId()] = e.getName();
+				electionOptionsOrdered[e.getElectionId()] = e.getName();
 			}
 		}
 		
@@ -102,7 +90,7 @@ public class CountVotes extends Command
 		for (int i = 0; i < electionOptionsOrdered.length; i++) {
 			sb.append(electionOptionsOrdered[i]);
 			sb.append(" with ");
-			sb.append(result[i]);
+			sb.append(electionResult[i]);
 			sb.append(" votes.\n");
 		}
 		
@@ -113,9 +101,13 @@ public class CountVotes extends Command
 		long[] result = new long[electionOptions.size()];
 		
 		for(ElectionOption e : electionOptions) {
-			if(e.getId() != e.getPartyId() && e.getPartyId() != -1) {
-				result[e.getPartyId()] = result[e.getPartyId()] + electionResult[e.getId()];
+			if(e.getElectionId() != e.getPartyId() && e.getPartyId() != -1) {
+				result[e.getPartyId()] += electionResult[e.getElectionId()];
 			}
+		}
+		
+		for (int i = 0; i < result.length; i++) {
+			result[i] += electionResult[i];
 		}
 		
 		return result;
@@ -123,7 +115,7 @@ public class CountVotes extends Command
 	
 	private String getPartyName(int partyId, List<ElectionOption> electionOptions) {
 		for(ElectionOption e : electionOptions) {
-			if(e.getId() == partyId) {
+			if(e.getElectionId() == partyId) {
 				return e.getName();
 			}
 		}

@@ -56,7 +56,7 @@ public class ConsoleIO
 			System.out.println("Enter the ID of the candidate or party that you want to vote for:");
 			input = console.readLine();
 			if(!isElectionOptionId(input, numberOfElectionOptions)) {
-				System.out.println("The input does not match any legal electionOption IDs.\n");
+				System.out.println("The input does not match any legal election option IDs.\n");
 			}
 		}
 		
