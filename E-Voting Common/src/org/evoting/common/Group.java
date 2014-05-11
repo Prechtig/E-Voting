@@ -90,6 +90,10 @@ public class Group
 		}
 	}
 	
+	/**
+	 * Builds a cache to speed up the decryption of exponential elgamal.
+	 * @param max the highest number of votes that the cache can provide performance enhancements for.
+	 */
 	public void buildCache(long max)
 	{
 		for(long i = 0; i <= max; i++) {

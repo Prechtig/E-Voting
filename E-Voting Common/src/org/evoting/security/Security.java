@@ -73,8 +73,15 @@ public class Security {
 		return ElGamal.encrypt(m, pK);
 	}
 	
+	/**
+	 * Encrypts a message with exponential ElGamal, such that it gain homomorphic properties.
+	 * @param message The number to be encrypted
+	 * @param pK The ElGamal public key
+	 * @return The resulting ciphertext
+	 */
 	public static byte[] encryptExponentialElgamal(long message, ElGamalPublicKeyParameters pK) {
 		byte[] raisedMessageByte = group.raiseGenerator(message).toByteArray();
+		raisedMessageByte = removeSignByte(raisedMessageByte);
 		return encryptElGamal(raisedMessageByte, pK);
 	}
 	
@@ -281,7 +288,7 @@ public class Security {
 			throw new IllegalArgumentException();
 		}
 		
-		// Seperates the two parts of the cipher arrays.
+		// Separates the two parts of the cipher arrays.
 		byte[] cipherGamma1 = Arrays.copyOfRange(cipher1, 0, cipher1.length/2);
 		byte[] cipherPhi1 = Arrays.copyOfRange(cipher1, cipher1.length/2, cipher1.length);
 		byte[] cipherGamma2 = Arrays.copyOfRange(cipher2, 0, cipher2.length/2);
@@ -314,6 +321,25 @@ public class Security {
 		
 		return result;
 	} 
+	
+	/**
+	 * Builds a cache to speed up the decryption of exponential elgamal.
+	 * @param max the highest number of votes that the cache can provide performance enhancements for.
+	 */
+	public static void buildCache(long max) {
+		group.buildCache(max);
+	}
+	
+	private static byte[] removeSignByte(byte[] array)
+	{
+		if(array.length > Security.SIZE_OF_ELGAMAL_CIPHER / 2) {
+			byte[] result = new byte[array.length-1];
+			System.arraycopy(array, 1, result, 0, result.length);
+			return result;
+		} else {
+			return array;
+		}
+	}
 	
 	
 	   //---------------------------------------\\

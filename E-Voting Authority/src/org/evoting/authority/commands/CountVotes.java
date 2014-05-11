@@ -19,6 +19,7 @@ import org.evoting.security.Security;
 public class CountVotes extends Command
 {
 	public static final String KEYWORD = "count";
+	private static String invalidArguments = "Invalid arguments.";
 	
 	public CountVotes(String[] args) {
 		super(args);
@@ -26,9 +27,39 @@ public class CountVotes extends Command
 	
 	public String execute(JavaService js)
 	{
-		long[] votes = countVotes(js);
-		votes = addCandidateVotesToParties(votes, Model.getElectionOptions());
-		return electionResultToString(votes, Model.getElectionOptions());
+		if(Model.getElectionOptions() == null) {
+			return "Cannot count before options has been loaded.";
+		}
+		
+		if (args.length < 2) {
+			return invalidArguments;
+		}
+
+		long[] votes;
+		switch (args[1]) {
+		// adds the personal votes to the party votes
+		case "sum":
+			votes = countVotes(js);
+			votes = addCandidateVotesToParties(votes, Model.getElectionOptions());
+			return electionResultToString(votes, Model.getElectionOptions());
+			// count the votes only
+		case "clean":
+			votes = countVotes(js);
+			return electionResultToString(votes, Model.getElectionOptions());
+			// Generate both RSA and ElGamal key pair
+		case "both":
+			votes = countVotes(js);
+			StringBuilder sb = new StringBuilder();
+			sb.append("Clean: \n");
+			sb.append(electionResultToString(votes, Model.getElectionOptions()));
+			sb.append("\n");
+			sb.append("Sum: \n");
+			votes = addCandidateVotesToParties(votes, Model.getElectionOptions());
+			sb.append(electionResultToString(votes, Model.getElectionOptions()));
+			return sb.toString();
+		default:
+			return invalidArguments;
+		}
 	}
 	
 	/**
@@ -79,7 +110,9 @@ public class CountVotes extends Command
 	private String electionResultToString(long[] electionResult, List<ElectionOption> electionOptions) {
 		String[] electionOptionsOrdered = new String[electionOptions.size()];
 		for(ElectionOption e : electionOptions) {
-			if(e.getPartyId() != -1) {
+			if(e.getElectionId() == e.getPartyId()) {
+				electionOptionsOrdered[e.getElectionId()] = "Party " + e.getName();
+			} else if(e.getPartyId() != -1) {
 				electionOptionsOrdered[e.getElectionId()] = e.getName() + " from " + getPartyName(e.getPartyId(), electionOptions);
 			} else {
 				electionOptionsOrdered[e.getElectionId()] = e.getName();

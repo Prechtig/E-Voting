@@ -1,5 +1,6 @@
 package org.evoting.authority;
 
+import org.evoting.authority.commands.Build;
 import org.evoting.authority.commands.Command;
 import org.evoting.authority.commands.CountVotes;
 import org.evoting.authority.commands.Exit;
@@ -42,6 +43,9 @@ public class ConsoleIO {
 			// Count votes
 		case CountVotes.KEYWORD:
 			return new CountVotes(args);
+			// Builds the cache
+		case Build.KEYWORD:
+			return new Build(args);
 			// Update the election status
 		case Status.KEYWORD:
 			return new Status(args);
