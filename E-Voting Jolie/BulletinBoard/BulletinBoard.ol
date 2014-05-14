@@ -90,5 +90,5 @@ main {
 
 	[ sendElectionOptionList( options )( confirmation ) {
 		sendElectionOptionList@BBJavaController( options )( confirmation )
-	} ] { nullProcess }
+	} ] { println@Console( "Recieved the list of election options" )( ) }
 }
