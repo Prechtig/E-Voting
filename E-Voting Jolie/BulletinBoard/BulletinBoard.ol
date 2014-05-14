@@ -65,17 +65,13 @@ main {
 		processVote@BBJavaController( encryptedBallot )( registered );
 		println@Console( "Registered vote: " + registered )()
 	} }
-	
+
 	[ getAllVotes( )( allVotes ) {
 		getAllVotes@BBJavaController( )( allVotes )
 	} ] { nullProcess }
 
 	[ getAllVotesAuthority( validator )( allVotes ) {
 		getAllVotesAuthority@BBJavaController( validator )( allVotes )
-	} ] { nullProcess }
-
-	[ getElectionStatus( )( confirmation ) {
-		getElectionStatus@BBJavaController( )( confirmation )
 	} ] { nullProcess }
 
 	[ startElection( electionStart )( confirmation ) {
