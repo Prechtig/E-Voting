@@ -65,13 +65,7 @@ main {
 		processVote@BBJavaController( encryptedBallot )( registered );
 		println@Console( "Registered vote: " + registered )()
 	} }
-
-	//[ processVote( encryptedBallot )( registered ) {
-	//	//Process the vote in the embedded Java service
-	//	processVote@BBJavaController( encryptedBallot )( registered );
-	//	println@Console( "Registered vote: " + registered )()
-	//} ] { nullProcess }
-
+	
 	[ getAllVotes( )( allVotes ) {
 		getAllVotes@BBJavaController( )( allVotes )
 	} ] { nullProcess }
