@@ -33,10 +33,6 @@ init
 
 main
 {
-	[ getElectionStatus( )( status ) {// Used to get information regarding the election
-		getElectionStatus@BulletinBoardService( )( status )
-	} ] { nullProcess }
-
     [ startElection( startElection )( confirmation ) { //Start the election
 		startElection@BulletinBoardService( startElection )( confirmation )
 	} ] { nullProcess }
