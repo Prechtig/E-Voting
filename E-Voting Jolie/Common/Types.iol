@@ -19,8 +19,8 @@ type SignedBallotList: void {
 type SignedElectionOptions: void {
 	.electionId: int
 	.electionOptions*: void {
-		.id: int
 		.name: string
+		.id: int
 		.partyId: int
 	}
 	.signature: raw
@@ -36,12 +36,6 @@ type PublicKeys: void {
 		}
 	}
 	.rsaPublicKey: raw
-}
-
-type ElectionStatus: void {
-	.running: bool
-	.startTime: long
-	.endTime: long
 }
 
 type LoginRequest: void {
