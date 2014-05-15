@@ -52,19 +52,19 @@ public class HibernateTest {
 		}
 
 		ElectionOptionRepository cr = new ElectionOptionRepository(entMgr);
-		if (cr.findById(p0.getId()) == null) {
+		if (cr.findByElectionOptionId(p0.getId()) == null) {
 			entMgr.persist(p0);
 		}
-		if (cr.findById(c0.getId()) == null) {
+		if (cr.findByElectionOptionId(c0.getId()) == null) {
 			entMgr.persist(c0);
 		}
-		if (cr.findById(c1.getId()) == null) {
+		if (cr.findByElectionOptionId(c1.getId()) == null) {
 			entMgr.persist(c1);
 		}
-		if (cr.findById(c2.getId()) == null) {
+		if (cr.findByElectionOptionId(c2.getId()) == null) {
 			entMgr.persist(c2);
 		}
-		if (cr.findById(c3.getId()) == null) {
+		if (cr.findByElectionOptionId(c3.getId()) == null) {
 			entMgr.persist(c3);
 		}
 		

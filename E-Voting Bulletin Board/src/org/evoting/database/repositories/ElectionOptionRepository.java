@@ -19,9 +19,9 @@ public class ElectionOptionRepository extends EntityRepository<ElectionOption>{
 	 * @param electionOptionId The id of the electionOption searching for
 	 * @return The electionOption with the given id if one exists, null otherwise
 	 */
-	public ElectionOption findById(int electionOptionId) {
-		String query = "SELECT c FROM ElectionOption c WHERE id = ?1";
-		return super.findSingleByQuery(query, electionOptionId);
+	public List<ElectionOption> findByElectionOptionId(int electionOptionId) {
+		String query = "SELECT c FROM ElectionOption c WHERE electionOptionId = ?1";
+		return super.findByQuery(query, electionOptionId);
 	}
 	
 	/**

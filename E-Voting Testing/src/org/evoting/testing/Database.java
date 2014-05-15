@@ -11,6 +11,7 @@ import org.evoting.common.Converter;
 import org.evoting.database.EntityManagerUtil;
 import org.evoting.database.entities.ElectionOption;
 import org.evoting.database.entities.Vote;
+import org.evoting.database.repositories.ElectionOptionRepository;
 import org.evoting.database.repositories.VoteRepository;
 import org.evoting.security.Security;
 import org.junit.AfterClass;
@@ -97,11 +98,20 @@ public class Database {
 		EntityManager entMgr = EntityManagerUtil.getEntityManager();
 		entMgr.getTransaction().begin();
 		
-		VoteRepository vr = new VoteRepository(entMgr);
 		
+		//Remove test votes
+		VoteRepository vr = new VoteRepository(entMgr);
 		List<Vote> votes = vr.findByUserId("-1");
 		for(Vote v : votes) {
 			entMgr.remove(v);
+		}
+		
+		
+		//Remove test candidates
+		ElectionOptionRepository eor = new ElectionOptionRepository(entMgr);
+		List<ElectionOption> electionOptions = eor.findByElectionOptionId(-1);
+		for(ElectionOption eo : electionOptions) {
+			entMgr.remove(eo);
 		}
 		
 		entMgr.getTransaction().commit();
