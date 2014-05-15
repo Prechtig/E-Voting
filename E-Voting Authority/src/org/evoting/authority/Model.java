@@ -142,7 +142,7 @@ public class Model {
 
 		for (ElectionOption e : eOptions) {
 			Value electionOptions = result.getNewChild(ValueIdentifiers.getElectionOptions());
-			electionOptions.getNewChild(ValueIdentifiers.getId()).setValue(e.getElectionId());
+			electionOptions.getNewChild(ValueIdentifiers.getId()).setValue(e.getElectionOptionId());
 			electionOptions.getNewChild(ValueIdentifiers.getName()).setValue(e.getName());
 			electionOptions.getNewChild(ValueIdentifiers.getPartyId()).setValue(e.getPartyId());
 		}

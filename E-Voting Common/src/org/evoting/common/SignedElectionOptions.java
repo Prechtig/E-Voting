@@ -33,7 +33,7 @@ public class SignedElectionOptions
 	public SignedElectionOptions(List<ElectionOption> electionOptions, int electionId, Date endTime)
 	{
 		for(int i = 0; i < electionOptions.size(); i++) {
-			if(electionOptions.get(i).getElectionId() != i) {
+			if(electionOptions.get(i).getElectionOptionId() != i) {
 				//TODO: throw correct exception.
 				throw new RuntimeException();
 			}
@@ -97,7 +97,7 @@ public class SignedElectionOptions
 		result.getNewChild(ValueIdentifiers.getElectionId()).setValue(electionId);
 		for(ElectionOption e : electionOptions) {
 			Value electionOptions = result.getNewChild(ValueIdentifiers.getElectionOptions());
-			electionOptions.getNewChild(ValueIdentifiers.getId()).setValue(e.getElectionId());
+			electionOptions.getNewChild(ValueIdentifiers.getId()).setValue(e.getElectionOptionId());
 			electionOptions.getNewChild(ValueIdentifiers.getName()).setValue(e.getName());
 			electionOptions.getNewChild(ValueIdentifiers.getPartyId()).setValue(e.getPartyId());
 		}

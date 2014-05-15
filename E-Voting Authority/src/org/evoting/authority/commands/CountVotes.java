@@ -110,12 +110,12 @@ public class CountVotes extends Command
 	private String electionResultToString(long[] electionResult, List<ElectionOption> electionOptions) {
 		String[] electionOptionsOrdered = new String[electionOptions.size()];
 		for(ElectionOption e : electionOptions) {
-			if(e.getElectionId() == e.getPartyId()) {
-				electionOptionsOrdered[e.getElectionId()] = "Party " + e.getName();
+			if(e.getElectionOptionId() == e.getPartyId()) {
+				electionOptionsOrdered[e.getElectionOptionId()] = "Party " + e.getName();
 			} else if(e.getPartyId() != -1) {
-				electionOptionsOrdered[e.getElectionId()] = e.getName() + " from " + getPartyName(e.getPartyId(), electionOptions);
+				electionOptionsOrdered[e.getElectionOptionId()] = e.getName() + " from " + getPartyName(e.getPartyId(), electionOptions);
 			} else {
-				electionOptionsOrdered[e.getElectionId()] = e.getName();
+				electionOptionsOrdered[e.getElectionOptionId()] = e.getName();
 			}
 		}
 		
@@ -134,8 +134,8 @@ public class CountVotes extends Command
 		long[] result = new long[electionOptions.size()];
 		
 		for(ElectionOption e : electionOptions) {
-			if(e.getElectionId() != e.getPartyId() && e.getPartyId() != -1) {
-				result[e.getPartyId()] += electionResult[e.getElectionId()];
+			if(e.getElectionOptionId() != e.getPartyId() && e.getPartyId() != -1) {
+				result[e.getPartyId()] += electionResult[e.getElectionOptionId()];
 			}
 		}
 		
@@ -148,7 +148,7 @@ public class CountVotes extends Command
 	
 	private String getPartyName(int partyId, List<ElectionOption> electionOptions) {
 		for(ElectionOption e : electionOptions) {
-			if(e.getElectionId() == partyId) {
+			if(e.getElectionOptionId() == partyId) {
 				return e.getName();
 			}
 		}

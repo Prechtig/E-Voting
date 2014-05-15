@@ -10,8 +10,8 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "ElectionOptions")
 public class ElectionOption extends BaseEntity {
-	@Column(name = "electionId", updatable = false, nullable = false)
-	private int electionId;
+	@Column(name = "electionOptionId", updatable = false, nullable = false)
+	private int electionOptionId;
 	//The name of the electionOption
 	@Column(name = "name", updatable = false, nullable = false)
 	private String name;
@@ -24,7 +24,7 @@ public class ElectionOption extends BaseEntity {
 	 */
 	public ElectionOption(int electionOptionId, String name, int partyId) {
 		super();
-		this.electionId = electionOptionId;
+		this.electionOptionId = electionOptionId;
 		this.name = name;
 		this.partyId = partyId;
 	}
@@ -37,8 +37,8 @@ public class ElectionOption extends BaseEntity {
 		super();
 	}
 	
-	public int getElectionId() {
-		return electionId;
+	public int getElectionOptionId() {
+		return electionOptionId;
 	}
 	
 	/**
@@ -53,6 +53,6 @@ public class ElectionOption extends BaseEntity {
 	}
 	
 	public String toString() {
-		return name + " with election option id: " + electionId + " and party id: " + partyId;
+		return name + " with election option id: " + electionOptionId + " and party id: " + partyId;
 	}
 }
