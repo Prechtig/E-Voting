@@ -15,7 +15,6 @@ import org.evoting.security.Security;
 
 /**
  * Contains data about the election options and logic supporting ballot creation.
- * @author Mark
  *
  */
 public class Model

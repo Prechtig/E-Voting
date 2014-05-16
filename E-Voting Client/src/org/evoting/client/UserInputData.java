@@ -4,7 +4,6 @@ import org.evoting.common.jolie.LoginRequest;
 
 /**
  * Contains user input to create a ballot and logic to hash the password.
- * @author Mark
  *
  */
 public class UserInputData

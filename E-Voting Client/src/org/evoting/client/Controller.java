@@ -10,7 +10,6 @@ import org.evoting.common.jolie.SignedElectionOptions;
 
 /**
  * Contains the methods that the client jolie script calls.
- * @author Mark
  *
  */
 public class Controller extends JavaService

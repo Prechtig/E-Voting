@@ -6,7 +6,6 @@ import java.security.NoSuchAlgorithmException;
 
 /**
  * Contains hashing logic for the client.
- * @author Mark
  *
  */
 public class Hasher {

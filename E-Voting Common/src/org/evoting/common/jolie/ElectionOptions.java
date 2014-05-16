@@ -6,7 +6,6 @@ import org.evoting.database.entities.ElectionOption;
 
 /**
  * Contains names of the electionOptions available for voting and a time stamp.
- * @author Mark
  *
  */
 public class ElectionOptions

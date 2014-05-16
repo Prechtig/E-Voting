@@ -16,7 +16,6 @@ import org.evoting.security.Security;
 
 /**
  * This class contains fields and logic for encrypting and decrypting electionOption list data.
- * @author Mark
  *
  */
 public class SignedElectionOptions

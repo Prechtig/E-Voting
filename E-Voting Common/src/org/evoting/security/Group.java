@@ -5,7 +5,6 @@ import java.util.HashMap;
 
 /**
  * Contains data defining a cyclic group, and methods for generating and finding group elements.
- * @author Mark
  *
  */
 public class Group
