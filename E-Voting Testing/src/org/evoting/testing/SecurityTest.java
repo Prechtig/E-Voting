@@ -3,6 +3,8 @@ package org.evoting.testing;
 import static org.junit.Assert.assertEquals;
 
 import java.io.IOException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 
@@ -14,6 +16,7 @@ import org.evoting.common.utility.Exporter;
 import org.evoting.common.utility.Importer;
 import org.evoting.security.ElGamal;
 import org.evoting.security.RSA;
+import org.evoting.security.SHA1;
 import org.evoting.security.Security;
 import org.junit.Assert;
 import org.junit.BeforeClass;
@@ -123,5 +126,24 @@ public class SecurityTest {
 			e.printStackTrace();
 		}
 		Assert.assertEquals(savedParams, ElGamalPrivateKey);
+	}
+	
+	public void testHash() {
+		String m = "Test String";
+		String trueResult = "a5103f9c0b7d5ff69ddc38607c74e53d4ac120f2";
+		String result = "";
+		byte[] hashed = null;
+		
+		MessageDigest md = null;
+	    try {
+	        md = MessageDigest.getInstance("SHA-1");
+	        
+	        hashed = md.digest(m.getBytes());
+	    }
+	    catch(NoSuchAlgorithmException e) {
+	        e.printStackTrace();
+	    } 
+	    result = SHA1.byteToHex(hashed);
+	    Assert.assertEquals(trueResult, result);
 	}
 }

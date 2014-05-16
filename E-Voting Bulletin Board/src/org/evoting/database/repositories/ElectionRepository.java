@@ -29,10 +29,4 @@ public class ElectionRepository extends EntityRepository<Election> {
 		}
 		return elections.get(0);
 	}
-	
-	public boolean timestampExists() {
-		String query = "SELECT e FROM Election e";
-		List<Election> timestamps = super.findByQuery(query);
-		return timestamps.size() == 1;
-	}
 }
