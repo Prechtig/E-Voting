@@ -8,10 +8,10 @@ import java.security.PublicKey;
 
 import org.bouncycastle.crypto.params.ElGamalPrivateKeyParameters;
 import org.bouncycastle.crypto.params.ElGamalPublicKeyParameters;
-import org.evoting.common.Converter;
-import org.evoting.common.Exporter;
-import org.evoting.common.Importer;
 import org.evoting.common.exceptions.CorruptDataException;
+import org.evoting.common.utility.Converter;
+import org.evoting.common.utility.Exporter;
+import org.evoting.common.utility.Importer;
 import org.evoting.security.ElGamal;
 import org.evoting.security.RSA;
 import org.evoting.security.Security;

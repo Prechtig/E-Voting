@@ -1,4 +1,4 @@
-package org.evoting.common;
+package org.evoting.common.utility;
 
 import java.io.BufferedReader;
 import java.io.File;

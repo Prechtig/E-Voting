@@ -12,8 +12,8 @@ import jolie.runtime.JavaService;
 import org.bouncycastle.crypto.params.ElGamalPrivateKeyParameters;
 import org.bouncycastle.crypto.params.ElGamalPublicKeyParameters;
 import org.evoting.authority.Model;
-import org.evoting.common.Importer;
 import org.evoting.common.exceptions.CorruptDataException;
+import org.evoting.common.utility.Importer;
 import org.evoting.database.entities.ElectionOption;
 import org.evoting.security.Security;
 

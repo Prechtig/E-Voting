@@ -7,7 +7,7 @@ import java.util.Date;
 import javax.persistence.EntityManager;
 
 import org.bouncycastle.crypto.params.ElGamalPublicKeyParameters;
-import org.evoting.common.Converter;
+import org.evoting.common.utility.Converter;
 import org.evoting.database.entities.ElectionOption;
 import org.evoting.database.entities.Election;
 import org.evoting.database.entities.Vote;

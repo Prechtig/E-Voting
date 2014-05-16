@@ -9,8 +9,8 @@ import jolie.runtime.ByteArray;
 import jolie.runtime.Value;
 import jolie.runtime.ValueVector;
 
-import org.evoting.common.Converter;
 import org.evoting.common.exceptions.BadValueException;
+import org.evoting.common.utility.Converter;
 import org.evoting.database.entities.Vote;
 import org.evoting.security.Security;
 

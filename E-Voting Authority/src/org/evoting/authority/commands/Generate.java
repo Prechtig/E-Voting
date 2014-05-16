@@ -3,7 +3,7 @@ package org.evoting.authority.commands;
 import java.io.IOException;
 
 import org.evoting.authority.Model;
-import org.evoting.common.Exporter;
+import org.evoting.common.utility.Exporter;
 import org.evoting.security.Security;
 
 import jolie.runtime.JavaService;
