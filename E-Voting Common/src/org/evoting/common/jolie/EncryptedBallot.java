@@ -1,4 +1,4 @@
-package org.evoting.common;
+package org.evoting.common.jolie;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -7,6 +7,7 @@ import jolie.runtime.ByteArray;
 import jolie.runtime.Value;
 import jolie.runtime.ValueVector;
 
+import org.evoting.common.Converter;
 import org.evoting.common.exceptions.BadValueException;
 import org.evoting.common.exceptions.InvalidVoteException;
 import org.evoting.security.Security;

@@ -7,7 +7,7 @@ import java.util.List;
 import jolie.runtime.ByteArray;
 import jolie.runtime.Value;
 
-import org.evoting.common.ValueIdentifiers;
+import org.evoting.common.jolie.ValueIdentifiers;
 import org.evoting.database.entities.ElectionOption;
 import org.evoting.security.Security;
 

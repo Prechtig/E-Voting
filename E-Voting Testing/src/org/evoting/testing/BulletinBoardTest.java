@@ -14,7 +14,7 @@ import jolie.runtime.ValueVector;
 import org.evoting.authority.Model;
 import org.evoting.bulletinboard.Controller;
 import org.evoting.common.Importer;
-import org.evoting.common.ValueIdentifiers;
+import org.evoting.common.jolie.ValueIdentifiers;
 import org.evoting.security.Security;
 import org.junit.BeforeClass;
 import org.junit.Test;

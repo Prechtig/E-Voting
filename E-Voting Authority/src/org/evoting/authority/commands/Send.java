@@ -8,7 +8,7 @@ import jolie.runtime.Value;
 import jolie.runtime.ValueVector;
 
 import org.evoting.authority.Model;
-import org.evoting.common.ValueIdentifiers;
+import org.evoting.common.jolie.ValueIdentifiers;
 
 public class Send extends Command {
 	public static final String KEYWORD = "send";

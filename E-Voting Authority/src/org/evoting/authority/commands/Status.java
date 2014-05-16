@@ -8,7 +8,7 @@ import jolie.runtime.JavaService;
 import jolie.runtime.Value;
 
 import org.evoting.authority.Model;
-import org.evoting.common.ValueIdentifiers;
+import org.evoting.common.jolie.ValueIdentifiers;
 
 public class Status extends Command
 {

@@ -4,9 +4,9 @@ import jolie.runtime.JavaService;
 import jolie.runtime.Value;
 
 import org.evoting.client.exceptions.NoElectionOptionsException;
-import org.evoting.common.ElectionOptions;
-import org.evoting.common.SignedElectionOptions;
-import org.evoting.common.LoginRequest;
+import org.evoting.common.jolie.ElectionOptions;
+import org.evoting.common.jolie.LoginRequest;
+import org.evoting.common.jolie.SignedElectionOptions;
 
 /**
  * Contains the methods that the client jolie script calls.

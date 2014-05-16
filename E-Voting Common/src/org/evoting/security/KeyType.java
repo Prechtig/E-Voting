@@ -1,4 +1,4 @@
-package org.evoting.common;
+package org.evoting.security;
 
 public enum KeyType {
 	PRIVATE, PUBLIC

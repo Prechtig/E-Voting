@@ -1,4 +1,4 @@
-package org.evoting.common;
+package org.evoting.common.jolie;
 
 public class AnonymousVote
 {

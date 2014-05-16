@@ -1,4 +1,4 @@
-package org.evoting.common;
+package org.evoting.security;
 
 import java.math.BigInteger;
 import java.util.HashMap;

@@ -2,7 +2,7 @@ package org.evoting.client;
 
 import java.io.Console;
 
-import org.evoting.common.LoginRequest;
+import org.evoting.common.jolie.LoginRequest;
 
 public class ConsoleIO
 {	

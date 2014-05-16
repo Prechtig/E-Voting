@@ -16,7 +16,6 @@ import org.bouncycastle.crypto.params.ElGamalPrivateKeyParameters;
 import org.bouncycastle.crypto.params.ElGamalPublicKeyParameters;
 import org.bouncycastle.util.Arrays;
 import org.evoting.common.Converter;
-import org.evoting.common.Group;
 
 
 public class Security {

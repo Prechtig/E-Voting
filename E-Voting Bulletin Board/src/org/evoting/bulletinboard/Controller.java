@@ -18,19 +18,19 @@ import jolie.runtime.embedding.RequestResponse;
 import org.bouncycastle.crypto.params.ElGamalPublicKeyParameters;
 import org.evoting.bulletinboard.exceptions.ElectionNotStartedException;
 import org.evoting.bulletinboard.exceptions.InvalidUserInformationException;
-import org.evoting.common.AnonymousVoteList;
-import org.evoting.common.Ballot;
-import org.evoting.common.EncryptedBallot;
-import org.evoting.common.SignedElectionOptions;
 import org.evoting.common.Importer;
-import org.evoting.common.KeyType;
-import org.evoting.common.LoginRequest;
-import org.evoting.common.LoginResponse;
-import org.evoting.common.ValueIdentifiers;
 import org.evoting.common.exceptions.BadValueException;
 import org.evoting.common.exceptions.CorruptDataException;
+import org.evoting.common.jolie.AnonymousVoteList;
+import org.evoting.common.jolie.Ballot;
+import org.evoting.common.jolie.EncryptedBallot;
+import org.evoting.common.jolie.LoginRequest;
+import org.evoting.common.jolie.LoginResponse;
+import org.evoting.common.jolie.SignedElectionOptions;
+import org.evoting.common.jolie.ValueIdentifiers;
 import org.evoting.database.entities.Election;
 import org.evoting.database.entities.ElectionOption;
+import org.evoting.security.KeyType;
 import org.evoting.security.Security;
 
 public class Controller extends JavaService {

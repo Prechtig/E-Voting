@@ -8,9 +8,9 @@ import jolie.runtime.JavaService;
 import jolie.runtime.Value;
 
 import org.evoting.authority.Model;
-import org.evoting.common.AnonymousVote;
-import org.evoting.common.AnonymousVoteList;
 import org.evoting.common.exceptions.CorruptDataException;
+import org.evoting.common.jolie.AnonymousVote;
+import org.evoting.common.jolie.AnonymousVoteList;
 import org.evoting.database.entities.ElectionOption;
 import org.evoting.security.Security;
 
