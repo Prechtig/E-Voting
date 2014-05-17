@@ -192,7 +192,7 @@ public class HomomorphicEncryptionTest
 	}
 	
 	@Test
-	public void testExponentialHomomorphicPropertiesWithAccumulatedVotes() {
+	public void testWithAccumulatedVotes() {
 		try {
 			ElGamalPublicKeyParameters pubKey = Importer.importElGamalPublicKeyParameters(Model.getElGamalPublicKeyFile());
 			ElGamalPrivateKeyParameters privKey = Importer.importElGamalPrivateKeyParameters(Model.getElGamalPrivateKeyFile());
@@ -217,7 +217,7 @@ public class HomomorphicEncryptionTest
 		
 		byte[] productCipher = Security.encryptExponentialElgamal(message2, Security.getElgamalPublicKey());
 		
-		for (int i = 1; i < 100000; i = i * 10) {
+		for (int i = 1; i < 10000; i = i * 10) {
 			productCipher = Security.encryptExponentialElgamal(message2, Security.getElgamalPublicKey());
 			accumulator = 0;
 			for (int j = 0; j < i; j++) {
@@ -226,6 +226,44 @@ public class HomomorphicEncryptionTest
 				accumulator += message1;
 				cipher = Security.encryptExponentialElgamal(message2, Security.getElgamalPublicKey());
 				productCipher = Security.multiplyElGamalCiphers(productCipher, cipher);
+			}
+			Assert.assertEquals(accumulator, Security.decryptExponentialElgamal(productCipher, Security.getElgamalPrivateKey()));
+		}
+	}
+	
+	@Test
+	public void testWithAccumulatedVotesNoRepEnc() {
+		try {
+			ElGamalPublicKeyParameters pubKey = Importer.importElGamalPublicKeyParameters(Model.getElGamalPublicKeyFile());
+			ElGamalPrivateKeyParameters privKey = Importer.importElGamalPrivateKeyParameters(Model.getElGamalPrivateKeyFile());
+			Security.setElGamalPrivateKey(privKey);
+			Security.setElGamalPublicKey(pubKey);
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (CorruptDataException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		long message1 = 1;
+		long message2 = 0;
+		long accumulator = 0;
+		
+		byte[] cipher;
+		
+		byte[] productCipher = Security.encryptExponentialElgamal(message2, Security.getElgamalPublicKey());
+		cipher = Security.encryptExponentialElgamal(message1, Security.getElgamalPublicKey());
+		
+		for (int i = 1; i < 10000000; i = i * 10) {
+			productCipher = Security.encryptExponentialElgamal(message2, Security.getElgamalPublicKey());
+			accumulator = 0;
+			for (int j = 0; j < i; j++) {
+				productCipher = Security.multiplyElGamalCiphers(productCipher, cipher);
+				accumulator += message1;
 			}
 			Assert.assertEquals(accumulator, Security.decryptExponentialElgamal(productCipher, Security.getElgamalPrivateKey()));
 		}
