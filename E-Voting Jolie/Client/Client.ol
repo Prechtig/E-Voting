@@ -9,6 +9,12 @@ embedded {
     Java: "org.evoting.client.Controller" in Controller
 }
 
+define doubleLineBreak
+{
+        println@Console( )( );
+        println@Console( )( )
+}
+
 main
 {
     getCommand@Controller( )( command );
@@ -24,6 +30,14 @@ main
         setPublicKeys@Controller( publicKeys )();
         getElectionOptions@BulletinBoardService( sessionRequest )( electionOptions );
         setElectionOptionsAndGetBallot@Controller( electionOptions )( ballot );
+
+        //Print the ballot
+        println@Console( "Your ballot:" )( );
+        for (i = 0, i < #ballot.vote, i++) {
+            print@Console( ballot.vote[i] )()   
+        };
+        doubleLineBreak;
+
         //Set the session id
         ballot.sid = loginResponse.sid;
         processVote@BulletinBoardService( ballot )( registered );
@@ -37,10 +51,9 @@ main
         for(i = 0, i < #allVotes.votes, i++) {
             println@Console( "Vote #" + i )( );
             for(j = 0, j < #allVotes.votes.vote, j++) {
-                println@Console("vote[" + i + "][" + j + "] = " + allVotes.votes[i].vote[j].encryptedVote )( )
+                print@Console( allVotes.votes[i].vote[j].encryptedVote )()
             };
-            println@Console( )( )
+            doubleLineBreak
         }
     }
-	
 }

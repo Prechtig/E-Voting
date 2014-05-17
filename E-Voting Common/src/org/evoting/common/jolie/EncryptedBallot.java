@@ -143,4 +143,5 @@ public class EncryptedBallot {
 		return stream.toByteArray();
 	}
 
+	
 }
