@@ -1,7 +1,7 @@
 include "Types.iol"
 
 interface IAuthority {
-	RequestResponse: startElection( ElectionStart )( bool )
-	RequestResponse: sendElectionOptionList( ElectionOptionsList )( bool )
-	RequestResponse: getAllVotesAuthority( Validation )( SignedBallotList )
+	RequestResponse: startElection( ElectionStart )( bool ),
+					 sendElectionOptionList( ElectionOptionsList )( bool ),
+					 getAllVotesAuthority( Validation )( SignedBallotList )
 }

@@ -1,8 +1,15 @@
 include "console.iol"
 include "IClient.iol"
+include "../Common/IBulletinBoard.iol"
 
 outputPort Controller {
     Interfaces: IClientController
+}
+
+outputPort BulletinBoardService {
+    Location: "socket://localhost:8000"
+    Protocol: sodep
+    Interfaces: IBulletinBoard
 }
 
 embedded {
