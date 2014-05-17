@@ -36,9 +36,37 @@ main
         getPublicKeys@BulletinBoardService( sessionRequest )( publicKeys );
         setPublicKeys@Controller( publicKeys )();
         getElectionOptions@BulletinBoardService( sessionRequest )( electionOptions );
+
+        //Print the election options
+        println@Console ( )( );
+        println@Console ( "Options are given in the following format:")( );
+        println@Console ( "id - name - party")( );
+        println@Console ( "If the option is a candidate under a party")( );
+        println@Console ( "id - name - [NO_PARTY]")( );
+        println@Console ( "If the option is a candidate without a party")( );
+        println@Console ( "id - party")( );
+        println@Console ( "If the option is a party")( );
+        println@Console ( )( );
+        
+        options -> electionOptions.electionOptions;
+        for (i = 0, i < #options, i++) {
+            if(options[i].partyId == -1) {
+                //Candidate with no party
+                println@Console( options[i].id + " - " + options[i].name + " - [NO_PARTY]")()
+            } else if(options[i].partyId == i) {
+                //Party
+                println@Console( options[i].id + " - " + options[options[i].partyId].name )()
+            } else {
+                //Candidate with party
+                println@Console( options[i].id + " - " + options[i].name + " - " + options[options[i].partyId].name )()
+            }
+        };
+        println@Console ( )( );
+
         setElectionOptionsAndGetBallot@Controller( electionOptions )( ballot );
 
         //Print the ballot
+        println@Console ( )( );
         println@Console( "Your ballot:" )( );
         for (i = 0, i < #ballot.vote, i++) {
             print@Console( ballot.vote[i] )()   
