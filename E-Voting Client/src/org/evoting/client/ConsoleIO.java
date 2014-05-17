@@ -68,7 +68,6 @@ public class ConsoleIO
 	
 	public static String getCommand() {
 		Console console = System.console();
-		System.out.println("Would you like to vote or get the list of all votes?");
 		System.out.println("Write \"vote\" to vote and \"get\" to get the list of votes");
 		while(true) {
 			String input = console.readLine().toLowerCase();

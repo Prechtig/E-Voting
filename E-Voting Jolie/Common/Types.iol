@@ -67,3 +67,7 @@ type ElectionStart: void {
 	.endTime: long
 	.validator: Validation
 }
+
+type SessionRequest: void {
+	.sid: string
+}

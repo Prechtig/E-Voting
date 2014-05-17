@@ -18,14 +18,20 @@ main
             getLoginInformation@Controller() ( loginRequest );
             login@BulletinBoardService( loginRequest ) ( loginResponse )
         };
-        getPublicKeys@BulletinBoardService()( publicKeys );
+        //Set the session id
+        sessionRequest.sid = loginResponse.sid;
+        getPublicKeys@BulletinBoardService( sessionRequest )( publicKeys );
         setPublicKeys@Controller( publicKeys )();
-        getElectionOptions@BulletinBoardService( )( electionOptions );
+        getElectionOptions@BulletinBoardService( sessionRequest )( electionOptions );
         setElectionOptionsAndGetBallot@Controller( electionOptions )( ballot );
+        //Set the session id
         ballot.sid = loginResponse.sid;
-        println@Console(ballot.userId)();
         processVote@BulletinBoardService( ballot )( registered );
-        println@Console( "The vote is registered: " + registered )( )
+        if(registered) {
+            println@Console( "The vote is registered" )( )    
+        } else {
+            println@Console( "The vote is not registered" )( )    
+        }
     } else if(command == "get") {
         getAllVotes@BulletinBoardService( )( allVotes );
         for(i = 0, i < #allVotes.votes, i++) {

@@ -111,20 +111,6 @@ public class Controller extends JavaService {
 	}
 
 	@RequestResponse
-	public Value getElectionStatus() {
-		Value status = Value.create();
-
-		Date startTime = election.getStartTime();
-		Date endTime = election.getEndTime();
-
-		status.getNewChild(ValueIdentifiers.getRunning()).setValue(electionIsRunning());
-		status.getNewChild(ValueIdentifiers.getStartTime()).setValue(startTime.getTime());
-		status.getNewChild(ValueIdentifiers.getEndTime()).setValue(endTime.getTime());
-
-		return status;
-	}
-
-	@RequestResponse
 	/**
 	 * @return Returns the electionOptionlist as a Value, used in Jolie 
 	 */
@@ -179,11 +165,6 @@ public class Controller extends JavaService {
 
 		AnonymousVoteList allVotesAuthority = Model.getAllVotesAuthority();
 		return allVotesAuthority.toValue();
-	}
-	
-	public boolean loadAuthorityRsaPublicKey(String pathname) {
-
-		return Boolean.TRUE;
 	}
 
 	private boolean electionIsRunning() {

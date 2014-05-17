@@ -1,4 +1,4 @@
-include "ILoadKeys.iol"
+include "JavaBBController.iol"
 include "../Common/IBulletinBoard.iol"
 include "../Common/IAuthority.iol"
 include "console.iol"
@@ -9,7 +9,7 @@ execution {
 }
 
 outputPort BBJavaController {
-    Interfaces: IBulletinBoard, IAuthority, ILoadKeys
+    Interfaces: JavaBBController, IAuthority
 }
 
 inputPort BulletinBoardService {
@@ -23,7 +23,8 @@ embedded {
 }
 
 cset {
-	sid: EncryptedBallot.sid
+	sid:	EncryptedBallot.sid
+			SessionRequest.sid
 }
 
 init {
@@ -45,25 +46,23 @@ init {
 }
 
 main {
-	[ getPublicKeys( )( publicKeys ) {
-		println@Console("Someone is requesting the public keys")(  );
-		getPublicKeys@BBJavaController( )( publicKeys )
-	} ] { nullProcess }
-
-	[ getElectionOptions( )( electionOptions ) {
-		println@Console("Someone is requesting the election options")(  );
-		//Get the election options from the embedded Java service
-		getElectionOptions@BBJavaController( )( electionOptions )
-	} ] { nullProcess }
-
 	[ login( userInformation )( loginResponse ) {
 		login@BBJavaController( userInformation )( loginResponse );
 		if(loginResponse.success) {
 			loginResponse.sid = csets.sid = new	
 		}
-	} ] { processVote( encryptedBallot )( registered ) {
-		processVote@BBJavaController( encryptedBallot )( registered );
-		println@Console( "Registered vote: " + registered )()
+	} ] {
+		getPublicKeys( sessionRequest )( publicKeys ) {
+			getPublicKeys@BBJavaController( )( publicKeys )
+		};
+		getElectionOptions( sessionRequest )( electionOptions ) {
+			getElectionOptions@BBJavaController( )( electionOptions )
+		};
+		processVote( encryptedBallot )( registered ) {
+			processVote@BBJavaController( encryptedBallot )( registered );
+			if(registered) {
+				println@Console( "Registered a vote")()
+			}
 	} }
 
 	[ getAllVotes( )( allVotes ) {
