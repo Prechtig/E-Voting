@@ -186,10 +186,9 @@ public class HomomorphicEncryptionTest
 		
 		byte[] product = Security.multiplyElGamalCiphers(cipher1, cipher2);
         
-        byte[] messageByte = Security.decryptElgamal(product, Security.getElgamalPrivateKey());
-        BigInteger result = new BigInteger(1, messageByte);
+        long result = Security.decryptExponentialElgamal(product, Security.getElgamalPrivateKey());
         
-        assertEquals(base1+base2, Group.getInstance().discreteLogarithm(result));
+        assertEquals(base1+base2, result);
 	}
 	
 	@Test
