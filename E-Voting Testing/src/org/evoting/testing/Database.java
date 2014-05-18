@@ -95,14 +95,12 @@ public class Database {
 		EntityManager entMgr = EntityManagerUtil.getEntityManager();
 		entMgr.getTransaction().begin();
 		
-		
 		//Remove test votes
 		VoteRepository vr = new VoteRepository(entMgr);
 		List<Vote> votes = vr.findByUserId("-1");
 		for(Vote v : votes) {
 			entMgr.remove(v);
 		}
-		
 		
 		//Remove test candidates
 		ElectionOptionRepository eor = new ElectionOptionRepository(entMgr);
