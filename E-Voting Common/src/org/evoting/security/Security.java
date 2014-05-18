@@ -15,8 +15,6 @@ import org.bouncycastle.crypto.params.ElGamalParameters;
 import org.bouncycastle.crypto.params.ElGamalPrivateKeyParameters;
 import org.bouncycastle.crypto.params.ElGamalPublicKeyParameters;
 import org.bouncycastle.util.Arrays;
-import org.evoting.common.utility.Converter;
-
 
 public class Security {
 	//Size of ELGamal byte array
@@ -54,25 +52,6 @@ public class Security {
 	}
 	
 	/**
-	 * Check if both RSA and ElGamal key sets have been sat
-	 * @return if both key sets have been sat
-	 */
-	//TODO:Unused
-	public static boolean keysSat() {
-		return RSAKeysSat() && ElGamalKeysSat();
-	}
-
-	/**
-	 * Encrypts a byte array using ElGamal
-	 * @param m The byte array to encrypt
-	 * @param pK the ElGamal public key used to encrypt
-	 * @return The encrypted byte array
-	 */
-	public static byte[] encryptElGamal(byte[] m, ElGamalPublicKeyParameters pK) {
-		return ElGamal.encrypt(m, pK);
-	}
-	
-	/**
 	 * Encrypts a message with exponential ElGamal, such that it gain homomorphic properties.
 	 * @param message The number to be encrypted
 	 * @param pK The ElGamal public key
@@ -81,7 +60,7 @@ public class Security {
 	public static byte[] encryptExponentialElgamal(long message, ElGamalPublicKeyParameters pK) {
 		byte[] raisedMessageByte = group.raiseGenerator(message).toByteArray();
 		raisedMessageByte = removeSignByte(raisedMessageByte);
-		return encryptElGamal(raisedMessageByte, pK);
+		return ElGamal.encrypt(raisedMessageByte, pK);
 	}
 	
 	/**
@@ -103,17 +82,6 @@ public class Security {
 	 * @return The encrypted byte array
 	 */
 	public static byte[] encryptRSA(String hash, Key pK) {
-		return RSA.encrypt(hash, pK);
-	}
-	
-	
-	/**
-	 * Encrypt a byte array using RSA
-	 * @param hash byte array to encrypt
-	 * @param pK The key used to encrypt. This can be either java.security.PublicKey or .PrivateKey
-	 * @return The encrypted byte array
-	 */
-	public static byte[] encryptRSA(byte[] hash, Key pK) {
 		return RSA.encrypt(hash, pK);
 	}
 
@@ -139,16 +107,6 @@ public class Security {
 	public static String hash(byte[] m) {
 		return SHA1.hash(m);
 	}
-	
-	//TODO:Unused
-	public static String hash(int m) {
-		return hash(Converter.toByteArray(m));
-	}
-	
-	//TODO:Unused
-	public static String hash(long m) {
-		return hash(Converter.toByteArray(m));
-	}
 
 	/**
 	 * Method used to sign a string using an RSA key.
@@ -162,25 +120,12 @@ public class Security {
 		return encryptRSA(hash, pK);
 	}
 	
-	//TODO:Unused
-	public static byte[] sign(int m, Key pK) {
-		String hash = hash(Converter.toByteArray(m));
-		return encryptRSA(hash, pK);
-	}
-	
 	public static byte[] sign(Key pK, byte[]... bytes){
 		byte[] resultBytes = concatenateByteArrays(bytes);
 		String hash = hash(resultBytes);
 		return sign(hash, pK);
 	}
 	
-	//TODO:Unused
-	public static byte[] sign(long m, Key pK) {
-		String hash = hash(Converter.toByteArray(m));
-		return encryptRSA(hash, pK);
-	}
-	
-	//TODO:Unused
 	public static byte[] sign(byte[] m, Key pK) {
 		String hash = hash(m);
 		return encryptRSA(hash, pK);
@@ -348,17 +293,6 @@ public class Security {
    //-----------------------------------------------\\
 	
 	/**
-	 * Encrypts a string using ElGamal
-	 * @param m The string to encrypt
-	 * @param pK the ElGamal public key used to encrypt
-	 * @return The encrypted string
-	 */
-	//TODO:Used in: SecurityTest
-	public static byte[] encryptElGamal(String m, ElGamalPublicKeyParameters pK) {
-		return ElGamal.encrypt(m, pK);
-	}
-	
-	/**
 	 * Decrypts a byte array
 	 * @param m The byte array to decrypt
 	 * @param pK The ElGamal private key used to decrypt
@@ -367,32 +301,5 @@ public class Security {
 	//TODO:Used in: SecurityTest, HomomorphicEncryptionTest
 	public static byte[] decryptElgamal(byte[] m, ElGamalPrivateKeyParameters pK) {
 		return ElGamal.decrypt(m, pK);
-	}
-	
-	/**
-	 * Check if RSA keys have been sat
-	 * @return if RSA keys have been sat
-	 */
-	//TODO:Used in: HibernateTest, Database
-	public static boolean RSAKeysSat() {
-		return (RSA.getAuthorityPrivateKey() != null && RSA.getAuthorityPublicKey() != null && RSA.getBulletinBoardPrivateKey() != null && RSA.getBulletinBoardPublicKey() != null);
-	}
-	
-	/**
-	 * Check if ElGamal keys have been sat
-	 * @return if ElGamal keys have been sat
-	 */
-	//TODO:Used in: Database
-	public static boolean ElGamalKeysSat() {
-		return (ElGamal.getPrivateKey() != null && ElGamal.getPublicKey() != null);
-	}
-	
-	/**
-	 * Generates both RSA and ElGamal key sets
-	 */
-	//TODO:Used in: ImportExportTest
-	public static void generateKeys() {
-		generateElGamalKeys(true);
-		generateRSAKeys();
 	}
 }

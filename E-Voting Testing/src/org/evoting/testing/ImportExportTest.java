@@ -21,7 +21,8 @@ public class ImportExportTest {
 
 	@Before
 	public void generateKeys() {
-		Security.generateKeys();
+		Security.generateElGamalKeys(true);
+		Security.generateRSAKeys();
 	}
 	
 	@Test

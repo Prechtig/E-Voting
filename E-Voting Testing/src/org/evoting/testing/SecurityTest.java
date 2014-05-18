@@ -2,6 +2,7 @@ package org.evoting.testing;
 
 import static org.junit.Assert.assertEquals;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -11,10 +12,8 @@ import java.security.PublicKey;
 import org.bouncycastle.crypto.params.ElGamalPrivateKeyParameters;
 import org.bouncycastle.crypto.params.ElGamalPublicKeyParameters;
 import org.evoting.common.exceptions.CorruptDataException;
-import org.evoting.common.utility.Converter;
 import org.evoting.common.utility.Exporter;
 import org.evoting.common.utility.Importer;
-import org.evoting.security.ElGamal;
 import org.evoting.security.RSA;
 import org.evoting.security.SHA1;
 import org.evoting.security.Security;
@@ -33,10 +32,11 @@ public class SecurityTest {
 	private static String ElGamalPrivateKeyFile = "ElGamalPrivateKey";
 
 	@BeforeClass
-	public static void setup() {
-		ElGamal.generateKeyPair(false);
-		ElGamalPrivateKey = ElGamal.getPrivateKey();
-		ElGamalPublicKey = ElGamal.getPublicKey();
+	public static void setup() throws FileNotFoundException, CorruptDataException, IOException {
+		Security.setElGamalPublicKey(Importer.importElGamalPublicKeyParameters(ElGamalPublicKeyFile));
+		Security.setElGamalPrivateKey(Importer.importElGamalPrivateKeyParameters(ElGamalPrivateKeyFile));
+		ElGamalPublicKey = Security.getElgamalPublicKey();
+		ElGamalPrivateKey = Security.getElgamalPrivateKey();
 
 		RSA.generateAuthKeyPair(false);
 		RSAPrivateKey = RSA.getAuthorityPrivateKey();
@@ -44,29 +44,12 @@ public class SecurityTest {
 	}
 
 	@Test
-	public void testElGamalString() {
-		String m = "Test String";
+	public void testElGamal() {
+		long one = 1l;
+		byte[] encrypted = Security.encryptExponentialElgamal(one, ElGamalPublicKey);
+		long decrypted = Security.decryptExponentialElgamal(encrypted, ElGamalPrivateKey);
 
-		byte[] encrypted = Security.encryptElGamal(m, ElGamalPublicKey);
-		byte[] decrypted = Security.decryptElgamal(encrypted, ElGamalPrivateKey);
-
-		String result = new String(decrypted);
-
-		assertEquals(m, result);
-	}
-
-	@Test
-	public void testElGamalInt() {
-		int m = 1;
-
-		byte[] n = Converter.toByteArray(m);
-
-		byte[] encrypted = Security.encryptElGamal(n, ElGamalPublicKey);
-		byte[] decrypted = Security.decryptElgamal(encrypted, ElGamalPrivateKey);
-
-		int i = Converter.toInt(decrypted);
-
-		assertEquals(m, i);
+		assertEquals(one, decrypted);
 	}
 
 	@Test
