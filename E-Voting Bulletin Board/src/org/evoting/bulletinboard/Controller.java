@@ -28,14 +28,11 @@ import org.evoting.common.jolie.LoginResponse;
 import org.evoting.common.jolie.SignedElectionOptions;
 import org.evoting.common.jolie.ValueIdentifiers;
 import org.evoting.common.utility.Importer;
-import org.evoting.database.entities.Election;
 import org.evoting.database.entities.ElectionOption;
 import org.evoting.security.KeyType;
 import org.evoting.security.Security;
 
 public class Controller extends JavaService {
-	private static Date electionStartDate;
-	private static Date electionEndDate;
 	private static Election election;
 	private static Value publicKeys = null;
 
@@ -72,9 +69,9 @@ public class Controller extends JavaService {
 		long startTime = electionStart.getFirstChild(ValueIdentifiers.getStartTime()).longValue();
 		long endTime = electionStart.getFirstChild(ValueIdentifiers.getEndTime()).longValue();
 
-		electionStartDate = new Date(startTime);
-		electionEndDate = new Date(endTime);
-		election = Model.createNewElection(electionStartDate, electionEndDate);
+		Date startDate = new Date(startTime);
+		Date endDate = new Date(endTime);
+		election = new Election(startDate, endDate);
 		return Boolean.TRUE;
 	}
 
@@ -120,7 +117,7 @@ public class Controller extends JavaService {
 		}
 
 		List<ElectionOption> electionOptions = Model.getEncryptedElectionOptions();
-		SignedElectionOptions signedElectionOptions = new SignedElectionOptions(electionOptions, election.getId(), election.getEndTime());
+		SignedElectionOptions signedElectionOptions = new SignedElectionOptions(electionOptions, election.getEndTime());
 		
 		return signedElectionOptions.getValue();
 	}
@@ -169,7 +166,7 @@ public class Controller extends JavaService {
 
 	private boolean electionIsRunning() {
 		Date currentTime = new Date(System.currentTimeMillis());
-		return currentTime.after(electionStartDate) && currentTime.before(electionEndDate);
+		return currentTime.after(election.getStartTime()) && currentTime.before(election.getEndTime());
 	}
 
 	private void validate(Value validation) {

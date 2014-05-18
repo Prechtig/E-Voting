@@ -14,11 +14,4 @@
 	<natures>
 		<nature>org.eclipse.jdt.core.javanature</nature>
 	</natures>
-	<linkedResources>
-		<link>
-			<name>bcprov-jdk15on-150</name>
-			<type>2</type>
-			<location>C:/Users/Andreas/Repositories/E-Voting/E-Voting Common/lib/javadoc/bcprov-jdk15on-150</location>
-		</link>
-	</linkedResources>
 </projectDescription>

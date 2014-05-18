@@ -20,7 +20,6 @@ import org.evoting.security.Security;
  */
 public class SignedElectionOptions
 {
-	private int electionId;
 	private List<ElectionOption> electionOptions;
 	// All the fields below are ciphertext.
 	private byte[] signature;
@@ -30,7 +29,7 @@ public class SignedElectionOptions
 	 * @param electionOptions The list of electionOptions to be encrypted.
 	 * @param signedElectionId The time stamp.
 	 */
-	public SignedElectionOptions(List<ElectionOption> electionOptions, int electionId, Date endTime)
+	public SignedElectionOptions(List<ElectionOption> electionOptions, Date endTime)
 	{
 		for(int i = 0; i < electionOptions.size(); i++) {
 			if(electionOptions.get(i).getElectionOptionId() != i) {
@@ -39,9 +38,8 @@ public class SignedElectionOptions
 			}
 		}
 		
-		this.electionId = electionId;
 		this.electionOptions = electionOptions;
-		this.signature = Security.sign(Security.getBulletinBoardRSAPrivateKey(), Converter.toByteArray(electionId), Converter.toByteArray(endTime.getTime()));
+		this.signature = Security.sign(Security.getBulletinBoardRSAPrivateKey(), Converter.toByteArray(endTime.getTime()));
 	}
 	
 	/**
@@ -51,14 +49,10 @@ public class SignedElectionOptions
 	public SignedElectionOptions(Value encryptedElectionOptionsValue)
 	{
 		// Checks whether the value object has the required fields.
-		if(!encryptedElectionOptionsValue.hasChildren(ValueIdentifiers.getElectionId()) ||
-			!encryptedElectionOptionsValue.hasChildren(ValueIdentifiers.getElectionOptions()) ||
-			!encryptedElectionOptionsValue.hasChildren(ValueIdentifiers.getSignature())) {
+		if(!encryptedElectionOptionsValue.hasChildren(ValueIdentifiers.getElectionOptions()) ||
+		   !encryptedElectionOptionsValue.hasChildren(ValueIdentifiers.getSignature())) {
 				throw new BadValueException();
 		}
-		
-		electionId = encryptedElectionOptionsValue.getFirstChild(ValueIdentifiers.getElectionId()).intValue();
-
 		//Get the election options children
 		ValueVector electionOptionsValueVector = encryptedElectionOptionsValue.getChildren(ValueIdentifiers.getElectionOptions());
 		//Get the iterator to be able to iterate over the children
@@ -83,7 +77,7 @@ public class SignedElectionOptions
 	 */
 	public ElectionOptions getElectionOptions()
 	{
-		return new ElectionOptions(electionOptions, electionId);
+		return new ElectionOptions(electionOptions);
 	}
 	
 	/**
@@ -94,7 +88,6 @@ public class SignedElectionOptions
 	{
 		Value result = Value.create();
 		
-		result.getNewChild(ValueIdentifiers.getElectionId()).setValue(electionId);
 		for(ElectionOption e : electionOptions) {
 			Value electionOptions = result.getNewChild(ValueIdentifiers.getElectionOptions());
 			electionOptions.getNewChild(ValueIdentifiers.getId()).setValue(e.getElectionOptionId());

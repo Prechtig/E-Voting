@@ -17,7 +17,6 @@ type SignedBallotList: void {
 }
 
 type SignedElectionOptions: void {
-	.electionId: int
 	.electionOptions*: void {
 		.name: string
 		.id: int
