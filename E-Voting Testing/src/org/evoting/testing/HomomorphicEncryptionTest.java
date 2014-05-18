@@ -5,19 +5,12 @@ import static org.junit.Assert.assertEquals;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.math.BigInteger;
-import java.security.SecureRandom;
 
-import org.bouncycastle.crypto.AsymmetricCipherKeyPair;
-import org.bouncycastle.crypto.generators.ElGamalKeyPairGenerator;
-import org.bouncycastle.crypto.params.ElGamalKeyGenerationParameters;
-import org.bouncycastle.crypto.params.ElGamalParameters;
 import org.bouncycastle.crypto.params.ElGamalPrivateKeyParameters;
 import org.bouncycastle.crypto.params.ElGamalPublicKeyParameters;
-import org.bouncycastle.util.Arrays;
 import org.evoting.authority.Model;
 import org.evoting.common.exceptions.CorruptDataException;
 import org.evoting.common.utility.Importer;
-import org.evoting.security.ElGamal;
 import org.evoting.security.Group;
 import org.evoting.security.Security;
 import org.junit.Assert;
@@ -25,10 +18,6 @@ import org.junit.Test;
 
 public class HomomorphicEncryptionTest 
 {
-	private final static BigInteger p = new BigInteger("7781871412403125272081994420237498498848517960190636813994593624893166160780445513887821412313009361625936687452586174696909303141691170346568788390764347");
-	private final static BigInteger g = new BigInteger("1112413672743230891881273653171640834687833299890125651932066327486193358080471215100797237775771467149894260123512660136402158406998369481252844452718796");
-	private final static int l = 0;
-	
 	@Test
 	public void testRaiseAndDiscreteLog()
 	{

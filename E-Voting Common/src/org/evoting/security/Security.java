@@ -284,22 +284,4 @@ public class Security {
 			return array;
 		}
 	}
-	
-	
-	   //---------------------------------------\\
-	  //										 \\
-	 //         ONLY USED IN TEST METHODS         \\
-	//											   \\
-   //-----------------------------------------------\\
-	
-	/**
-	 * Decrypts a byte array
-	 * @param m The byte array to decrypt
-	 * @param pK The ElGamal private key used to decrypt
-	 * @return The decrypted byte array
-	 */
-	//TODO:Used in: SecurityTest, HomomorphicEncryptionTest
-	public static byte[] decryptElgamal(byte[] m, ElGamalPrivateKeyParameters pK) {
-		return ElGamal.decrypt(m, pK);
-	}
 }
