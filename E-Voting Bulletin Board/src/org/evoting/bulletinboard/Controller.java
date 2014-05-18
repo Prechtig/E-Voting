@@ -105,9 +105,9 @@ public class Controller extends JavaService {
 		try {
 			Model.validateUser(loginRequest);
 		} catch (InvalidUserInformationException e) {
-			return new LoginResponse(false, "").getValue();
+			return new LoginResponse(false).getValue();
 		}
-		return new LoginResponse(true, "").getValue();
+		return new LoginResponse(true).getValue();
 	}
 
 	@RequestResponse

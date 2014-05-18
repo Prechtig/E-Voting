@@ -11,12 +11,8 @@ public class UserInputData
 	private LoginRequest loginRequest;
 	private int electionOptionId;
 	
-	public String getUserId() {
+	public byte[] getUserId() {
 		return loginRequest.getUserId();
-	}
-	
-	public String getPasswordHash() {
-		return loginRequest.getPasswordHash();
 	}
 	
 	public void setLoginRequest(LoginRequest loginRequest) {

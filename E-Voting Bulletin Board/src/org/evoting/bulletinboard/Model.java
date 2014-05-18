@@ -91,6 +91,8 @@ public class Model {
 		
 		//Set the children regarding rsa
 		keys.getNewChild(ValueIdentifiers.getRsaPublicKey()).setValue(new ByteArray(Security.getBulletinBoardRSAPublicKey().getEncoded()));
+		
+		keys.getNewChild(ValueIdentifiers.getSid()).setValue("");
 			
 		return keys;
 	}

@@ -26,15 +26,20 @@ main
 {
     getCommand@Controller( )( command );
     if(command == "vote") {
-        loginResponse.success = false;
-        while( loginResponse.success == false ) {
+        getPublicKeys@BulletinBoardService( )( publicKeys );
+        sid = publicKeys.sid;
+
+        setPublicKeys@Controller( publicKeys )();
+        success = false;
+        while( !success ) {
             getLoginInformation@Controller() ( loginRequest );
-            login@BulletinBoardService( loginRequest ) ( loginResponse )
+            loginRequest.sid = sid;
+            login@BulletinBoardService( loginRequest ) ( loginResponse );
+            validateLoginResponse@Controller( loginResponse )( response );
+            success = response
         };
         //Set the session id
-        sessionRequest.sid = loginResponse.sid;
-        getPublicKeys@BulletinBoardService( sessionRequest )( publicKeys );
-        setPublicKeys@Controller( publicKeys )();
+        sessionRequest.sid = sid;
         getElectionOptions@BulletinBoardService( sessionRequest )( electionOptions );
 
         //Print the election options
@@ -74,7 +79,7 @@ main
         doubleLineBreak;
 
         //Set the session id
-        ballot.sid = loginResponse.sid;
+        ballot.sid = sid;
         processVote@BulletinBoardService( ballot )( registered );
         if(registered) {
             println@Console( "The vote is registered" )( )    

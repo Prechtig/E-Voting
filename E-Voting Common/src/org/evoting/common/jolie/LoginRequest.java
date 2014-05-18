@@ -1,16 +1,18 @@
 package org.evoting.common.jolie;
 
 import org.evoting.common.exceptions.BadValueException;
+import org.evoting.security.Security;
 
+import jolie.runtime.ByteArray;
 import jolie.runtime.Value;
 
 public class LoginRequest {
-	private String userId;
-	private String passwordHash;
+	private byte[] userId;
+	private byte[] passwordHash;
 	
 	public LoginRequest(String userId, String passwordHash) {
-		this.userId = userId;
-		this.passwordHash = passwordHash;
+		this.userId = Security.encryptRSA(userId, Security.getBulletinBoardRSAPublicKey());
+		this.passwordHash = Security.encryptRSA(passwordHash, Security.getBulletinBoardRSAPublicKey());
 	}
 	
 	public LoginRequest(Value value) {
@@ -18,24 +20,24 @@ public class LoginRequest {
 		   !value.hasChildren(ValueIdentifiers.getPasswordHash())) {
 			throw new BadValueException();
 		}
-			
-		this.userId = value.getFirstChild(ValueIdentifiers.getUserId()).strValue();
-		this.passwordHash = value.getFirstChild(ValueIdentifiers.getPasswordHash()).strValue();
+		this.userId = value.getFirstChild(ValueIdentifiers.getUserId()).byteArrayValue().getBytes();
+		this.passwordHash = value.getFirstChild(ValueIdentifiers.getPasswordHash()).byteArrayValue().getBytes();
 	}
 	
 	public Value getValue() {
 		Value result = Value.create();
-		result.getNewChild(ValueIdentifiers.getUserId()).setValue(userId);
-		result.getNewChild(ValueIdentifiers.getPasswordHash()).setValue(passwordHash);
+		result.getNewChild(ValueIdentifiers.getUserId()).setValue(new ByteArray(userId));
+		result.getNewChild(ValueIdentifiers.getPasswordHash()).setValue(new ByteArray(passwordHash));
+		result.getNewChild(ValueIdentifiers.getSid()).setValue("");
 		
 		return result;
 	}
 	
-	public String getUserId() {
+	public byte[] getUserId() {
 		return userId;
 	}
 
-	public String getPasswordHash() {
+	public byte[] getPasswordHash() {
 		return passwordHash;
 	}
 }

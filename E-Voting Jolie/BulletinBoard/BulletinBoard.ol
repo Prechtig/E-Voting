@@ -25,6 +25,7 @@ embedded {
 cset {
 	sid:	EncryptedBallot.sid
 			SessionRequest.sid
+			LoginRequest.sid
 }
 
 init {
@@ -46,14 +47,12 @@ init {
 }
 
 main {
-	[ login( userInformation )( loginResponse ) {
-		login@BBJavaController( userInformation )( loginResponse );
-		if(loginResponse.success) {
-			loginResponse.sid = csets.sid = new	
-		}
+	[ getPublicKeys( )( publicKeys ) {
+			getPublicKeys@BBJavaController( )( publicKeys );
+			publicKeys.sid = csets.sid = new
 	} ] {
-		getPublicKeys( sessionRequest )( publicKeys ) {
-			getPublicKeys@BBJavaController( )( publicKeys )
+		login( userInformation )( loginResponse ) {
+			login@BBJavaController( userInformation )( loginResponse )
 		};
 		getElectionOptions( sessionRequest )( electionOptions ) {
 			getElectionOptions@BBJavaController( )( electionOptions )

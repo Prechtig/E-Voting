@@ -28,11 +28,10 @@ public class EncryptedBallot {
 	 * @param vote The vote of the voter
 	 * @throws InvalidVoteException Is thrown if the vote is invalid
 	 */
-	public EncryptedBallot(String userId, String sid, long[] vote) throws InvalidVoteException {
-		this.userId = encrypt(userId);
+	public EncryptedBallot(byte[] userId, String sid, long[] vote) throws InvalidVoteException {
+		this.userId = userId;
 		this.sid = sid;
 		this.vote = encryptVote(vote);
-		//TODO: generate signature
 		this.signature = Security.sign(Security.getBulletinBoardRSAPublicKey(), toByteArray());
 	}
 	
@@ -59,10 +58,6 @@ public class EncryptedBallot {
 			i++;
 		}
 		this.signature = encryptedBallot.getFirstChild(ValueIdentifiers.getSignature()).byteArrayValue().getBytes();
-	}
-	
-	private byte[] encrypt(String value) {
-		return Security.encryptRSA(value, Security.getBulletinBoardRSAPublicKey());
 	}
 	
 	private String decryptString(byte[] value) {

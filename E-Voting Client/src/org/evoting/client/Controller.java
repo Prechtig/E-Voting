@@ -2,10 +2,13 @@ package org.evoting.client;
 
 import jolie.runtime.JavaService;
 import jolie.runtime.Value;
+import jolie.runtime.embedding.RequestResponse;
 
 import org.evoting.client.exceptions.NoElectionOptionsException;
+import org.evoting.common.exceptions.BadValueException;
 import org.evoting.common.jolie.ElectionOptions;
 import org.evoting.common.jolie.LoginRequest;
+import org.evoting.common.jolie.LoginResponse;
 import org.evoting.common.jolie.SignedElectionOptions;
 
 /**
@@ -40,12 +43,22 @@ public class Controller extends JavaService
 		Model.setPublicKeys(publicKeyValues);
 	}
 	
+	@RequestResponse
 	public Value getLoginInformation()
 	{
-		//TODO change jolie so it calls this
 		LoginRequest userInfo = ConsoleIO.getLoginData();
 		Model.setLastLogin(userInfo);
 		return userInfo.getValue();
+	}
+	
+	@RequestResponse
+	public Boolean validateLoginResponse(Value loginResponse) {
+		try {
+			new LoginResponse(loginResponse);
+		} catch(BadValueException e) {
+			return Boolean.FALSE;
+		}
+		return Boolean.TRUE;
 	}
 	
 	/**
@@ -62,6 +75,7 @@ public class Controller extends JavaService
 		}
 		return null;
     }
+  
     
     /**
      * Sets the electionOption list and requests a ballot from user input based on the electionOption list provided.

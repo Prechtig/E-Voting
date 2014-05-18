@@ -5,5 +5,6 @@ interface IClientController {
                      setElectionOptions( SignedElectionOptions )( void ),
                      setPublicKeys( PublicKeys )( void ),
                      setElectionOptionsAndGetBallot( SignedElectionOptions )( EncryptedBallot ),
-                     getCommand( void )( string )
+                     getCommand( void )( string ),
+                     validateLoginResponse( LoginResponse )( bool )
 }

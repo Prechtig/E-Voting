@@ -36,16 +36,18 @@ type PublicKeys: void {
 		}
 	}
 	.rsaPublicKey: raw
+	.sid: string
 }
 
 type LoginRequest: void {
-	.userId: string
-	.passwordHash: string
+	.userId: raw
+	.passwordHash: raw
+	.sid: string
 }
 
 type LoginResponse: void {
 	.success: bool
-	.sid: string
+	.validator: Validation
 }
 
 type Validation: void {
