@@ -128,6 +128,7 @@ public class SecurityTest {
 		Assert.assertEquals(savedParams, ElGamalPrivateKey);
 	}
 	
+	@Test
 	public void testHash() {
 		String m = "Test String";
 		String trueResult = "a5103f9c0b7d5ff69ddc38607c74e53d4ac120f2";
@@ -145,5 +146,13 @@ public class SecurityTest {
 	    } 
 	    result = SHA1.byteToHex(hashed);
 	    Assert.assertEquals(trueResult, result);
+	}
+	
+	@Test
+	public void testAuthentication() {
+		byte[] bytes = {123, -12, 88, 41};
+		Security.generateRSAKeys();
+		byte[] signature = Security.sign(bytes, Security.getBulletinBoardRSAPrivateKey());
+		Assert.assertEquals(true, Security.authenticate(bytes, signature, Security.getBulletinBoardRSAPublicKey()));
 	}
 }
