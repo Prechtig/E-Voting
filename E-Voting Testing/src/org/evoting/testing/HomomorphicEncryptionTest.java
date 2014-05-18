@@ -2,14 +2,11 @@ package org.evoting.testing;
 
 import static org.junit.Assert.assertEquals;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.math.BigInteger;
 
 import org.bouncycastle.crypto.params.ElGamalPrivateKeyParameters;
 import org.bouncycastle.crypto.params.ElGamalPublicKeyParameters;
 import org.evoting.authority.Model;
-import org.evoting.common.exceptions.CorruptDataException;
 import org.evoting.common.utility.Importer;
 import org.evoting.security.Group;
 import org.evoting.security.Security;
@@ -26,15 +23,8 @@ public class HomomorphicEncryptionTest
 			ElGamalPrivateKeyParameters privKey = Importer.importElGamalPrivateKeyParameters(Model.getElGamalPrivateKeyFile());
 			Security.setElGamalPrivateKey(privKey);
 			Security.setElGamalPublicKey(pubKey);
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (CorruptDataException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (Exception e) {
+			Assert.fail();
 		}
 		
 		long message = 1336;
@@ -62,15 +52,8 @@ public class HomomorphicEncryptionTest
 			ElGamalPrivateKeyParameters privKey = Importer.importElGamalPrivateKeyParameters(Model.getElGamalPrivateKeyFile());
 			Security.setElGamalPrivateKey(privKey);
 			Security.setElGamalPublicKey(pubKey);
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (CorruptDataException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (Exception e) {
+			Assert.fail();
 		}
 		Security.buildCache(20000);
 		
@@ -99,15 +82,8 @@ public class HomomorphicEncryptionTest
 			ElGamalPrivateKeyParameters privKey = Importer.importElGamalPrivateKeyParameters(Model.getElGamalPrivateKeyFile());
 			Security.setElGamalPrivateKey(privKey);
 			Security.setElGamalPublicKey(pubKey);
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (CorruptDataException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (Exception e) {
+			Assert.fail();
 		}
 		
 		long message = 1336;
@@ -159,15 +135,8 @@ public class HomomorphicEncryptionTest
 			ElGamalPrivateKeyParameters privKey = Importer.importElGamalPrivateKeyParameters(Model.getElGamalPrivateKeyFile());
 			Security.setElGamalPrivateKey(privKey);
 			Security.setElGamalPublicKey(pubKey);
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (CorruptDataException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (Exception e) {
+			Assert.fail();
 		}
 		
 		byte[] cipher1 = Security.encryptExponentialElgamal(base1, Security.getElgamalPublicKey());
@@ -187,15 +156,8 @@ public class HomomorphicEncryptionTest
 			ElGamalPrivateKeyParameters privKey = Importer.importElGamalPrivateKeyParameters(Model.getElGamalPrivateKeyFile());
 			Security.setElGamalPrivateKey(privKey);
 			Security.setElGamalPublicKey(pubKey);
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (CorruptDataException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (Exception e) {
+			Assert.fail();
 		}
 		
 		long message1 = 1;
@@ -227,15 +189,8 @@ public class HomomorphicEncryptionTest
 			ElGamalPrivateKeyParameters privKey = Importer.importElGamalPrivateKeyParameters(Model.getElGamalPrivateKeyFile());
 			Security.setElGamalPrivateKey(privKey);
 			Security.setElGamalPublicKey(pubKey);
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (CorruptDataException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (Exception e) {
+			Assert.fail();
 		}
 		
 		long message1 = 1;
