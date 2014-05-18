@@ -258,14 +258,10 @@ public class HomomorphicEncryptionTest
 		byte[] productCipher = Security.encryptExponentialElgamal(message2, Security.getElgamalPublicKey());
 		cipher = Security.encryptExponentialElgamal(message1, Security.getElgamalPublicKey());
 		
-		for (int i = 1; i < 10000000; i = i * 10) {
-			productCipher = Security.encryptExponentialElgamal(message2, Security.getElgamalPublicKey());
-			accumulator = 0;
-			for (int j = 0; j < i; j++) {
-				productCipher = Security.multiplyElGamalCiphers(productCipher, cipher);
-				accumulator += message1;
-			}
-			Assert.assertEquals(accumulator, Security.decryptExponentialElgamal(productCipher, Security.getElgamalPrivateKey()));
+		for (long i = 1; i < 10000000000l; i++) {
+			productCipher = Security.multiplyElGamalCiphers(productCipher, cipher);
+			accumulator += message1;
 		}
+		Assert.assertEquals(accumulator, Security.decryptExponentialElgamal(productCipher, Security.getElgamalPrivateKey()));
 	}
 }
