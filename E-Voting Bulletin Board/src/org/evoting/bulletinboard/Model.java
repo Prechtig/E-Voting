@@ -1,6 +1,5 @@
 package org.evoting.bulletinboard;
 
-import java.util.Date;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -15,7 +14,6 @@ import org.evoting.common.jolie.AnonymousVoteList;
 import org.evoting.common.jolie.LoginRequest;
 import org.evoting.common.jolie.ValueIdentifiers;
 import org.evoting.database.EntityManagerUtil;
-import org.evoting.database.entities.Election;
 import org.evoting.database.entities.ElectionOption;
 import org.evoting.database.entities.Vote;
 import org.evoting.database.repositories.ElectionOptionRepository;
@@ -124,16 +122,6 @@ public class Model {
 	private static void endDatabaseSession(EntityManager entMgr) {
 		entMgr.getTransaction().commit();
 		entMgr.close();
-	}
-
-	public static Election createNewElection(Date startDate, Date endDate) {
-		EntityManager entMgr = beginDatabaseSession();
-		
-		Election election = new Election(startDate, endDate);
-		entMgr.persist(election);
-		
-		endDatabaseSession(entMgr);
-		return election;
 	}
 
 	public static void setElectionOptions(ElectionOption[] electionOptions) {

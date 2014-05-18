@@ -4,12 +4,8 @@ public class ValueIdentifiers {
 	private static final String ID = "id";
 	private static final String NAME = "name";
 	private static final String PARTY_ID = "partyId";
-	public static String getElectionOptionId() {
-		return ELECTION_OPTION_ID;
-	}
 	private static final String USER_ID = "userId";
 	private static final String PASSWORD_HASH = "passwordHash";
-	private static final String ELECTION_ID = "electionId";
 	private static final String VOTE = "vote";
 	// Name of the electionOptions cipher text in the value object.
 	private static final String ELECTION_OPTIONS = "electionOptions";
@@ -32,7 +28,10 @@ public class ValueIdentifiers {
 	private static final String RUNNING = "running";
 	private static final String ENCRYPTED_VOTE = "encryptedVote";
 	private static final String INDEX = "index";
-	
+
+	public static String getElectionOptionId() {
+		return ELECTION_OPTION_ID;
+	}
 	public static String getEncryptedVote() {
 		return ENCRYPTED_VOTE;
 	}
@@ -65,9 +64,6 @@ public class ValueIdentifiers {
 	}
 	public static String getPasswordHash() {
 		return PASSWORD_HASH;
-	}
-	public static String getElectionId() {
-		return ELECTION_ID;
 	}
 	public static String getVote() {
 		return VOTE;

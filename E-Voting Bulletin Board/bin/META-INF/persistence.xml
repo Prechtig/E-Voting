@@ -9,7 +9,6 @@
 
 		<!-- This is where we tell JPA/Hibernate about our @Entity objects -->
 		<class>org.evoting.database.entities.ElectionOption</class>
-		<class>org.evoting.database.entities.Election</class>
 		<class>org.evoting.database.entities.Vote</class>
 
 		<properties>
