@@ -66,17 +66,21 @@ public class CountVotes extends Command
 	 * @return The result of the election as long array with index representing election option id.
 	 */
 	private long[] countVotes(JavaService js) {
+		// Gets all non-overwritten votes from authority
 		CommMessage request = CommMessage.createRequest("getAllVotesAuthority", Model.getaCommunicationPath(), Model.getNewValidator());
 		try {
+			// Receives the collection of votes
 			CommMessage response = js.sendMessage(request).recvResponseFor(request);
 			Value listOfVotesValue = response.value();
 			AnonymousVoteList allVotes = new AnonymousVoteList(listOfVotesValue);
 			
+			// Checks that the data has not been modified
 			boolean notCorrupted = Security.authenticate(allVotes.toByteArray(), allVotes.getSignature(), Security.getBulletinBoardRSAPublicKey());
 			if(!notCorrupted) {
 				throw new CorruptDataException();
 			}
 			
+			// Calculates the product of all votes
 			byte[][] voteProducts = new byte[Model.getElectionOptions().size()][];
 			boolean firstIteration = true;
 			for(AnonymousVote v : allVotes.getListOfVotes()) {
@@ -91,7 +95,7 @@ public class CountVotes extends Command
 					}
 				}
 			}
-			
+			 // Decrypting the product
 			long[] result = new long[Model.getElectionOptions().size()];
 			for (int i = 0; i < result.length; i++) {
 				result[i] = Security.decryptExponentialElgamal(voteProducts[i], Security.getElgamalPrivateKey());

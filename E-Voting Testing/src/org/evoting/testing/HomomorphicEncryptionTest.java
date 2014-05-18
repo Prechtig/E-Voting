@@ -186,14 +186,13 @@ public class HomomorphicEncryptionTest
 		
 		byte[] product = Security.multiplyElGamalCiphers(cipher1, cipher2);
         
-        byte[] messageByte = Security.decryptElgamal(product, Security.getElgamalPrivateKey());
-        BigInteger result = new BigInteger(1, messageByte);
+        long result = Security.decryptExponentialElgamal(product, Security.getElgamalPrivateKey());
         
-        assertEquals(base1+base2, Group.getInstance().discreteLogarithm(result));
+        assertEquals(base1+base2, result);
 	}
 	
 	@Test
-	public void testExponentialHomomorphicPropertiesWithAccumulatedVotes() {
+	public void testWithAccumulatedVotes() {
 		try {
 			ElGamalPublicKeyParameters pubKey = Importer.importElGamalPublicKeyParameters(Model.getElGamalPublicKeyFile());
 			ElGamalPrivateKeyParameters privKey = Importer.importElGamalPrivateKeyParameters(Model.getElGamalPrivateKeyFile());
@@ -218,7 +217,7 @@ public class HomomorphicEncryptionTest
 		
 		byte[] productCipher = Security.encryptExponentialElgamal(message2, Security.getElgamalPublicKey());
 		
-		for (int i = 1; i < 100000; i = i * 10) {
+		for (int i = 1; i < 10000; i = i * 10) {
 			productCipher = Security.encryptExponentialElgamal(message2, Security.getElgamalPublicKey());
 			accumulator = 0;
 			for (int j = 0; j < i; j++) {
@@ -230,5 +229,39 @@ public class HomomorphicEncryptionTest
 			}
 			Assert.assertEquals(accumulator, Security.decryptExponentialElgamal(productCipher, Security.getElgamalPrivateKey()));
 		}
+	}
+	
+	@Test
+	public void testWithAccumulatedVotesNoRepEnc() {
+		try {
+			ElGamalPublicKeyParameters pubKey = Importer.importElGamalPublicKeyParameters(Model.getElGamalPublicKeyFile());
+			ElGamalPrivateKeyParameters privKey = Importer.importElGamalPrivateKeyParameters(Model.getElGamalPrivateKeyFile());
+			Security.setElGamalPrivateKey(privKey);
+			Security.setElGamalPublicKey(pubKey);
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (CorruptDataException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		long message1 = 1;
+		long message2 = 0;
+		long accumulator = 0;
+		
+		byte[] cipher;
+		
+		byte[] productCipher = Security.encryptExponentialElgamal(message2, Security.getElgamalPublicKey());
+		cipher = Security.encryptExponentialElgamal(message1, Security.getElgamalPublicKey());
+		
+		for (long i = 1; i < 10000000000l; i++) {
+			productCipher = Security.multiplyElGamalCiphers(productCipher, cipher);
+			accumulator += message1;
+		}
+		Assert.assertEquals(accumulator, Security.decryptExponentialElgamal(productCipher, Security.getElgamalPrivateKey()));
 	}
 }
