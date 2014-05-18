@@ -105,7 +105,7 @@ public class Security {
 	}
 	
 	public static String hash(byte[] m) {
-		return SHA1.hash(m);
+		return SHA2.hash(m);
 	}
 
 	/**
@@ -133,7 +133,7 @@ public class Security {
 	
 	public static boolean authenticate(byte[] receivedData, byte[] signature, PublicKey pk) {
 		String signatureHash = new String(decryptRSA(signature, pk));
-		String receivedDataHash = SHA1.hash(receivedData);
+		String receivedDataHash = SHA2.hash(receivedData);
 		
 		return signatureHash.equals(receivedDataHash);
 	}

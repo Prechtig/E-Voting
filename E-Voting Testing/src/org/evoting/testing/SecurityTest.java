@@ -28,7 +28,7 @@ public class SecurityTest {
 	private static String ElGamalPrivateKeyFile = "ElGamalPriv";
 	
 	private final String m = "Test String";
-	private final String mHash = "a5103f9c0b7d5ff69ddc38607c74e53d4ac120f2";
+	private final String mHash = "30c6ff7a44f7035af933babaea771bf177fc38f06482ad06434cbcc04de7ac14";
 
 	@BeforeClass
 	public static void setup() throws FileNotFoundException, CorruptDataException, IOException {
@@ -62,7 +62,7 @@ public class SecurityTest {
 	}
 
 	@Test
-	public void testSHA1() {
+	public void testSHA2() {
 		String hash = Security.hash(m);
 
 		assertEquals(hash, mHash);

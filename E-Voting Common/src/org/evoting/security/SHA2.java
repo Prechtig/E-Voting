@@ -3,7 +3,7 @@ package org.evoting.security;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-public class SHA1 {
+public class SHA2 {
 	public static String byteToHex(byte[] b) {
 	  String result = "";
 	  for (int i=0; i < b.length; i++) {
@@ -21,7 +21,7 @@ public class SHA1 {
 		MessageDigest md = null;
 	    byte[] hashed = null;
 		try {
-	        md = MessageDigest.getInstance("SHA-1");
+	        md = MessageDigest.getInstance("SHA-256");
 	    }
 	    catch(NoSuchAlgorithmException e) {
 	        e.printStackTrace();
