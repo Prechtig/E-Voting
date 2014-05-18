@@ -22,6 +22,7 @@ import org.evoting.common.exceptions.BadValueException;
 import org.evoting.common.exceptions.CorruptDataException;
 import org.evoting.common.jolie.AnonymousVoteList;
 import org.evoting.common.jolie.Ballot;
+import org.evoting.common.jolie.ElectionStart;
 import org.evoting.common.jolie.EncryptedBallot;
 import org.evoting.common.jolie.LoginRequest;
 import org.evoting.common.jolie.LoginResponse;
@@ -33,7 +34,7 @@ import org.evoting.security.KeyType;
 import org.evoting.security.Security;
 
 public class Controller extends JavaService {
-	private static Election election;
+	private static ElectionStart electionStart;
 	private static Value publicKeys = null;
 
 	@RequestResponse
@@ -57,21 +58,8 @@ public class Controller extends JavaService {
 	}
 
 	@RequestResponse
-	public Boolean startElection(Value electionStart) {
-		if(!electionStart.hasChildren(ValueIdentifiers.getValidator()) ||
-		   !electionStart.hasChildren(ValueIdentifiers.getStartTime()) ||
-		   !electionStart.hasChildren(ValueIdentifiers.getEndTime())) {
-			throw new BadValueException();
-		}
-		
-		validate(electionStart.getFirstChild(ValueIdentifiers.getValidator()));
-
-		long startTime = electionStart.getFirstChild(ValueIdentifiers.getStartTime()).longValue();
-		long endTime = electionStart.getFirstChild(ValueIdentifiers.getEndTime()).longValue();
-
-		Date startDate = new Date(startTime);
-		Date endDate = new Date(endTime);
-		election = new Election(startDate, endDate);
+	public Boolean startElection(Value electionStartValue) {
+		electionStart = new ElectionStart(electionStartValue);
 		return Boolean.TRUE;
 	}
 
@@ -117,7 +105,7 @@ public class Controller extends JavaService {
 		}
 
 		List<ElectionOption> electionOptions = Model.getEncryptedElectionOptions();
-		SignedElectionOptions signedElectionOptions = new SignedElectionOptions(electionOptions, election.getEndTime());
+		SignedElectionOptions signedElectionOptions = new SignedElectionOptions(electionOptions, electionStart.getEndTime());
 		
 		return signedElectionOptions.getValue();
 	}
@@ -166,7 +154,7 @@ public class Controller extends JavaService {
 
 	private boolean electionIsRunning() {
 		Date currentTime = new Date(System.currentTimeMillis());
-		return currentTime.after(election.getStartTime()) && currentTime.before(election.getEndTime());
+		return currentTime.after(electionStart.getStartTime()) && currentTime.before(electionStart.getEndTime());
 	}
 
 	private void validate(Value validation) {
