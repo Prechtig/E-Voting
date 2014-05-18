@@ -28,8 +28,11 @@ public class SecurityTest {
 	private static PrivateKey RSAPrivateKey;
 	private static PublicKey RSAPublicKey;
 
-	private static String ElGamalPublicKeyFile = "ElGamalPublicKey";
-	private static String ElGamalPrivateKeyFile = "ElGamalPrivateKey";
+	private static String ElGamalPublicKeyFile = "ElGamalPub";
+	private static String ElGamalPrivateKeyFile = "ElGamalPriv";
+	
+	private final String m = "Test String";
+	private final String mHash = "a5103f9c0b7d5ff69ddc38607c74e53d4ac120f2";
 
 	@BeforeClass
 	public static void setup() throws FileNotFoundException, CorruptDataException, IOException {
@@ -54,8 +57,6 @@ public class SecurityTest {
 
 	@Test
 	public void testRSA() {
-		String m = "Test String";
-
 		byte[] encrypted = Security.encryptRSA(m, RSAPrivateKey);
 		byte[] decrypted = Security.decryptRSA(encrypted, RSAPublicKey);
 
@@ -66,23 +67,18 @@ public class SecurityTest {
 
 	@Test
 	public void testSHA1() {
-		String m = "Test String";
-		String trueHash = "a5103f9c0b7d5ff69ddc38607c74e53d4ac120f2";
-
 		String hash = Security.hash(m);
 
-		assertEquals(hash, trueHash);
+		assertEquals(hash, mHash);
 	}
 
 	@Test
 	public void testSign() {
-		String m = "Test String";
-		String trueHash = "a5103f9c0b7d5ff69ddc38607c74e53d4ac120f2";
 		byte[] signed = Security.sign(m, RSAPrivateKey);
 		byte[] hash = Security.decryptRSA(signed, RSAPublicKey);
 
 		String result = new String(hash);
-		assertEquals(trueHash, result);
+		assertEquals(mHash, result);
 	}
 
 	@Test
@@ -93,7 +89,7 @@ public class SecurityTest {
 
 			savedParams = Importer.importElGamalPublicKeyParameters(ElGamalPublicKeyFile);
 		} catch (CorruptDataException | IOException e) {
-			e.printStackTrace();
+			Assert.fail();
 		}
 		Assert.assertEquals(savedParams, ElGamalPublicKey);
 	}
@@ -106,15 +102,13 @@ public class SecurityTest {
 
 			savedParams = Importer.importElGamalPrivateKeyParameters(ElGamalPrivateKeyFile);
 		} catch (CorruptDataException | IOException e) {
-			e.printStackTrace();
+			Assert.fail();
 		}
 		Assert.assertEquals(savedParams, ElGamalPrivateKey);
 	}
 	
 	@Test
 	public void testHash() {
-		String m = "Test String";
-		String trueResult = "a5103f9c0b7d5ff69ddc38607c74e53d4ac120f2";
 		String result = "";
 		byte[] hashed = null;
 		
@@ -125,10 +119,10 @@ public class SecurityTest {
 	        hashed = md.digest(m.getBytes());
 	    }
 	    catch(NoSuchAlgorithmException e) {
-	        e.printStackTrace();
+	    	Assert.fail();
 	    } 
 	    result = SHA1.byteToHex(hashed);
-	    Assert.assertEquals(trueResult, result);
+	    Assert.assertEquals(mHash, result);
 	}
 	
 	@Test
