@@ -4,18 +4,14 @@ import static org.junit.Assert.assertEquals;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 
 import org.bouncycastle.crypto.params.ElGamalPrivateKeyParameters;
 import org.bouncycastle.crypto.params.ElGamalPublicKeyParameters;
 import org.evoting.common.exceptions.CorruptDataException;
-import org.evoting.common.utility.Exporter;
 import org.evoting.common.utility.Importer;
 import org.evoting.security.RSA;
-import org.evoting.security.SHA1;
 import org.evoting.security.Security;
 import org.junit.Assert;
 import org.junit.BeforeClass;
@@ -79,50 +75,6 @@ public class SecurityTest {
 
 		String result = new String(hash);
 		assertEquals(mHash, result);
-	}
-
-	@Test
-	public void saveElgamalKeyPublic() {
-		ElGamalPublicKeyParameters savedParams = null;
-		try {
-			Exporter.exportElGamalPublicKeyParameters(ElGamalPublicKey, ElGamalPublicKeyFile);
-
-			savedParams = Importer.importElGamalPublicKeyParameters(ElGamalPublicKeyFile);
-		} catch (CorruptDataException | IOException e) {
-			Assert.fail();
-		}
-		Assert.assertEquals(savedParams, ElGamalPublicKey);
-	}
-
-	@Test
-	public void saveElgamalKeyPrivate() {
-		ElGamalPrivateKeyParameters savedParams = null;
-		try {
-			Exporter.exportElGamalPrivateKeyParameters(ElGamalPrivateKey, ElGamalPrivateKeyFile);
-
-			savedParams = Importer.importElGamalPrivateKeyParameters(ElGamalPrivateKeyFile);
-		} catch (CorruptDataException | IOException e) {
-			Assert.fail();
-		}
-		Assert.assertEquals(savedParams, ElGamalPrivateKey);
-	}
-	
-	@Test
-	public void testHash() {
-		String result = "";
-		byte[] hashed = null;
-		
-		MessageDigest md = null;
-	    try {
-	        md = MessageDigest.getInstance("SHA-1");
-	        
-	        hashed = md.digest(m.getBytes());
-	    }
-	    catch(NoSuchAlgorithmException e) {
-	    	Assert.fail();
-	    } 
-	    result = SHA1.byteToHex(hashed);
-	    Assert.assertEquals(mHash, result);
 	}
 	
 	@Test

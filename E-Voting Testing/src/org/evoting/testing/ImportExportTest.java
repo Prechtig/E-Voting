@@ -16,8 +16,10 @@ import org.junit.Before;
 import org.junit.Test;
 
 public class ImportExportTest {
-	private String bbPubRsaKey = "bbPubRsaKey";
-	private String bbPrivRsaKey = "bbPrivRsaKey";
+	private String bbRsaPub = "BbRsaPub";
+	private String bbRsaPriv = "BbRsaPriv";
+	private String authRsaPub = "AuthRsaPub";
+	private String authRsaPriv = "AuthRsaPriv";
 
 	@Before
 	public void generateKeys() {
@@ -27,44 +29,61 @@ public class ImportExportTest {
 	
 	@Test
 	public void testPublicExportImport() {
-		PublicKey key = Security.getBulletinBoardRSAPublicKey();
+		//Get keys
+		PublicKey aKey = Security.getAuthorityRSAPublicKey();
+		PublicKey bKey = Security.getBulletinBoardRSAPublicKey();
 		try {
-			Exporter.exportRsaKey(bbPubRsaKey, key);
-			PublicKey importedKey = Importer.importRsaPublicKey(bbPubRsaKey);
-			Assert.assertEquals(key, importedKey);
+			//Export keys
+			Exporter.exportRsaKey(authRsaPub, aKey);
+			Exporter.exportRsaKey(bbRsaPub, bKey);
+			//Import keys
+			PublicKey importedAKey = Importer.importRsaPublicKey(authRsaPub);
+			PublicKey importedBKey = Importer.importRsaPublicKey(bbRsaPub);
+			//Assert they are equal
+			Assert.assertEquals(aKey, importedAKey);
+			Assert.assertEquals(bKey, importedBKey);
 		} catch (IOException e) {
-			System.out.println("Could not find file");
-			assert false;
+			Assert.fail("Could not find file");
 		} catch (InvalidKeySpecException e) {
-			System.out.println("Invalid key file");
-			assert false;
+			Assert.fail("Invalid key file");
 		}
 	}
 	
 	@Test
 	public void testPrivateExportImport() {
-		PrivateKey key = Security.getBulletinBoardRSAPrivateKey();
+		//Get keys
+		PrivateKey aKey = Security.getAuthorityRSAPrivateKey();
+		PrivateKey bKey = Security.getBulletinBoardRSAPrivateKey();
 		try {
-			Exporter.exportRsaKey(bbPrivRsaKey, key);
-			PrivateKey importedKey = Importer.importRsaPrivateKey(bbPrivRsaKey);
-			Assert.assertEquals(key, importedKey);
+			//Export keys
+			Exporter.exportRsaKey(authRsaPriv, aKey);
+			Exporter.exportRsaKey(bbRsaPriv, bKey);
+			//Import keys
+			PrivateKey importedAKey = Importer.importRsaPrivateKey(authRsaPriv);
+			PrivateKey importedBKey = Importer.importRsaPrivateKey(bbRsaPriv);
+			//Assert they are equal
+			Assert.assertEquals(aKey, importedAKey);
+			Assert.assertEquals(bKey, importedBKey);
 		} catch (IOException e) {
 			System.out.println("Could not find file");
-			assert false;
+			Assert.fail("Could not find file");
 		} catch (InvalidKeySpecException e) {
-			System.out.println("Invalid key file");
-			assert false;
+			Assert.fail("Invalid key file");
 		}
 	}
 	
 	@Test
 	public void testElGamalImportExport() throws IOException {
+		//Get keys
 		ElGamalPrivateKeyParameters privKey = Security.getElgamalPrivateKey();
 		ElGamalPublicKeyParameters pubKey = Security.getElgamalPublicKey();
+		//Export keys
 		Exporter.exportElGamalPrivateKeyParameters(privKey, Model.getElGamalPrivateKeyFile());
 		Exporter.exportElGamalPublicKeyParameters(pubKey, Model.getElGamalPublicKeyFile());
+		//Import keys
 		ElGamalPrivateKeyParameters importedPrivKey = Importer.importElGamalPrivateKeyParameters(Model.getElGamalPrivateKeyFile());
 		ElGamalPublicKeyParameters importedPubKey = Importer.importElGamalPublicKeyParameters(Model.getElGamalPublicKeyFile());
+		//Assert they are equal
 		Assert.assertEquals(privKey, importedPrivKey);
 		Assert.assertEquals(pubKey, importedPubKey);
 	}
