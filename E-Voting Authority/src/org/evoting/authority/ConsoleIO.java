@@ -8,7 +8,6 @@ import org.evoting.authority.commands.Generate;
 import org.evoting.authority.commands.Load;
 import org.evoting.authority.commands.Send;
 import org.evoting.authority.commands.Start;
-import org.evoting.authority.commands.Status;
 
 public class ConsoleIO {
 
@@ -46,9 +45,6 @@ public class ConsoleIO {
 			// Builds the cache
 		case Build.KEYWORD:
 			return new Build(args);
-			// Update the election status
-		case Status.KEYWORD:
-			return new Status(args);
 			// Terminate program
 		case Exit.KEYWORD:
 			return new Exit(args);
